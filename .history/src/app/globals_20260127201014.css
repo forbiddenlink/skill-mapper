@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  
+  /* Cyberpunk Palette */
+  --deep-void: #050505;
+  --neon-cyan: #00f3ff;
+  --plasma-pink: #ff00ff;
+  --electric-green: #00ff9d;
+  --alert-red: #ff0055;
+  --hologram-blue: rgba(0, 243, 255, 0.1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-deep-void: var(--deep-void);
+  --color-neon-cyan: var(--neon-cyan);
+  --color-plasma-pink: var(--plasma-pink);
+  --color-electric-green: var(--electric-green);
+  --color-alert-red: var(--alert-red);
+  --color-hologram-blue: var(--hologram-blue);
+  
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-orbitron);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow: hidden; /* Prevent scrolling for the game-like feel */
+}
+
+/* Progress bar styling using data attribute */
+[data-progress] {
+  width: calc(var(--progress-width, 0) * 1%);
+}

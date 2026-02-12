@@ -153,6 +153,36 @@ const RAW_SKILLS: Omit<SkillNode, 'position'>[] = [
             ]
         },
     },
+    {
+        id: 'http-fundamentals',
+        type: 'skill',
+        data: {
+            id: 'http-fundamentals',
+            title: 'HTTP Fundamentals',
+            description: 'Request/Response cycle, status codes, headers, and REST principles.',
+            tier: 'foundation',
+            category: 'backend',
+            status: 'available',
+            prerequisites: [],
+            xpReward: 100,
+            resources: [
+                { label: 'MDN HTTP Guide', url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP', type: 'article' },
+                { label: 'HTTP Crash Course', url: 'https://www.youtube.com/watch?v=iYM2zFP3Zn0', type: 'video' }
+            ],
+            quiz: [
+                {
+                    question: "What HTTP status code indicates a successful request?",
+                    options: ["404", "500", "200", "301"],
+                    correctIndex: 2
+                },
+                {
+                    question: "Which HTTP method is typically used to update a resource?",
+                    options: ["GET", "POST", "PUT", "DELETE"],
+                    correctIndex: 2
+                }
+            ]
+        },
+    },
 
     // --- TIER 2: FRONTEND ENGINEERING 2.0 ---
     {

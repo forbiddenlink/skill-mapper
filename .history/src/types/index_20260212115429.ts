@@ -99,3 +99,71 @@ export interface SaveData {
     timestamp: number;
     state: Partial<GameState>;
 }
+
+/**
+ * Daily Challenge definition
+ */
+export interface DailyChallenge {
+    id: string;
+    skillId: string;
+    type: 'quiz' | 'practice' | 'review';
+    title: string;
+    description: string;
+    xpBonus: number;
+    expiresAt: number;
+    completed: boolean;
+}
+
+/**
+ * Streak data for tracking consistency
+ */
+export interface StreakData {
+    currentStreak: number;
+    longestStreak: number;
+    lastActivityDate: string; // YYYY-MM-DD format
+    activityCalendar: Record<string, number>; // date -> xp earned
+}
+
+/**
+ * Learning Path definition
+ */
+export interface LearningPath {
+    id: string;
+    title: string;
+    description: string;
+    icon: string;
+    skills: string[]; // Ordered list of skill IDs
+    targetRole: string;
+    estimatedWeeks: number;
+    color: string;
+}
+
+/**
+ * Boss Battle - comprehensive tier challenge
+ */
+export interface BossBattle {
+    id: string;
+    tier: SkillTier;
+    title: string;
+    description: string;
+    requiredSkills: string[]; // All skills in tier must be mastered
+    questions: SkillQuiz[];
+    xpReward: number;
+    unlocksBadge: string;
+    completed: boolean;
+    attempts: number;
+    bestScore?: number;
+}
+
+/**
+ * Achievement milestone
+ */
+export interface Milestone {
+    id: string;
+    title: string;
+    description: string;
+    emoji: string;
+    threshold: number; // XP or skill count threshold
+    type: 'xp' | 'skills' | 'streak' | 'badges';
+    celebrationMessage: string;
+}

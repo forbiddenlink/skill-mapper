@@ -69,3 +69,6 @@ lerna-debug.log*
 
 # Ignore vscode AI rules
 .github/instructions/codacy.instructions.md
+
+*storybook.log
+storybook-static

@@ -10,7 +10,13 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "type-check": "tsc --noEmit"
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report",
+    "type-check": "tsc --noEmit",
+    "prepare": "npx playwright install",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@types/canvas-confetti": "^1.9.0",
@@ -19,14 +25,18 @@
     "framer-motion": "^12.24.7",
     "lucide-react": "^0.562.0",
     "next": "16.1.1",
+    "next-pwa": "^5.6.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "reactflow": "^11.11.4",
     "tailwind-merge": "^3.4.0",
     "use-sound": "^5.0.0",
+    "workbox-window": "^7.4.0",
     "zustand": "^5.0.9"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^16.1.0",
@@ -42,6 +52,18 @@
     "prettier": "^3.2.5",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.0",
+    "storybook": "^10.2.8",
+    "@storybook/nextjs-vite": "^10.2.8",
+    "@chromatic-com/storybook": "^5.0.1",
+    "@storybook/addon-vitest": "^10.2.8",
+    "@storybook/addon-a11y": "^10.2.8",
+    "@storybook/addon-docs": "^10.2.8",
+    "@storybook/addon-onboarding": "^10.2.8",
+    "vite": "^7.3.1",
+    "eslint-plugin-storybook": "^10.2.8",
+    "playwright": "^1.58.2",
+    "@vitest/browser": "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.0"
   }
 }

@@ -1,7 +1,8 @@
 'use client';
+
 import { motion } from 'framer-motion';
 import { CheckCircle2, Lock } from 'lucide-react';
-import { LearningPath } from '@/types';
+import { type LearningPath } from '@/types';
 import { useGameStore } from '@/lib/store';
 
 const LEARNING_PATHS: LearningPath[] = [

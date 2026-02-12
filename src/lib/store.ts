@@ -165,7 +165,17 @@ export const useGameStore = create<GameState>()(
                 const skill = nodes.find((n) => n.id === id);
                 if (!skill) return;
 
-                // Validation: Check prerequisites
+                // Handle 'available' skills - start working on them
+                if (skill.data.status === 'available') {
+                    set((state) => ({
+                        nodes: state.nodes.map((n) =>
+                            n.id === id ? { ...n, data: { ...n.data, status: 'in-progress' } } : n
+                        ),
+                    }));
+                    return;
+                }
+
+                // Validation: Check prerequisites for locked skills
                 const canUnlock = skill.data.prerequisites.every((reqId) => {
                     const reqNode = nodes.find((n) => n.id === reqId);
                     return reqNode?.data.status === 'mastered';

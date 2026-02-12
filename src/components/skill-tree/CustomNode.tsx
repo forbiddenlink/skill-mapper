@@ -28,6 +28,9 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
     const glareX = useTransform(mouseX, [-0.5, 0.5], ["0%", "100%"]);
     const glareY = useTransform(mouseY, [-0.5, 0.5], ["0%", "100%"]);
 
+    // Glare opacity - must be called unconditionally (React hooks rule)
+    const glareOpacity = useTransform(mouseX, [-0.5, 0.5], [0, 1]);
+
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!ref.current || isLocked) return;
 
@@ -76,7 +79,7 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
                 <motion.div
                     style={{
                         background: `radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.3) 0%, transparent 50%)`,
-                        opacity: useTransform(mouseX, [-0.5, 0.5], [0, 1]) // Fade in when moving
+                        opacity: glareOpacity
                     }}
                     className="absolute inset-0 rounded-lg pointer-events-none z-20 mix-blend-overlay"
                 />

@@ -15,18 +15,21 @@ export function DailyChallenges() {
 
     // Generate daily challenge based on date
     const dailyChallenge = useMemo((): DailyChallenge | null => {
-        const today = new Date().toISOString().split('T')[0]!;
+        const today = new Date().toISOString().split('T')[0] ?? '';
+        if (!today) return null;
         const skills = getInitialSkills();
         
         // Use date as seed for deterministic challenge selection
-        const seed = today.split('-').reduce((acc, val) => acc + parseInt(val), 0);
+        const seed = today.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
         const availableSkills = skills.filter(s => s.data.quiz && s.data.quiz.length > 0);
         
         if (availableSkills.length === 0) return null;
         
-        const challengeSkill = availableSkills[seed % availableSkills.length]!;
-        const quiz = challengeSkill.data.quiz!;
-        const question = quiz[seed % quiz.length]!;
+        const challengeSkill = availableSkills[seed % availableSkills.length];
+        if (!challengeSkill || !challengeSkill.data.quiz || challengeSkill.data.quiz.length === 0) return null;
+        const quiz = challengeSkill.data.quiz;
+        const question = quiz[seed % quiz.length];
+        if (!question) return null;
         
         const expiresAt = new Date(today).setHours(23, 59, 59, 999);
         
@@ -62,9 +65,11 @@ export function DailyChallenges() {
         const skill = nodes.find(n => n.id === dailyChallenge.skillId);
         if (!skill || !skill.data.quiz) return;
         
-        const today = new Date().toISOString().split('T')[0]!;
-        const seed = today.split('-').reduce((acc, val) => acc + parseInt(val), 0);
-        const question = skill.data.quiz[seed % skill.data.quiz.length]!;
+        const today = new Date().toISOString().split('T')[0] ?? '';
+        if (!today) return;
+        const seed = today.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
+        const question = skill.data.quiz[seed % skill.data.quiz.length];
+        if (!question) return;
         
         const isCorrect = selectedAnswer === question.correctIndex;
         setShowResult(true);
@@ -87,9 +92,11 @@ export function DailyChallenges() {
     const skill = nodes.find(n => n.id === dailyChallenge.skillId);
     if (!skill || !skill.data.quiz) return null;
     
-    const today = new Date().toISOString().split('T')[0]!;
-    const seed = today.split('-').reduce((acc, val) => acc + parseInt(val), 0);
-    const question = skill.data.quiz[seed % skill.data.quiz.length]!;
+    const today = new Date().toISOString().split('T')[0] ?? '';
+    if (!today) return null;
+    const seed = today.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
+    const question = skill.data.quiz[seed % skill.data.quiz.length];
+    if (!question) return null;
 
     return (
         <motion.div

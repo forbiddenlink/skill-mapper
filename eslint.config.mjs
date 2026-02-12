@@ -15,6 +15,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Ignore VS Code history folder
+    ".history/**",
+    // Ignore Codacy tools configs
+    ".codacy/**",
   ]),
   ...storybook.configs["flat/recommended"]
 ]);

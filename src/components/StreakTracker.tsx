@@ -11,7 +11,15 @@ export function StreakTracker() {
     
     // Calculate streak data
     const streakData = useMemo((): StreakData => {
-        const today = new Date().toISOString().split('T')[0]!;
+        const today = new Date().toISOString().split('T')[0] ?? '';
+        if (!today) {
+            return {
+                currentStreak: 0,
+                longestStreak: 0,
+                lastActivityDate: '',
+                activityCalendar: {}
+            };
+        }
         
         // Get stored streak data from localStorage
         const stored = localStorage.getItem('streakData');
@@ -28,7 +36,7 @@ export function StreakTracker() {
         // Update streak if active today
         if (todayActivity > 0) {
             // Check if yesterday has activity to continue streak
-            const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0]!;
+            const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0] ?? '';
             if (data.lastActivityDate === yesterday) {
                 data.currentStreak += 1;
             } else if (data.lastActivityDate !== today) {
@@ -38,7 +46,7 @@ export function StreakTracker() {
             data.longestStreak = Math.max(data.longestStreak, data.currentStreak);
         } else {
             // Check if streak is broken
-            const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0]!;
+            const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0] ?? '';
             if (data.lastActivityDate !== today && data.lastActivityDate !== yesterday) {
                 data.currentStreak = 0;
             }
@@ -55,7 +63,7 @@ export function StreakTracker() {
         for (let i = 29; i >= 0; i--) {
             const date = new Date(today);
             date.setDate(date.getDate() - i);
-            const dateStr = date.toISOString().split('T')[0]!;
+            const dateStr = date.toISOString().split('T')[0] ?? '';
             const xp = streakData.activityCalendar[dateStr] || 0;
             
             days.push({
@@ -70,7 +78,8 @@ export function StreakTracker() {
 
     // Update activity calendar when XP changes
     useEffect(() => {
-        const today = new Date().toISOString().split('T')[0]!;
+        const today = new Date().toISOString().split('T')[0] ?? '';
+        if (!today) return;
         const stored = localStorage.getItem('streakData');
         const data: StreakData = stored ? JSON.parse(stored) : {
             currentStreak: 0,
@@ -92,6 +101,8 @@ export function StreakTracker() {
         if (xp < 1000) return 'bg-green-500';
         return 'bg-green-300';
     };
+
+    const firstCalendarDay = calendarDays[0];
 
     return (
         <motion.div
@@ -140,7 +151,7 @@ export function StreakTracker() {
                 {/* Calendar grid */}
                 <div className="grid grid-cols-7 gap-1">
                     {/* Fill empty cells at start */}
-                    {calendarDays.length > 0 && Array.from({ length: calendarDays[0]!.dayOfWeek }).map((_, idx) => (
+                    {firstCalendarDay && Array.from({ length: firstCalendarDay.dayOfWeek }).map((_, idx) => (
                         <div key={`empty-${idx}`} className="aspect-square"></div>
                     ))}
                     

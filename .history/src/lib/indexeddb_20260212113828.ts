@@ -61,7 +61,7 @@ class IndexedDBHelper {
         }
     }
 
-    async loadState(): Promise<unknown> {
+    async loadState(): Promise<any | null> {
         try {
             const db = await this.getDB();
             const transaction = db.transaction([STORE_NAME], 'readonly');
@@ -129,7 +129,7 @@ class IndexedDBHelper {
         }
     }
 
-    private fallbackLoad(): unknown {
+    private fallbackLoad(): any | null {
         try {
             const data = localStorage.getItem('skill-mapper-storage');
             return data ? JSON.parse(data) : null;

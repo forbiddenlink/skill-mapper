@@ -170,6 +170,6 @@ test.describe('PWA Functionality', () => {
     });
     
     // In dev mode, SW might not be registered, so we just check if the API is available
-    expect(swRegistration !== undefined).toBeTruthy();
+    expect(typeof swRegistration !== 'undefined').toBeTruthy();
   });
 });

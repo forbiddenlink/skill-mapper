@@ -108,9 +108,9 @@ export default function KeyboardShortcutsModal() {
 
                             {/* Shortcuts List */}
                             <div className="space-y-3">
-                                {SHORTCUTS.map((shortcut) => (
+                                {SHORTCUTS.map((shortcut, index) => (
                                     <div
-                                        key={`${shortcut.key}-${shortcut.ctrlKey || ''}-${shortcut.shiftKey || ''}`}
+                                        key={index}
                                         className="flex items-center justify-between p-3 rounded bg-black/30 border border-gray-800"
                                     >
                                         <span className="text-gray-300 text-sm">

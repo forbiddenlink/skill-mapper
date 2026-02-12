@@ -201,13 +201,13 @@ function MetricCard({
     value, 
     subtitle, 
     color 
-}: Readonly<{ 
+}: { 
     icon: React.ReactNode; 
     label: string; 
     value: string; 
     subtitle?: string;
     color: string;
-}>) {
+}) {
     return (
         <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
             <div className={`${color} mb-2`}>{icon}</div>

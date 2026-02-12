@@ -67,15 +67,6 @@ export const createSkillsSlice: StateCreator<SkillsSlice> = (set, get) => ({
 
     unlockBatch: (ids) => {
         const { nodes } = get();
-        
-        // Helper function to check if prerequisites are met
-        const checkPrereqsMet = (node: SkillNode, nodeList: SkillNode[]): boolean => {
-            return node.data.prerequisites.every((reqId) => {
-                const reqNode = nodeList.find((n) => n.id === reqId);
-                return reqNode?.data.status === 'mastered';
-            });
-        };
-
         const updatedNodes = nodes.map((node) => {
             if (ids.includes(node.id)) {
                 return {
@@ -92,8 +83,10 @@ export const createSkillsSlice: StateCreator<SkillsSlice> = (set, get) => ({
 
         const nextNodes = updatedNodes.map((node) => {
             if (node.data.status === 'mastered') return node;
-            
-            const prereqsMet = checkPrereqsMet(node, updatedNodes);
+            const prereqsMet = node.data.prerequisites.every((reqId) => {
+                const reqNode = updatedNodes.find((n) => n.id === reqId);
+                return reqNode?.data.status === 'mastered';
+            });
             if (prereqsMet) {
                 return { ...node, data: { ...node.data, status: 'available' as SkillStatus } };
             }

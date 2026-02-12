@@ -55,7 +55,7 @@ test.describe('Skill Mapper - Core Functionality', () => {
       await skipButton.waitFor({ state: 'visible', timeout: 2000 });
       await skipButton.click();
       await page.waitForTimeout(500);
-    } catch {
+    } catch (e) {
       // Modal not present, continue
     }
     
@@ -170,6 +170,6 @@ test.describe('PWA Functionality', () => {
     });
     
     // In dev mode, SW might not be registered, so we just check if the API is available
-    expect(swRegistration !== undefined).toBeTruthy();
+    expect(typeof swRegistration !== 'undefined').toBeTruthy();
   });
 });

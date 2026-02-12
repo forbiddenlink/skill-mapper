@@ -174,8 +174,8 @@ export default function StatsPanel() {
                             <div className="mb-8">
                                 <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Progress by Tier</h3>
                                 <div className="space-y-3">
-                                    {tierStats.map((tier) => (
-                                        <div key={tier.name} className="bg-black/30 border border-gray-800 rounded p-3">
+                                    {tierStats.map((tier, index) => (
+                                        <div key={index} className="bg-black/30 border border-gray-800 rounded p-3">
                                             <div className="flex justify-between items-center mb-2">
                                                 <span className="text-sm text-gray-300">{tier.name}</span>
                                                 <span className="text-xs font-mono text-gray-400">
@@ -197,8 +197,8 @@ export default function StatsPanel() {
                             <div>
                                 <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Progress by Category</h3>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                    {categoryStats.map((cat) => (
-                                        <div key={cat.name} className="bg-black/30 border border-gray-800 rounded p-3">
+                                    {categoryStats.map((cat, index) => (
+                                        <div key={index} className="bg-black/30 border border-gray-800 rounded p-3">
                                             <div className="text-sm text-gray-300 mb-1">{cat.name}</div>
                                             <div className="text-xl font-bold text-white mb-2">{cat.percentage}%</div>
                                             <div className="text-xs text-gray-400">{cat.mastered} / {cat.total}</div>

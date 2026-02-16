@@ -131,7 +131,7 @@ export interface LearningPath {
     id: string;
     title: string;
     description: string;
-    icon: string;
+    icon: LucideIcon;
     skills: string[]; // Ordered list of skill IDs
     targetRole: string;
     estimatedWeeks: number;

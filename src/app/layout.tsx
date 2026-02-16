@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   applicationName: "Skill Mapper",
   keywords: ["learning", "skills", "gamification", "education", "progress tracking", "skill tree"],
   authors: [{ name: "Skill Mapper Team" }],
+  metadataBase: new URL("http://localhost:3000"),
   manifest: "/manifest.json",
   icons: {
     icon: [

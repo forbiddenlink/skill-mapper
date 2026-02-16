@@ -1,7 +1,7 @@
 'use client';
 
 import { useGameStore } from "@/lib/store";
-import { Trophy, User, Flame, Volume2, VolumeX, Save, Upload } from "lucide-react";
+import { Trophy, Flame, Volume2, VolumeX, Save, Upload } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useToast } from "./Toast";
 import { useShallow } from "zustand/react/shallow";
@@ -97,8 +97,12 @@ export default function HUD() {
             {/* User Card */}
             <section className="bg-black/80 border border-neon-cyan/50 p-3 md:p-4 rounded-lg backdrop-blur-md shadow-[0_0_20px_rgba(0,243,255,0.2)] w-56 md:w-64" aria-label="Player information">
                 <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded bg-neon-cyan/20 flex items-center justify-center border border-neon-cyan" aria-hidden="true">
-                        <User className="text-neon-cyan" />
+                    <div className="relative w-10 h-10 rounded overflow-hidden border border-neon-cyan" aria-hidden="true">
+                        <img 
+                            src="/avatars/operator.png" 
+                            alt="Operator Avatar" 
+                            className="w-full h-full object-cover"
+                        />
                     </div>
                     <div>
                         <h2 className="text-white font-display uppercase tracking-widest text-sm">Operator</h2>

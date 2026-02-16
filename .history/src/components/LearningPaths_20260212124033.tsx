@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CheckCircle2, Lock, Layout, Layers, Brain, Rocket, Smartphone, Shield } from 'lucide-react';
+import { CheckCircle2, Lock } from 'lucide-react';
 import { type LearningPath } from '@/types';
 import { useGameStore } from '@/lib/store';
 
@@ -10,7 +10,7 @@ const LEARNING_PATHS: LearningPath[] = [
         id: 'frontend-dev',
         title: 'Frontend Developer',
         description: 'Master modern web development with React, TypeScript, and Next.js',
-        icon: Layout,
+        icon: '🎨',
         skills: ['web-standards', 'es-next', 'react-core', 'tailwind', 'typescript', 'testing-quality', 'zustand', 'framer-motion', 'web-vitals', 'nextjs-app'],
         targetRole: 'Frontend Engineer',
         estimatedWeeks: 16,
@@ -20,7 +20,7 @@ const LEARNING_PATHS: LearningPath[] = [
         id: 'fullstack-dev',
         title: 'Full-Stack Developer',
         description: 'Build complete web applications from frontend to backend',
-        icon: Layers,
+        icon: '⚡',
         skills: ['web-standards', 'es-next', 'react-core', 'typescript', 'node-runtime', 'postgresql', 'rest-api', 'authentication', 'docker', 'nextjs-app', 'cloud-platforms'],
         targetRole: 'Full-Stack Engineer',
         estimatedWeeks: 24,
@@ -30,7 +30,7 @@ const LEARNING_PATHS: LearningPath[] = [
         id: 'ai-engineer',
         title: 'AI Engineer',
         description: 'Build intelligent systems with LLMs, RAG, and autonomous agents',
-        icon: Brain,
+        icon: '🤖',
         skills: ['python-core', 'postgresql', 'vector-db', 'llm-integration', 'prompt-eng', 'embeddings', 'rag-arch', 'evals', 'ai-agents', 'mlops'],
         targetRole: 'AI/ML Engineer',
         estimatedWeeks: 20,
@@ -40,7 +40,7 @@ const LEARNING_PATHS: LearningPath[] = [
         id: 'devops-sre',
         title: 'DevOps & SRE',
         description: 'Deploy, scale, and monitor production systems',
-        icon: Rocket,
+        icon: '🚀',
         skills: ['git-ops', 'node-runtime', 'docker', 'kubernetes', 'cicd', 'cloud-platforms', 'security', 'observability', 'microservices'],
         targetRole: 'DevOps Engineer / SRE',
         estimatedWeeks: 18,
@@ -50,7 +50,7 @@ const LEARNING_PATHS: LearningPath[] = [
         id: 'mobile-dev',
         title: 'Mobile Developer',
         description: 'Create native iOS/Android apps with React Native',
-        icon: Smartphone,
+        icon: '📱',
         skills: ['es-next', 'react-core', 'typescript', 'testing-quality', 'zustand', 'framer-motion', 'react-native', 'rest-api', 'authentication'],
         targetRole: 'Mobile App Developer',
         estimatedWeeks: 14,
@@ -60,7 +60,7 @@ const LEARNING_PATHS: LearningPath[] = [
         id: 'security-specialist',
         title: 'Security Specialist',
         description: 'Protect applications and infrastructure from threats',
-        icon: Shield,
+        icon: '🛡️',
         skills: ['http-fundamentals', 'rest-api', 'authentication', 'security', 'docker', 'kubernetes', 'ai-safety', 'observability'],
         targetRole: 'Security Engineer',
         estimatedWeeks: 16,
@@ -105,8 +105,7 @@ export function LearningPaths() {
                             {/* Header */}
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-3">
-                                    <path.icon className="text-white w-10 h-10" />
-
+                                    <span className="text-4xl">{path.icon}</span>
                                     <div>
                                         <h3 className="text-xl font-bold text-white">{path.title}</h3>
                                         <p className="text-sm text-white/80">{path.targetRole}</p>

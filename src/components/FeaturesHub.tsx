@@ -8,10 +8,18 @@ import { BossBattles } from './BossBattles';
 import { DailyChallenges } from './DailyChallenges';
 import { StreakTracker } from './StreakTracker';
 
+import { useGameStore } from '@/lib/store';
+
 type View = 'challenges' | 'streaks' | 'paths' | 'bosses' | null;
 
 export function FeaturesHub() {
     const [activeView, setActiveView] = useState<View>(null);
+    const selectSkill = useGameStore(state => state.selectSkill);
+
+    const handleViewChange = (view: View) => {
+        setActiveView(view);
+        if (view) selectSkill(null); // Close sidebar when opening modal
+    };
 
     const features = [
         { id: 'challenges' as View, icon: Target, label: 'Daily Challenge', color: 'from-purple-600 to-indigo-600' },
@@ -31,7 +39,7 @@ export function FeaturesHub() {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: idx * 0.1 }}
-                            onClick={() => setActiveView(feature.id)}
+                            onClick={() => handleViewChange(feature.id)}
                             className={`p-4 bg-gradient-to-r ${feature.color} rounded-lg shadow-xl hover:scale-110 transition-transform group relative overflow-hidden`}
                             title={feature.label}
                         >
@@ -56,7 +64,7 @@ export function FeaturesHub() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-6"
-                        onClick={() => setActiveView(null)}
+                        onClick={() => handleViewChange(null)}
                     >
                         <motion.div
                             initial={{ scale: 0.9, y: 20 }}
@@ -67,7 +75,7 @@ export function FeaturesHub() {
                         >
                             {/* Close button */}
                             <button
-                                onClick={() => setActiveView(null)}
+                                onClick={() => handleViewChange(null)}
                                 className="absolute -top-4 -right-4 p-3 bg-gray-800 hover:bg-gray-700 rounded-full shadow-xl transition-colors border-2 border-gray-600 z-10"
                             >
                                 <X className="text-white" size={24} />

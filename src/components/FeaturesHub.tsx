@@ -9,6 +9,7 @@ import { DailyChallenges } from './DailyChallenges';
 import { StreakTracker } from './StreakTracker';
 
 import { useGameStore } from '@/lib/store';
+import { useDialogA11y } from '@/hooks/use-dialog-a11y';
 
 type View = 'challenges' | 'streaks' | 'paths' | 'bosses' | null;
 
@@ -20,34 +21,39 @@ export function FeaturesHub() {
         setActiveView(view);
         if (view) selectSkill(null); // Close sidebar when opening modal
     };
+    const closeHub = () => handleViewChange(null);
+    const dialogRef = useDialogA11y<HTMLDivElement>(Boolean(activeView), closeHub);
 
     const features = [
-        { id: 'challenges' as View, icon: Target, label: 'Daily Challenge', color: 'from-purple-600 to-indigo-600' },
-        { id: 'streaks' as View, icon: Flame, label: 'Streaks', color: 'from-orange-600 to-red-600' },
-        { id: 'paths' as View, icon: Map, label: 'Learning Paths', color: 'from-blue-600 to-cyan-600' },
-        { id: 'bosses' as View, icon: Trophy, label: 'Boss Battles', color: 'from-red-600 to-purple-600' },
+        { id: 'challenges' as View, icon: Target, label: 'Daily Challenge', tone: 'text-neon-cyan' },
+        { id: 'streaks' as View, icon: Flame, label: 'Streaks', tone: 'text-warning-amber' },
+        { id: 'paths' as View, icon: Map, label: 'Learning Paths', tone: 'text-electric-green' },
+        { id: 'bosses' as View, icon: Trophy, label: 'Boss Battles', tone: 'text-plasma-pink' },
     ];
+    const activeLabel = features.find((feature) => feature.id === activeView)?.label ?? 'Features Hub';
 
     return (
         <>
             {/* Features Button - Bottom Left */}
-            <div className="fixed bottom-6 left-6 z-40">
-                <div className="flex flex-col gap-3">
+            <div className="fixed bottom-6 left-6 z-30 md:bottom-8 md:left-6">
+                <div className="flex flex-col gap-2">
                     {features.map((feature, idx) => (
                         <motion.button
                             key={feature.id}
-                            initial={{ opacity: 0, x: -20 }}
+                            type="button"
+                            initial={{ opacity: 0, x: -12 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: idx * 0.1 }}
+                            transition={{ delay: idx * 0.08 }}
                             onClick={() => handleViewChange(feature.id)}
-                            className={`p-4 bg-gradient-to-r ${feature.color} rounded-lg shadow-xl hover:scale-110 transition-transform group relative overflow-hidden`}
+                            className="icon-btn group relative grid place-items-center overflow-visible"
                             title={feature.label}
+                            aria-label={feature.label}
                         >
-                            <feature.icon className="text-white" size={24} />
+                            <feature.icon className={feature.tone} size={20} />
                             
                             {/* Hover tooltip */}
-                            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                                <div className="bg-gray-900 text-white px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap border border-gray-700">
+                            <div className="pointer-events-none absolute left-full top-1/2 ml-3 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100">
+                                <div className="panel-base whitespace-nowrap px-3 py-2 text-sm font-medium text-white">
                                     {feature.label}
                                 </div>
                             </div>
@@ -63,26 +69,36 @@ export function FeaturesHub() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-6"
+                        className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm p-4 md:p-6"
                         onClick={() => handleViewChange(null)}
                     >
                         <motion.div
-                            initial={{ scale: 0.9, y: 20 }}
+                            initial={{ scale: 0.96, y: 12 }}
                             animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.9, y: 20 }}
+                            exit={{ scale: 0.96, y: 12 }}
+                            ref={dialogRef}
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="features-hub-title"
+                            tabIndex={-1}
                             className="max-w-7xl mx-auto relative"
                             onClick={(e) => e.stopPropagation()}
                         >
+                            <h2 id="features-hub-title" className="sr-only">
+                                {activeLabel}
+                            </h2>
                             {/* Close button */}
                             <button
+                                type="button"
                                 onClick={() => handleViewChange(null)}
-                                className="absolute -top-4 -right-4 p-3 bg-gray-800 hover:bg-gray-700 rounded-full shadow-xl transition-colors border-2 border-gray-600 z-10"
+                                className="icon-btn absolute -right-2 -top-2 z-10 grid place-items-center"
+                                aria-label="Close features hub"
                             >
-                                <X className="text-white" size={24} />
+                                <X className="text-white" size={20} />
                             </button>
 
                             {/* Content */}
-                            <div className="bg-gray-900 rounded-2xl p-8 shadow-2xl border border-gray-700">
+                            <div className="modal-shell p-4 md:p-8">
                                 {activeView === 'challenges' && <DailyChallenges />}
                                 {activeView === 'streaks' && <StreakTracker />}
                                 {activeView === 'paths' && <LearningPaths />}

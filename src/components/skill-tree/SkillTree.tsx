@@ -113,7 +113,7 @@ export default function SkillTreeCanvas() {
     }, [nodes, selectedSkillId, selectSkill, playClick]);
 
     return (
-        <div className="w-full h-full bg-deep-void">
+        <div className="h-full w-full bg-transparent" data-skill-tree>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -123,12 +123,12 @@ export default function SkillTreeCanvas() {
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
                 fitView
-                className="bg-deep-void"
+                className="bg-transparent"
 
                 proOptions={{ hideAttribution: true }}
             >
-                <Background gap={20} color="#333" className="opacity-20" />
-                <Controls className="bg-gray-800 border-gray-700 fill-white" />
+                <Background gap={24} color="rgba(148,163,184,0.25)" className="opacity-20" />
+                <Controls className="!bg-surface-2 !border !border-white/20 !rounded-[12px] !fill-slate-200" />
                 <MiniMap
                     nodeColor={(node) => {
                         switch (node.data.status) {
@@ -138,11 +138,10 @@ export default function SkillTreeCanvas() {
                         }
                     }}
                     maskColor="rgba(0,0,0, 0.7)"
-                    className="border-2 border-gray-800 rounded bg-black"
+                    className="!border !border-white/20 !rounded-[12px] !bg-surface-1"
                     ariaLabel="Skill tree minimap overview"
                 />
             </ReactFlow>
         </div>
     );
 }
-

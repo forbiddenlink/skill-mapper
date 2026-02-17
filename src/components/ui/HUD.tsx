@@ -93,11 +93,11 @@ export default function HUD() {
     };
 
     return (
-        <aside className="fixed top-2 left-2 md:top-4 md:left-4 z-50 flex flex-col gap-2 md:gap-4 pointer-events-none" aria-label="Game statistics">
+        <aside className="pointer-events-none fixed left-4 top-4 z-30 flex flex-col gap-3 md:left-6 md:top-6" aria-label="Game statistics">
             {/* User Card */}
-            <section className="bg-black/80 border border-neon-cyan/50 p-3 md:p-4 rounded-lg backdrop-blur-md shadow-[0_0_20px_rgba(0,243,255,0.2)] w-56 md:w-64" aria-label="Player information">
-                <div className="flex items-center gap-3 mb-2">
-                    <div className="relative w-10 h-10 rounded overflow-hidden border border-neon-cyan" aria-hidden="true">
+            <section className="panel-strong w-64 p-4 md:w-[17rem]" aria-label="Player information">
+                <div className="mb-3 flex items-center gap-3">
+                    <div className="relative h-10 w-10 overflow-hidden rounded-md border border-neon-cyan/60" aria-hidden="true">
                         <img 
                             src="/avatars/operator.png" 
                             alt="Operator Avatar" 
@@ -105,8 +105,8 @@ export default function HUD() {
                         />
                     </div>
                     <div>
-                        <h2 className="text-white font-display uppercase tracking-widest text-sm">Operator</h2>
-                        <div className="text-xs text-gray-400 font-mono">Level {level} Architect</div>
+                        <h2 className="text-sm font-semibold tracking-wide text-white">Operator</h2>
+                        <div className="font-mono text-xs text-text-muted">Level {level} Architect</div>
                     </div>
 
                     {/* Controls Row */}
@@ -114,7 +114,7 @@ export default function HUD() {
                         <button
                             type="button"
                             onClick={handleSave}
-                            className="p-1.5 rounded hover:bg-gray-800 text-gray-400 hover:text-white transition-colors"
+                            className="icon-btn grid place-items-center"
                             title="Export Save"
                             aria-label="Export progress to file"
                         >
@@ -123,7 +123,7 @@ export default function HUD() {
                         <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className="p-1.5 rounded hover:bg-gray-800 text-gray-400 hover:text-white transition-colors"
+                            className="icon-btn grid place-items-center"
                             title="Import Save"
                             aria-label="Import progress from file"
                         >
@@ -133,7 +133,7 @@ export default function HUD() {
                             <button
                                 type="button"
                                 onClick={toggleSound}
-                                className="p-1.5 rounded hover:bg-gray-800 text-gray-400 hover:text-white transition-colors"
+                                className="icon-btn grid place-items-center"
                                 title="Mute Sounds"
                                 aria-label="Mute sound effects"
                                 aria-pressed="true"
@@ -144,7 +144,7 @@ export default function HUD() {
                             <button
                                 type="button"
                                 onClick={toggleSound}
-                                className="p-1.5 rounded hover:bg-gray-800 text-gray-400 hover:text-white transition-colors"
+                                className="icon-btn grid place-items-center"
                                 title="Enable Sounds"
                                 aria-label="Enable sound effects"
                                 aria-pressed="false"
@@ -167,7 +167,7 @@ export default function HUD() {
                 />
 
                 {/* XP Bar */}
-                <div className="w-full bg-gray-900 h-2 rounded-full overflow-hidden border border-gray-700 relative">
+                <div className="relative h-2 w-full overflow-hidden rounded-full border border-white/15 bg-black/30">
                     <progress 
                         value={progress} 
                         max={100} 
@@ -176,18 +176,18 @@ export default function HUD() {
                     />
                     <div
                         ref={progressBarRef}
-                        className="xp-progress-fill h-full bg-neon-cyan shadow-[0_0_10px_var(--neon-cyan)] transition-all duration-1000 ease-out"
+                        className="xp-progress-fill h-full bg-neon-cyan transition-all duration-700 ease-out"
                         aria-hidden="true"
                     />
                 </div>
-                <div className="flex justify-between text-[10px] uppercase font-mono text-gray-400 mt-1">
+                <div className="mt-1 flex justify-between text-[10px] font-mono uppercase text-text-muted">
                     <span>XP: {xp}</span>
                     <span>Next Lvl: {(level) * 1000}</span>
                 </div>
             </section>
 
             {/* Stats / Achievements */}
-            <section className="bg-black/60 border border-gray-800 p-2 rounded flex gap-2 md:gap-4 text-gray-400 text-xs font-mono" aria-label="Achievements and streaks">
+            <section className="panel-base flex gap-3 p-3 text-xs font-mono text-text-muted" aria-label="Achievements and streaks">
                 <div className="flex items-center gap-2">
                     <Trophy className="w-3 h-3 text-yellow-500" aria-hidden="true" />
                     <span className="text-white">{unlockedBadges.length} Badges</span>

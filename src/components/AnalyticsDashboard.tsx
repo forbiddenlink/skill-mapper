@@ -9,9 +9,12 @@ import {
 } from 'lucide-react';
 import { useKeyboardShortcut } from '@/hooks/use-keyboard-shortcuts';
 import { useShallow } from 'zustand/react/shallow';
+import { useDialogA11y } from '@/hooks/use-dialog-a11y';
 
 export default function AnalyticsDashboard() {
     const [isOpen, setIsOpen] = useState(false);
+    const closeDashboard = () => setIsOpen(false);
+    const dialogRef = useDialogA11y<HTMLDivElement>(isOpen, closeDashboard);
     
     const { nodes, userXP, streak, lastVisit } = useGameStore(
         useShallow((state) => ({
@@ -22,7 +25,7 @@ export default function AnalyticsDashboard() {
         }))
     );
 
-    useKeyboardShortcut('Escape', () => setIsOpen(false), { enabled: isOpen });
+    useKeyboardShortcut('Escape', closeDashboard, { enabled: isOpen });
 
     // Calculate analytics
     const totalSkills = nodes.length;
@@ -70,7 +73,7 @@ export default function AnalyticsDashboard() {
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-36 right-4 z-50 p-3 bg-gray-900 border border-gray-700 rounded-full hover:border-electric-green hover:text-electric-green transition-colors text-gray-400 shadow-lg"
+                className="icon-btn fixed bottom-[10rem] right-6 z-30 grid place-items-center md:bottom-[10.5rem] md:right-6"
                 title="Analytics Dashboard"
                 aria-label="Open analytics dashboard"
             >
@@ -79,30 +82,34 @@ export default function AnalyticsDashboard() {
 
             <AnimatePresence>
                 {isOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
                         <motion.div
-                            initial={{ scale: 0.95, opacity: 0 }}
+                            initial={{ scale: 0.96, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            className="bg-gray-900 border border-gray-700 rounded-xl p-6 max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+                            exit={{ scale: 0.96, opacity: 0 }}
+                            ref={dialogRef}
+                            className="modal-shell max-h-[90vh] w-full max-w-5xl overflow-y-auto p-4 md:p-6"
                             role="dialog"
                             aria-labelledby="analytics-title"
+                            aria-modal="true"
+                            tabIndex={-1}
                         >
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-electric-green/10 rounded border border-electric-green/30 text-electric-green">
+                                    <div className="grid h-10 w-10 place-items-center rounded-[12px] border border-electric-green/35 bg-electric-green/10 text-electric-green">
                                         <TrendingUp size={24} />
                                     </div>
-                                    <h2 id="analytics-title" className="text-xl font-bold text-white font-display">
+                                    <h2 id="analytics-title" className="text-xl font-semibold text-white">
                                         Learning Analytics
                                     </h2>
                                 </div>
                                 <button
-                                    onClick={() => setIsOpen(false)}
-                                    className="text-gray-400 hover:text-white transition-colors p-1"
+                                    type="button"
+                                    onClick={closeDashboard}
+                                    className="icon-btn grid place-items-center"
                                     aria-label="Close analytics"
                                 >
-                                    <X size={24} />
+                                    <X size={20} />
                                 </button>
                             </div>
 
@@ -143,14 +150,14 @@ export default function AnalyticsDashboard() {
                                 </h3>
                                 <div className="space-y-3">
                                     {categoryData.map(cat => (
-                                        <div key={cat.name} className="bg-gray-800/50 rounded-lg p-3">
+                                        <div key={cat.name} className="panel-base p-3">
                                             <div className="flex justify-between items-center mb-2">
                                                 <span className="text-sm font-medium text-gray-300">{cat.name}</span>
                                                 <span className="text-sm text-gray-400">
                                                     {cat.mastered}/{cat.total} ({cat.percentage}%)
                                                 </span>
                                             </div>
-                                            <div className="w-full bg-gray-700 rounded-full h-2">
+                                            <div className="h-2 w-full rounded-full bg-black/35">
                                                 <div
                                                     className="bg-neon-cyan h-2 rounded-full transition-all"
                                                     style={{ width: `${cat.percentage}%` }}
@@ -170,7 +177,7 @@ export default function AnalyticsDashboard() {
                                 <div className="space-y-2">
                                     {recentActivity.length > 0 ? (
                                         recentActivity.map(node => (
-                                            <div key={node.id} className="bg-gray-800/50 rounded-lg p-3 flex justify-between items-center">
+                                            <div key={node.id} className="panel-base flex items-center justify-between p-3">
                                                 <div className="flex items-center gap-3">
                                                     <Award size={16} className="text-plasma-pink" />
                                                     <span className="text-sm text-gray-300">{node.data.title}</span>
@@ -209,7 +216,7 @@ function MetricCard({
     color: string;
 }>) {
     return (
-        <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+        <div className="metric-card p-4">
             <div className={`${color} mb-2`}>{icon}</div>
             <div className="text-2xl font-bold text-white mb-1">{value}</div>
             <div className="text-xs text-gray-400">{label}</div>

@@ -16,23 +16,25 @@ import { FeaturesHub } from "@/components/FeaturesHub";
 export default function Home() {
   return (
     <ErrorBoundary>
-      <main className="w-full h-screen relative bg-deep-void overflow-hidden">
-        <LiveRegions />
-        <MilestoneCelebrations />
-        <ToastContainer />
-        <KeyboardShortcutsModal />
-        <StatsPanel />
-        <AnalyticsDashboard />
-        <RecommendedSkills />
-        <FeaturesHub />
-        <OnboardingModal />
-        <BadgeNotification />
-        <HUD />
-        <SkillDetailsPanel />
-        <SkillTreeCanvas />
+      <main className="app-shell relative h-screen w-full overflow-hidden bg-deep-void">
+        <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_12%_8%,rgba(46,211,255,0.12),transparent_35%),radial-gradient(circle_at_86%_84%,rgba(200,92,255,0.12),transparent_34%)]" />
+        <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_bottom,rgba(148,163,184,0.06)_1px,transparent_1px),linear-gradient(to_right,rgba(148,163,184,0.06)_1px,transparent_1px)] bg-[size:48px_48px] opacity-20" />
 
-        {/* Background Decor */}
-        <div className="absolute inset-0 pointer-events-none z-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0a0a0a_100%)] opacity-80" />
+        <div className="relative z-10 h-full w-full">
+          <SkillTreeCanvas />
+          <LiveRegions />
+          <MilestoneCelebrations />
+          <ToastContainer />
+          <KeyboardShortcutsModal />
+          <StatsPanel />
+          <AnalyticsDashboard />
+          <RecommendedSkills />
+          <FeaturesHub />
+          <OnboardingModal />
+          <BadgeNotification />
+          <HUD />
+          <SkillDetailsPanel />
+        </div>
       </main>
     </ErrorBoundary>
   );

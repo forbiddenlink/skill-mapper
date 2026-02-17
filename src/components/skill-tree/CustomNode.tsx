@@ -64,14 +64,14 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
                 transformStyle: "preserve-3d",
             }}
             className={clsx(
-                "relative w-48 h-24 rounded-lg border-2 transition-colors duration-300 backdrop-blur-md flex items-center justify-center p-2 group overflow-visible perspective-1000",
+                "perspective-1000 group relative flex h-[92px] w-44 items-center justify-center overflow-visible rounded-[12px] border p-2 backdrop-blur-md transition-colors duration-200",
                 // Status Styles
-                isLocked && "border-gray-800 bg-gray-900/50 text-gray-400",
-                isAvailable && "border-neon-cyan bg-deep-void/80 shadow-[0_0_10px_var(--neon-cyan)] cursor-pointer",
-                isMastered && "border-plasma-pink bg-plasma-pink/10 shadow-[0_0_15px_var(--plasma-pink)] text-white",
-                isDecayed && "border-alert-red bg-alert-red/10 shadow-[0_0_15px_var(--alert-red)] text-gray-300",
+                isLocked && "border-white/15 bg-surface-1/85 text-gray-400",
+                isAvailable && "cursor-pointer border-neon-cyan/60 bg-surface-2/80 shadow-[0_6px_16px_rgba(0,0,0,0.26)]",
+                isMastered && "border-plasma-pink/65 bg-plasma-pink/10 text-white shadow-[0_6px_16px_rgba(0,0,0,0.3)]",
+                isDecayed && "border-alert-red/70 bg-alert-red/10 text-gray-300 shadow-[0_6px_16px_rgba(0,0,0,0.3)]",
                 // Selection
-                selected && "ring-2 ring-white ring-offset-2 ring-offset-black"
+                selected && "ring-2 ring-neon-cyan ring-offset-2 ring-offset-deep-void"
             )}
         >
             {/* Glare Effect */}
@@ -81,13 +81,13 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
                         background: `radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.3) 0%, transparent 50%)`,
                         opacity: glareOpacity
                     }}
-                    className="absolute inset-0 rounded-lg pointer-events-none z-20 mix-blend-overlay"
+                    className="pointer-events-none absolute inset-0 z-20 rounded-[12px] mix-blend-overlay"
                 />
             )}
 
             {/* Decayed Texture */}
             {isDecayed && (
-                <div className="absolute inset-0 z-0 opacity-30 pointer-events-none bg-[repeating-linear-gradient(45deg,_#ff000040_0px,_#ff000040_10px,_transparent_10px,_transparent_20px)] rounded-lg" />
+                <div className="pointer-events-none absolute inset-0 z-0 rounded-[12px] bg-[repeating-linear-gradient(45deg,_#ff000040_0px,_#ff000040_10px,_transparent_10px,_transparent_20px)] opacity-30" />
             )}
 
             {/* Input Handle (Top) */}
@@ -103,22 +103,22 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
             <div className="flex flex-col items-center text-center gap-1 z-10 transform-style-3d translate-z-10">
                 <div className="mb-1">
                     {isLocked && <Lock className="w-5 h-5" />}
-                    {isAvailable && <Zap className="w-6 h-6 text-neon-cyan animate-bounce" />}
+                    {isAvailable && <Zap className="h-5 w-5 text-neon-cyan" />}
                     {isMastered && <ShieldCheck className="w-6 h-6 text-plasma-pink" />}
                     {status === 'in-progress' && <BookOpen className="w-5 h-5 text-electric-green" />}
-                    {isDecayed && <TriangleAlert className="w-6 h-6 text-alert-red animate-pulse" />}
+                    {isDecayed && <TriangleAlert className="h-5 w-5 text-alert-red" />}
                 </div>
 
                 <h3 className={clsx(
-                    "font-display text-xs uppercase tracking-wider translate-z-20", // Extra pop for text
+                    "line-clamp-2 translate-z-20 px-1 text-xs font-medium tracking-wide",
                     isLocked ? "text-gray-400" : "text-gray-100"
                 )}>
                     {title}
                 </h3>
 
                 <span className={clsx(
-                    "text-[10px] uppercase font-mono px-2 py-0.5 rounded",
-                    isLocked ? "bg-gray-800 text-gray-400" : "bg-white/10"
+                    "rounded-[8px] px-2 py-0.5 font-mono text-[10px] uppercase",
+                    isLocked ? "bg-gray-800 text-gray-400" : "bg-black/20 text-text-muted"
                 )}>
                     {tier}
                 </span>
@@ -136,7 +136,7 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
 
             {/* Hover Information */}
             {!isLocked && (
-                <div className="absolute -bottom-8 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] text-neon-cyan bg-black/80 px-2 py-1 rounded border border-neon-cyan/30 whitespace-nowrap pointer-events-none z-30 transform translate-z-30">
+                <div className="pointer-events-none absolute -bottom-8 z-30 whitespace-nowrap rounded-[8px] border border-neon-cyan/35 bg-black/75 px-2 py-1 text-[10px] text-neon-cyan opacity-0 transition-opacity translate-z-30 group-hover:opacity-100">
                     Click to View Details
                 </div>
             )}

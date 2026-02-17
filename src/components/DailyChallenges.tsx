@@ -83,8 +83,8 @@ export function DailyChallenges() {
 
     if (!dailyChallenge) {
         return (
-            <div className="p-4 bg-gradient-to-br from-purple-900 to-indigo-900 rounded-lg border border-purple-500">
-                <p className="text-gray-300 text-center">No challenge available today. Check back tomorrow!</p>
+            <div className="panel-base p-4">
+                <p className="text-center text-text-muted">No challenge available today. Check back tomorrow!</p>
             </div>
         );
     }
@@ -102,19 +102,21 @@ export function DailyChallenges() {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 bg-gradient-to-br from-purple-900 to-indigo-900 rounded-lg border-2 border-purple-500 shadow-2xl"
+            className="panel-strong p-4 md:p-6"
         >
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                    <Trophy className="text-yellow-400" size={28} />
+                    <div className="grid h-10 w-10 place-items-center rounded-[12px] border border-warning-amber/35 bg-warning-amber/10">
+                        <Trophy className="text-warning-amber" size={20} />
+                    </div>
                     <div>
-                        <h3 className="text-xl font-bold text-white">{dailyChallenge.title}</h3>
-                        <p className="text-sm text-gray-300">Complete for +{dailyChallenge.xpBonus} XP bonus!</p>
+                        <h3 className="text-xl font-semibold text-white">{dailyChallenge.title}</h3>
+                        <p className="text-sm text-text-muted">Complete for +{dailyChallenge.xpBonus} XP bonus.</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-2 bg-black/30 px-3 py-1 rounded-full">
-                    <Clock className="text-orange-400" size={16} />
-                    <span className="text-sm font-semibold text-orange-300">{timeRemaining}</span>
+                <div className="flex items-center gap-2 rounded-full border border-white/20 bg-black/20 px-3 py-1">
+                    <Clock className="text-text-muted" size={16} />
+                    <span className="text-sm font-semibold text-gray-200">{timeRemaining}</span>
                 </div>
             </div>
 
@@ -126,7 +128,7 @@ export function DailyChallenges() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                     >
-                        <div className="bg-black/30 p-4 rounded-lg mb-4">
+                        <div className="panel-base mb-4 p-4">
                             <p className="text-lg text-white mb-4">{question.question}</p>
                             <div className="space-y-2">
                                 {question.options.map((option, idx) => (
@@ -138,23 +140,23 @@ export function DailyChallenges() {
                                             }
                                         }}
                                         disabled={showResult}
-                                        className={`w-full p-3 rounded-lg text-left transition-all ${
+                                        className={`w-full rounded-[12px] border p-3 text-left transition-all ${
                                             selectedAnswer === idx
                                                 ? showResult
                                                     ? idx === question.correctIndex
-                                                        ? 'bg-green-600 border-green-400'
-                                                        : 'bg-red-600 border-red-400'
-                                                    : 'bg-purple-600 border-purple-400'
-                                                : 'bg-gray-800 hover:bg-gray-700 border-gray-600'
-                                        } border-2`}
+                                                        ? 'border-electric-green/60 bg-electric-green/20'
+                                                        : 'border-alert-red/60 bg-alert-red/20'
+                                                    : 'border-neon-cyan/55 bg-neon-cyan/15'
+                                                : 'border-white/20 bg-black/20 hover:border-neon-cyan/45 hover:bg-white/5'
+                                        }`}
                                     >
                                         <div className="flex items-center justify-between">
                                             <span className="text-white">{option}</span>
                                             {showResult && idx === question.correctIndex && (
-                                                <CheckCircle2 className="text-green-300" size={20} />
+                                                <CheckCircle2 className="text-electric-green" size={20} />
                                             )}
                                             {showResult && selectedAnswer === idx && idx !== question.correctIndex && (
-                                                <XCircle className="text-red-300" size={20} />
+                                                <XCircle className="text-alert-red" size={20} />
                                             )}
                                         </div>
                                     </button>
@@ -166,7 +168,7 @@ export function DailyChallenges() {
                             <button
                                 onClick={handleAnswerSubmit}
                                 disabled={selectedAnswer === null}
-                                className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-semibold text-white flex items-center justify-center gap-2 transition-all"
+                                className="btn-primary flex w-full items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 <Zap size={20} />
                                 Submit Answer
@@ -174,8 +176,8 @@ export function DailyChallenges() {
                         )}
 
                         {showResult && !challengeCompleted && (
-                            <div className="p-4 bg-red-900/50 border border-red-500 rounded-lg">
-                                <p className="text-red-200">Incorrect! Try again tomorrow for a new challenge.</p>
+                            <div className="rounded-[12px] border border-alert-red/45 bg-alert-red/10 p-4">
+                                <p className="text-alert-red">Incorrect. Try again tomorrow for a new challenge.</p>
                             </div>
                         )}
                     </motion.div>
@@ -184,12 +186,12 @@ export function DailyChallenges() {
                         key="completed"
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="p-6 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg text-center"
+                        className="rounded-[12px] border border-electric-green/45 bg-electric-green/10 p-6 text-center"
                     >
-                        <CheckCircle2 className="mx-auto mb-3 text-white" size={48} />
-                        <h4 className="text-2xl font-bold text-white mb-2">Challenge Complete! 🎉</h4>
-                        <p className="text-green-100">You earned +{dailyChallenge.xpBonus} bonus XP!</p>
-                        <p className="text-sm text-green-200 mt-2">Come back tomorrow for a new challenge</p>
+                        <CheckCircle2 className="mx-auto mb-3 text-electric-green" size={48} />
+                        <h4 className="mb-2 text-2xl font-semibold text-white">Challenge Complete</h4>
+                        <p className="text-gray-100">You earned +{dailyChallenge.xpBonus} bonus XP.</p>
+                        <p className="mt-2 text-sm text-text-muted">Come back tomorrow for a new challenge.</p>
                     </motion.div>
                 )}
             </AnimatePresence>

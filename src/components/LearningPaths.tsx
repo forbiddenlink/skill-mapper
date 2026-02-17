@@ -14,7 +14,7 @@ const LEARNING_PATHS: LearningPath[] = [
         skills: ['web-standards', 'es-next', 'react-core', 'tailwind', 'typescript', 'testing-quality', 'zustand', 'framer-motion', 'web-vitals', 'nextjs-app'],
         targetRole: 'Frontend Engineer',
         estimatedWeeks: 16,
-        color: 'from-blue-600 to-cyan-600'
+        color: 'border-neon-cyan/55'
     },
     {
         id: 'fullstack-dev',
@@ -24,7 +24,7 @@ const LEARNING_PATHS: LearningPath[] = [
         skills: ['web-standards', 'es-next', 'react-core', 'typescript', 'node-runtime', 'postgresql', 'rest-api', 'authentication', 'docker', 'nextjs-app', 'cloud-platforms'],
         targetRole: 'Full-Stack Engineer',
         estimatedWeeks: 24,
-        color: 'from-purple-600 to-pink-600'
+        color: 'border-plasma-pink/55'
     },
     {
         id: 'ai-engineer',
@@ -34,7 +34,7 @@ const LEARNING_PATHS: LearningPath[] = [
         skills: ['python-core', 'postgresql', 'vector-db', 'llm-integration', 'prompt-eng', 'embeddings', 'rag-arch', 'evals', 'ai-agents', 'mlops'],
         targetRole: 'AI/ML Engineer',
         estimatedWeeks: 20,
-        color: 'from-green-600 to-emerald-600'
+        color: 'border-electric-green/55'
     },
     {
         id: 'devops-sre',
@@ -44,7 +44,7 @@ const LEARNING_PATHS: LearningPath[] = [
         skills: ['git-ops', 'node-runtime', 'docker', 'kubernetes', 'cicd', 'cloud-platforms', 'security', 'observability', 'microservices'],
         targetRole: 'DevOps Engineer / SRE',
         estimatedWeeks: 18,
-        color: 'from-orange-600 to-red-600'
+        color: 'border-warning-amber/55'
     },
     {
         id: 'mobile-dev',
@@ -54,7 +54,7 @@ const LEARNING_PATHS: LearningPath[] = [
         skills: ['es-next', 'react-core', 'typescript', 'testing-quality', 'zustand', 'framer-motion', 'react-native', 'rest-api', 'authentication'],
         targetRole: 'Mobile App Developer',
         estimatedWeeks: 14,
-        color: 'from-indigo-600 to-purple-600'
+        color: 'border-indigo-400/55'
     },
     {
         id: 'security-specialist',
@@ -64,7 +64,7 @@ const LEARNING_PATHS: LearningPath[] = [
         skills: ['http-fundamentals', 'rest-api', 'authentication', 'security', 'docker', 'kubernetes', 'ai-safety', 'observability'],
         targetRole: 'Security Engineer',
         estimatedWeeks: 16,
-        color: 'from-red-600 to-rose-600'
+        color: 'border-alert-red/55'
     }
 ];
 
@@ -82,8 +82,8 @@ export function LearningPaths() {
     return (
         <div className="space-y-6">
             <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-white mb-2">Learning Paths</h2>
-                <p className="text-gray-300">Choose your journey and follow a structured roadmap to your dream role</p>
+                <h2 className="mb-2 text-3xl font-semibold text-white">Learning Paths</h2>
+                <p className="text-text-muted">Choose your journey and follow a structured roadmap to your dream role</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -98,18 +98,20 @@ export function LearningPaths() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: idx * 0.1 }}
-                            className={`p-6 bg-gradient-to-br ${path.color} rounded-lg border-2 ${
-                                isStarted ? 'border-yellow-400' : 'border-white/20'
-                            } shadow-xl hover:scale-105 transition-transform cursor-pointer`}
+                            className={`panel-base cursor-pointer p-5 transition-transform hover:-translate-y-0.5 ${
+                                isStarted ? path.color : 'border-white/20'
+                            }`}
                         >
                             {/* Header */}
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-3">
-                                    <path.icon className="text-white w-10 h-10" />
+                                    <div className="grid h-10 w-10 place-items-center rounded-[12px] border border-white/20 bg-black/20">
+                                        <path.icon className="h-5 w-5 text-white" />
+                                    </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold text-white">{path.title}</h3>
-                                        <p className="text-sm text-white/80">{path.targetRole}</p>
+                                        <h3 className="text-xl font-semibold text-white">{path.title}</h3>
+                                        <p className="text-sm text-text-muted">{path.targetRole}</p>
                                     </div>
                                 </div>
                                 {isCompleted && (
@@ -124,15 +126,15 @@ export function LearningPaths() {
                             </div>
 
                             {/* Description */}
-                            <p className="text-white/90 text-sm mb-4">{path.description}</p>
+                            <p className="mb-4 text-sm text-gray-200">{path.description}</p>
 
                             {/* Stats */}
                             <div className="flex items-center justify-between mb-4 text-sm">
-                                <div className="bg-black/30 px-3 py-1 rounded-full">
-                                    <span className="text-white/90">⏱️ {path.estimatedWeeks} weeks</span>
+                                <div className="rounded-full border border-white/20 bg-black/20 px-3 py-1">
+                                    <span className="text-gray-100">{path.estimatedWeeks} weeks</span>
                                 </div>
-                                <div className="bg-black/30 px-3 py-1 rounded-full">
-                                    <span className="text-white/90">📚 {path.skills.length} skills</span>
+                                <div className="rounded-full border border-white/20 bg-black/20 px-3 py-1">
+                                    <span className="text-gray-100">{path.skills.length} skills</span>
                                 </div>
                             </div>
 
@@ -142,12 +144,12 @@ export function LearningPaths() {
                                     <span className="text-sm font-semibold text-white">Progress</span>
                                     <span className="text-sm font-bold text-white">{progress}%</span>
                                 </div>
-                                <div className="h-2 bg-black/30 rounded-full overflow-hidden">
+                                <div className="h-2 overflow-hidden rounded-full bg-black/35">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${progress}%` }}
                                         transition={{ duration: 1, delay: idx * 0.1 }}
-                                        className="h-full bg-gradient-to-r from-yellow-400 to-yellow-200"
+                                        className="h-full bg-gradient-to-r from-neon-cyan to-plasma-pink"
                                     />
                                 </div>
                             </div>
@@ -163,10 +165,10 @@ export function LearningPaths() {
                                     return (
                                         <div
                                             key={skillId}
-                                            className="flex items-center gap-2 text-sm text-white/90 bg-black/20 px-3 py-2 rounded"
+                                            className="flex items-center gap-2 rounded-[10px] border border-white/15 bg-black/20 px-3 py-2 text-sm text-gray-100"
                                         >
                                             {isMastered ? (
-                                                <CheckCircle2 className="text-green-400" size={16} />
+                                                <CheckCircle2 className="text-electric-green" size={16} />
                                             ) : isAvailable ? (
                                                 <div className="w-4 h-4 rounded-full border-2 border-white/60" />
                                             ) : (
@@ -177,13 +179,13 @@ export function LearningPaths() {
                                     );
                                 })}
                                 {path.skills.length > 3 && (
-                                    <p className="text-xs text-white/60 text-center">+ {path.skills.length - 3} more skills</p>
+                                    <p className="text-center text-xs text-text-muted">+ {path.skills.length - 3} more skills</p>
                                 )}
                             </div>
 
                             {/* CTA */}
-                            <button className="w-full mt-4 py-3 bg-white/20 hover:bg-white/30 backdrop-blur rounded-lg font-semibold text-white transition-all">
-                                {isCompleted ? '🏆 Completed!' : isStarted ? 'Continue Path' : 'Start Journey'}
+                            <button className="btn-ghost mt-4 flex w-full items-center justify-center font-semibold">
+                                {isCompleted ? 'Completed' : isStarted ? 'Continue Path' : 'Start Journey'}
                             </button>
                         </motion.div>
                     );

@@ -81,10 +81,10 @@ function ToastItem({ toast }: { toast: Toast }) {
     };
 
     const colors = {
-        success: 'bg-green-500/10 border-green-500 text-green-500',
-        error: 'bg-red-500/10 border-red-500 text-red-500',
-        info: 'bg-blue-500/10 border-blue-500 text-blue-500',
-        warning: 'bg-orange-500/10 border-orange-500 text-orange-500',
+        success: 'bg-electric-green/10 border-electric-green/55 text-electric-green',
+        error: 'bg-alert-red/10 border-alert-red/55 text-alert-red',
+        info: 'bg-neon-cyan/10 border-neon-cyan/55 text-neon-cyan',
+        warning: 'bg-warning-amber/10 border-warning-amber/55 text-warning-amber',
     };
 
     const Icon = icons[toast.type];
@@ -94,13 +94,15 @@ function ToastItem({ toast }: { toast: Toast }) {
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, x: 100, scale: 0.95 }}
-            className={`flex items-center gap-3 p-4 rounded-lg border backdrop-blur-md shadow-lg min-w-[300px] max-w-md ${colors[toast.type]}`}
+            className={`flex min-w-[300px] max-w-md items-start justify-between gap-3 rounded-[12px] border p-4 shadow-lg backdrop-blur-md ${colors[toast.type]}`}
         >
-            <Icon className="w-5 h-5 flex-shrink-0" />
-            <p className="flex-1 text-sm font-medium text-white">{toast.message}</p>
+            <div className="flex items-center gap-3">
+                <Icon className="h-5 w-5 flex-shrink-0" />
+                <p className="flex-1 text-sm font-medium text-white">{toast.message}</p>
+            </div>
             <button
                 onClick={() => removeToast(toast.id)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-text-muted hover:text-white transition-colors"
                 aria-label="Dismiss notification"
             >
                 <X size={16} />

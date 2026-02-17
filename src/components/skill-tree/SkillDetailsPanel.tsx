@@ -9,6 +9,7 @@ import { useGameStore } from '@/lib/store';
 import { useGameSounds } from '@/hooks/use-game-sounds';
 import ChallengeModal from '../ChallengeModal';
 import { useState } from 'react';
+import { useDialogA11y } from '@/hooks/use-dialog-a11y';
 
 // Helper for resource icons
 const getResourceIcon = (type: string) => {
@@ -32,7 +33,13 @@ export default function SkillDetailsPanel() {
 
     // Sounds & State
     const { playUnlock, playMastery, playClick, playHover } = useGameSounds();
+    const handleClose = () => {
+        playClick();
+        selectSkill(null);
+    };
     const [isChallengeOpen, setIsChallengeOpen] = useState(false);
+    const isPanelOpen = Boolean(selectedSkillId) && !isChallengeOpen;
+    const dialogRef = useDialogA11y<HTMLElement>(isPanelOpen, handleClose);
 
     const skill = nodes.find((n) => n.id === selectedSkillId);
 
@@ -59,11 +66,6 @@ export default function SkillDetailsPanel() {
         setIsChallengeOpen(false);
     };
 
-    const handleClose = () => {
-        playClick();
-        selectSkill(null);
-    };
-
     if (!skill) return null;
 
     const { title, description, tier, status, resources, xpReward, quiz } = skill.data;
@@ -77,46 +79,50 @@ export default function SkillDetailsPanel() {
                         initial={{ x: '100%' }}
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
-                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed right-0 top-0 bottom-0 w-full sm:w-96 bg-gray-900/95 backdrop-blur-xl border-l border-gray-800 p-4 sm:p-6 z-50 shadow-2xl flex flex-col"
+                        transition={{ type: 'spring', damping: 28, stiffness: 220 }}
+                        ref={dialogRef}
+                        className="fixed bottom-0 right-0 top-0 z-40 flex w-full flex-col border-l border-white/20 bg-surface-2/95 p-4 shadow-2xl backdrop-blur-xl sm:w-[420px] sm:p-5"
                         role="dialog"
                         aria-labelledby="skill-title"
                         aria-describedby="skill-description"
+                        aria-modal="true"
+                        tabIndex={-1}
                     >
                         {/* Header */}
-                        <div className="flex justify-between items-start mb-6">
+                        <div className="mb-5 flex items-start justify-between border-b divider-soft pb-4">
                             <div>
-                                <span className="text-[10px] font-mono uppercase bg-gray-800 text-gray-400 px-2 py-1 rounded">
+                                <span className="rounded-[8px] border border-white/20 bg-black/25 px-2 py-1 font-mono text-[10px] uppercase text-text-muted">
                                     Tier: {tier}
                                 </span>
-                                <h2 id="skill-title" className="text-2xl font-display font-bold text-white mt-2 leading-tight">
+                                <h2 id="skill-title" className="mt-2 text-[28px] font-semibold leading-[34px] text-white">
                                     {title}
                                 </h2>
                             </div>
                             <button
+                                type="button"
                                 onClick={handleClose}
-                                className="p-1 hover:bg-gray-800 rounded-full transition-colors"
+                                className="icon-btn grid place-items-center"
                                 aria-label="Close skill details"
                             >
-                                <X className="w-6 h-6 text-gray-400" aria-hidden="true" />
+                                <X className="h-5 w-5 text-gray-300" aria-hidden="true" />
                             </button>
                         </div>
 
                         {/* Content */}
-                        <div className="flex-1 overflow-y-auto space-y-6">
-                            <p id="skill-description" className="text-gray-300 leading-relaxed border-l-2 border-neon-cyan pl-4">
+                        <div className="flex-1 space-y-5 overflow-y-auto">
+                            <p id="skill-description" className="border-l-2 border-neon-cyan pl-4 text-[15px] leading-6 text-gray-200">
                                 {description}
                             </p>
 
-                            <div className="bg-black/50 p-4 rounded-lg border border-gray-800 flex justify-between items-center">
+                            <div className="panel-base flex items-center justify-between p-4">
                                 <div>
-                                    <div className="text-xs text-gray-500 uppercase font-mono mb-1">Reward</div>
-                                    <div className="text-neon-cyan font-display text-xl">{xpReward} XP</div>
+                                    <div className="mb-1 font-mono text-xs uppercase text-text-muted">Reward</div>
+                                    <div className="text-xl font-semibold text-neon-cyan">{xpReward} XP</div>
                                 </div>
                                 {hasQuiz && (
                                     <div className="text-right">
-                                        <div className="text-xs text-orange-500 uppercase font-mono mb-1">Challenge</div>
-                                        <div className="text-orange-400 font-bold text-sm flex items-center gap-1 justify-end">
+                                        <div className="mb-1 font-mono text-xs uppercase text-warning-amber">Challenge</div>
+                                        <div className="flex items-center justify-end gap-1 text-sm font-semibold text-warning-amber">
                                             <BrainCircuit size={14} /> Active
                                         </div>
                                     </div>
@@ -125,7 +131,7 @@ export default function SkillDetailsPanel() {
 
                             {/* Resources */}
                             <div>
-                                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-3">
+                                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-white">
                                     Learning Uplink
                                 </h3>
                                 <div className="space-y-2">
@@ -136,29 +142,30 @@ export default function SkillDetailsPanel() {
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             onMouseEnter={() => playHover()}
-                                            className="flex items-center gap-3 p-3 rounded bg-gray-800/50 hover:bg-gray-800 transition-colors group border border-transparent hover:border-gray-700"
+                                            className="panel-base group flex items-center gap-3 p-3 hover:border-neon-cyan/40"
                                         >
-                                            <div className="w-8 h-8 rounded bg-gray-900 flex items-center justify-center group-hover:bg-neon-cyan/10 group-hover:text-neon-cyan transition-colors text-gray-400">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-white/15 bg-black/20 text-text-muted transition-colors group-hover:border-neon-cyan/45 group-hover:bg-neon-cyan/10 group-hover:text-neon-cyan">
                                                 {getResourceIcon(res.type)}
                                             </div>
                                             <div className="flex-1">
-                                                <div className="text-sm text-gray-200 font-medium group-hover:text-neon-cyan transition-colors line-clamp-1">{res.label}</div>
-                                                <div className="text-[10px] text-gray-500 uppercase tracking-wider">{res.type}</div>
+                                                <div className="line-clamp-1 text-sm font-medium text-gray-200 transition-colors group-hover:text-neon-cyan">{res.label}</div>
+                                                <div className="text-[10px] uppercase tracking-wider text-text-muted">{res.type}</div>
                                             </div>
                                         </a>
                                     )) : (
-                                        <div className="text-gray-400 text-sm italic">No data feed connected.</div>
+                                        <div className="text-sm italic text-text-muted">No data feed connected.</div>
                                     )}
                                 </div>
                             </div>
                         </div>
 
                         {/* Action Footer */}
-                        <div className="mt-8 pt-6 border-t border-gray-800">
+                        <div className="divider-soft mt-5 border-t pt-4">
                             {status === 'available' && (
                                 <button
+                                    type="button"
                                     onClick={handleUnlock}
-                                    className="w-full py-4 bg-neon-cyan text-black font-bold uppercase tracking-widest hover:bg-cyan-300 transition-colors flex items-center justify-center gap-2 rounded"
+                                    className="btn-primary flex w-full items-center justify-center gap-2 uppercase tracking-wide"
                                 >
                                     <Play className="w-4 h-4" /> Start Learning
                                 </button>
@@ -166,10 +173,11 @@ export default function SkillDetailsPanel() {
 
                             {status === 'in-progress' && (
                                 <button
+                                    type="button"
                                     onClick={handleComplete}
-                                    className={`w-full py-4 font-bold uppercase tracking-widest transition-colors flex items-center justify-center gap-2 rounded ${hasQuiz
-                                            ? 'bg-orange-500 text-white hover:bg-orange-600'
-                                            : 'bg-electric-green text-black hover:bg-green-400'
+                                    className={`flex h-11 w-full items-center justify-center gap-2 rounded-[12px] border font-bold uppercase tracking-wide transition-colors ${hasQuiz
+                                            ? 'border-warning-amber/40 bg-warning-amber text-black hover:brightness-105'
+                                            : 'border-electric-green/40 bg-electric-green text-black hover:brightness-105'
                                         }`}
                                 >
                                     {hasQuiz ? (
@@ -185,22 +193,23 @@ export default function SkillDetailsPanel() {
                             )}
 
                             {status === 'mastered' && (
-                                <div className="text-center p-4 bg-plasma-pink/10 border border-plasma-pink/30 rounded text-plasma-pink font-mono text-sm">
+                                <div className="rounded-[12px] border border-plasma-pink/35 bg-plasma-pink/10 p-4 text-center font-mono text-sm text-plasma-pink">
                                     Skill Optimized
                                 </div>
                             )}
 
                             {status === 'decayed' && (
                                 <button
+                                    type="button"
                                     onClick={() => refreshSkill(skill.id)}
-                                    className="w-full py-4 bg-alert-red text-white font-bold uppercase tracking-widest hover:bg-red-600 transition-colors flex items-center justify-center gap-2 rounded animate-pulse"
+                                    className="flex h-11 w-full items-center justify-center gap-2 rounded-[12px] border border-alert-red/40 bg-alert-red text-white font-bold uppercase tracking-wide hover:brightness-105"
                                 >
                                     <RotateCcw className="w-4 h-4" /> Repair Skill Node
                                 </button>
                             )}
 
                             {status === 'locked' && (
-                                <div className="text-center p-4 bg-gray-800 rounded text-gray-500 font-mono text-xs">
+                                <div className="rounded-[12px] border border-white/15 bg-black/25 p-4 text-center font-mono text-xs text-text-muted">
                                     Prerequisites Missing
                                 </div>
                             )}

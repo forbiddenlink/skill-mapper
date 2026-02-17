@@ -61,18 +61,18 @@ export default function RecommendedSkills() {
   };
   
   return (
-    <div className="fixed bottom-6 right-6 z-40 max-w-sm">
+    <div className="fixed bottom-6 right-[5.5rem] z-30 max-w-sm md:bottom-8 md:right-[6rem]">
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gray-900/95 backdrop-blur-sm rounded-lg border border-cyan-500/30 shadow-2xl overflow-hidden"
+          className="panel-strong overflow-hidden"
         >
           {/* Header */}
-          <div className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-b border-cyan-500/20">
+          <div className="flex items-center gap-2 border-b border-neon-cyan/30 bg-neon-cyan/10 px-4 py-3">
             <Sparkles className="w-5 h-5 text-cyan-400" />
-            <h3 className="text-sm font-semibold text-cyan-400">AI Recommendations</h3>
-            <span className="ml-auto text-xs text-gray-400">{recommendations.length} suggested</span>
+            <h3 className="text-sm font-semibold text-cyan-300">AI Recommendations</h3>
+            <span className="ml-auto text-xs text-text-muted">{recommendations.length} suggested</span>
           </div>
           
           {/* Recommendations List */}
@@ -91,7 +91,7 @@ export default function RecommendedSkills() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ delay: index * 0.05 }}
-                  className={`group relative p-4 border-b border-gray-800 hover:bg-gray-800/50 cursor-pointer transition-colors ${
+                  className={`group relative cursor-pointer border-b border-white/10 p-4 transition-colors hover:bg-white/5 ${
                     isDecay ? 'bg-yellow-500/5' : ''
                   }`}
                   onClick={() => handleSkillClick(rec.skillId)}
@@ -112,10 +112,10 @@ export default function RecommendedSkills() {
                   <div className="flex items-start gap-3">
                     {/* Icon */}
                     <div className={`shrink-0 p-2 rounded-lg ${
-                      isDecay ? 'bg-yellow-500/10' : 'bg-cyan-500/10'
+                      isDecay ? 'bg-warning-amber/15 border border-warning-amber/25' : 'bg-neon-cyan/10 border border-neon-cyan/25'
                     }`}>
                       <Icon className={`w-4 h-4 ${
-                        isDecay ? 'text-yellow-400' : 'text-cyan-400'
+                        isDecay ? 'text-warning-amber' : 'text-cyan-300'
                       }`} />
                     </div>
                     
@@ -127,8 +127,8 @@ export default function RecommendedSkills() {
                         </h4>
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
                           isDecay 
-                            ? 'bg-yellow-500/20 text-yellow-300'
-                            : 'bg-cyan-500/20 text-cyan-300'
+                            ? 'bg-warning-amber/20 text-warning-amber'
+                            : 'bg-neon-cyan/20 text-cyan-200'
                         }`}>
                           {reasonLabels[rec.reason]}
                         </span>
@@ -164,7 +164,7 @@ export default function RecommendedSkills() {
           </div>
           
           {/* Footer */}
-          <div className="px-4 py-2 bg-gray-900/50 border-t border-gray-800 text-xs text-gray-500 text-center">
+          <div className="border-t border-white/10 bg-black/20 px-4 py-2 text-center text-xs text-text-muted">
             Personalized based on your progress
           </div>
         </motion.div>

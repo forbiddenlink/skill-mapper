@@ -17,7 +17,7 @@ export default function BadgeNotification() {
                     initial={{ scale: 0.5, opacity: 0, y: 50 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.5, opacity: 0, y: 50 }}
-                    className="fixed bottom-8 right-8 z-50 flex flex-col items-center bg-[#111] border border-yellow-500/30 rounded-2xl p-6 shadow-2xl shadow-yellow-500/10 max-w-sm"
+                    className="fixed left-1/2 top-6 z-[70] flex max-w-sm -translate-x-1/2 flex-col items-center rounded-[16px] border border-yellow-500/30 bg-[#111]/95 p-6 shadow-2xl shadow-yellow-500/10 backdrop-blur-md"
                 >
                     {/* Glow effect */}
                     <div className="absolute inset-0 bg-yellow-500/5 rounded-2xl animate-pulse" />

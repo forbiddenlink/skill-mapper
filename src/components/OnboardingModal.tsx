@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '@/lib/store';
 import { Sparkles, Code, Server, Layers } from 'lucide-react';
+import { useDialogA11y } from '@/hooks/use-dialog-a11y';
 
 // type Role = 'beginner' | 'frontend' | 'backend' | 'fullstack'; // Removed unused type
 
@@ -48,6 +49,8 @@ const ROLES = [
 export default function OnboardingModal() {
     const { unlockBatch, nodes } = useGameStore();
     const [isOpen, setIsOpen] = useState(false);
+    const closeModal = () => setIsOpen(false);
+    const dialogRef = useDialogA11y<HTMLDivElement>(isOpen, closeModal);
 
     useEffect(() => {
         // Run only once on mount -> check if we are "new"
@@ -69,7 +72,7 @@ export default function OnboardingModal() {
             if (role.unlocks.length > 0) {
                 unlockBatch(role.unlocks);
             }
-            setIsOpen(false);
+            closeModal();
         }
     };
 
@@ -80,21 +83,27 @@ export default function OnboardingModal() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+                    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
                 >
                     <motion.div
-                        initial={{ scale: 0.9, y: 20 }}
+                        initial={{ scale: 0.96, y: 12 }}
                         animate={{ scale: 1, y: 0 }}
-                        className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8 max-w-4xl w-full shadow-2xl relative overflow-hidden"
+                        ref={dialogRef}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="onboarding-title"
+                        aria-describedby="onboarding-description"
+                        tabIndex={-1}
+                        className="modal-shell relative w-full max-w-4xl overflow-hidden p-5 md:p-8"
                     >
                         {/* Background Gradient */}
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
+                        <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-neon-cyan/85 via-neon-cyan/20 to-plasma-pink/85" />
 
                         <div className="text-center mb-8">
-                            <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                            <h2 id="onboarding-title" className="text-3xl font-semibold text-white md:text-[40px] md:leading-[44px]">
                                 Welcome to the AI Stack
                             </h2>
-                            <p className="text-gray-400 mt-2 text-lg">
+                            <p id="onboarding-description" className="mt-2 text-base text-text-muted md:text-lg">
                                 Choose your current experience level to jumpstart your skill tree.
                             </p>
                         </div>
@@ -103,17 +112,18 @@ export default function OnboardingModal() {
                             {ROLES.map((role) => (
                                 <button
                                     key={role.id}
+                                    type="button"
                                     onClick={() => handleSelect(role.id)}
-                                    className="group relative p-6 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all text-left flex gap-4 items-start"
+                                    className="panel-base group relative flex items-start gap-4 p-5 text-left hover:border-neon-cyan/45"
                                 >
-                                    <div className="p-3 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 text-blue-400 transition-colors">
-                                        <role.icon size={24} />
+                                    <div className="grid h-11 w-11 place-items-center rounded-[12px] border border-neon-cyan/25 bg-neon-cyan/10 text-neon-cyan transition-colors group-hover:border-neon-cyan/55">
+                                        <role.icon size={22} />
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-lg text-white mb-1 group-hover:text-blue-300 transition-colors">
+                                        <h3 className="mb-1 text-xl font-semibold text-white">
                                             {role.title}
                                         </h3>
-                                        <p className="text-sm text-gray-400 leading-relaxed">
+                                        <p className="text-sm leading-relaxed text-text-muted">
                                             {role.description}
                                         </p>
                                     </div>
@@ -123,8 +133,9 @@ export default function OnboardingModal() {
 
                         <div className="mt-8 text-center">
                             <button
-                                onClick={() => setIsOpen(false)}
-                                className="text-sm text-gray-400 hover:text-white transition-colors"
+                                type="button"
+                                onClick={closeModal}
+                                className="text-sm text-text-muted hover:text-white"
                             >
                                 Skip and start from scratch
                             </button>

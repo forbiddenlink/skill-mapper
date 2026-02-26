@@ -1,11 +1,51 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Clock, Zap, CheckCircle2, XCircle } from 'lucide-react';
 import { DailyChallenge } from '@/types';
 import { useGameStore } from '@/lib/store';
 import { getInitialSkills } from '@/lib/skill-data';
+
+// Pure function to generate daily challenge from a given date string
+function generateDailyChallenge(todayStr: string): DailyChallenge | null {
+    if (!todayStr) return null;
+    const skills = getInitialSkills();
+
+    // Use date as seed for deterministic challenge selection
+    const seed = todayStr.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
+    const availableSkills = skills.filter(s => s.data.quiz && s.data.quiz.length > 0);
+
+    if (availableSkills.length === 0) return null;
+
+    const challengeSkill = availableSkills[seed % availableSkills.length];
+    if (!challengeSkill?.data.quiz?.length) return null;
+    const quiz = challengeSkill.data.quiz;
+    const question = quiz[seed % quiz.length];
+    if (!question) return null;
+
+    const expiresAt = new Date(todayStr).setHours(23, 59, 59, 999);
+
+    return {
+        id: `daily-${todayStr}`,
+        skillId: challengeSkill.id,
+        type: 'quiz',
+        title: `Daily Challenge: ${challengeSkill.data.title}`,
+        description: question.question,
+        xpBonus: 50,
+        expiresAt,
+        completed: false,
+    };
+}
+
+// Pure function to calculate time remaining from a given timestamp
+function calculateTimeRemaining(expiresAt: number, now: number): string {
+    const diff = expiresAt - now;
+    if (diff <= 0) return 'Expired';
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+}
 
 export function DailyChallenges() {
     const { nodes, userXP } = useGameStore();
@@ -13,67 +53,57 @@ export function DailyChallenges() {
     const [showResult, setShowResult] = useState(false);
     const [challengeCompleted, setChallengeCompleted] = useState(false);
 
-    // Generate daily challenge based on date
-    const dailyChallenge = useMemo((): DailyChallenge | null => {
-        const today = new Date().toISOString().split('T')[0] ?? '';
-        if (!today) return null;
-        const skills = getInitialSkills();
-        
-        // Use date as seed for deterministic challenge selection
-        const seed = today.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
-        const availableSkills = skills.filter(s => s.data.quiz && s.data.quiz.length > 0);
-        
-        if (availableSkills.length === 0) return null;
-        
-        const challengeSkill = availableSkills[seed % availableSkills.length];
-        if (!challengeSkill || !challengeSkill.data.quiz || challengeSkill.data.quiz.length === 0) return null;
-        const quiz = challengeSkill.data.quiz;
-        const question = quiz[seed % quiz.length];
-        if (!question) return null;
-        
-        const expiresAt = new Date(today).setHours(23, 59, 59, 999);
-        
-        return {
-            id: `daily-${today}`,
-            skillId: challengeSkill.id,
-            type: 'quiz',
-            title: `Daily Challenge: ${challengeSkill.data.title}`,
-            description: question.question,
-            xpBonus: 50,
-            expiresAt,
-            completed: false,
-        };
-    }, []);
-
-    const timeRemaining = useMemo(() => {
-        if (!dailyChallenge) return '';
+    // Use lazy initializer to capture mount time (runs only once)
+    const [mountState] = useState(() => {
         const now = Date.now();
-        const diff = dailyChallenge.expiresAt - now;
-        
-        if (diff <= 0) return 'Expired';
-        
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        
-        return `${hours}h ${minutes}m`;
+        const todayStr = new Date(now).toISOString().split('T')[0] ?? '';
+        const challenge = generateDailyChallenge(todayStr);
+        const initialTimeRemaining = challenge ? calculateTimeRemaining(challenge.expiresAt, now) : '';
+        return { todayStr, challenge, initialTimeRemaining };
+    });
+
+    const { todayStr, challenge: dailyChallenge } = mountState;
+
+    // Time remaining state with lazy initializer
+    const [timeRemaining, setTimeRemaining] = useState(mountState.initialTimeRemaining);
+
+    // Ref to track if effect has run (to avoid double-calling setState)
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    useEffect(() => {
+        if (!dailyChallenge) return;
+
+        // Clear any existing interval
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+        }
+
+        // Update time remaining every minute (setState in interval callback is fine)
+        intervalRef.current = setInterval(() => {
+            setTimeRemaining(calculateTimeRemaining(dailyChallenge.expiresAt, Date.now()));
+        }, 60000);
+
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
     }, [dailyChallenge]);
 
     const handleAnswerSubmit = () => {
         if (selectedAnswer === null || !dailyChallenge) return;
-        
+
         // Find the skill and its quiz
         const skill = nodes.find(n => n.id === dailyChallenge.skillId);
-        if (!skill || !skill.data.quiz) return;
-        
-        const today = new Date().toISOString().split('T')[0] ?? '';
-        if (!today) return;
-        const seed = today.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
+        if (!skill?.data.quiz) return;
+
+        const seed = todayStr.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
         const question = skill.data.quiz[seed % skill.data.quiz.length];
         if (!question) return;
-        
+
         const isCorrect = selectedAnswer === question.correctIndex;
         setShowResult(true);
-        
+
         if (isCorrect) {
             // Award bonus XP
             useGameStore.setState({ userXP: userXP + dailyChallenge.xpBonus });
@@ -90,11 +120,9 @@ export function DailyChallenges() {
     }
 
     const skill = nodes.find(n => n.id === dailyChallenge.skillId);
-    if (!skill || !skill.data.quiz) return null;
-    
-    const today = new Date().toISOString().split('T')[0] ?? '';
-    if (!today) return null;
-    const seed = today.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
+    if (!skill?.data.quiz) return null;
+
+    const seed = todayStr.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
     const question = skill.data.quiz[seed % skill.data.quiz.length];
     if (!question) return null;
 

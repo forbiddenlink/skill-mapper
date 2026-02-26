@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useGameStore } from '@/lib/store';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -25,6 +25,18 @@ export default function LiveRegions() {
         }))
     );
 
+    // Declare announce before effects that use it
+    const announce = useCallback((message: string, priority: 'polite' | 'assertive') => {
+        const ref = priority === 'assertive' ? assertiveRef : politeRef;
+        if (ref.current) {
+            ref.current.textContent = message;
+            // Clear after a delay to allow re-announcement of the same message
+            setTimeout(() => {
+                if (ref.current) ref.current.textContent = '';
+            }, 1000);
+        }
+    }, []);
+
     // Announce XP gains
     useEffect(() => {
         if (prevXP.current > 0 && userXP > prevXP.current) {
@@ -32,7 +44,7 @@ export default function LiveRegions() {
             announce(`Gained ${gain} experience points`, 'polite');
         }
         prevXP.current = userXP;
-    }, [userXP]);
+    }, [userXP, announce]);
 
     // Announce level ups
     useEffect(() => {
@@ -40,7 +52,7 @@ export default function LiveRegions() {
             announce(`Congratulations! You reached level ${userLevel}!`, 'assertive');
         }
         prevLevel.current = userLevel;
-    }, [userLevel]);
+    }, [userLevel, announce]);
 
     // Announce new badges
     useEffect(() => {
@@ -49,7 +61,7 @@ export default function LiveRegions() {
             announce(`Achievement unlocked! You earned ${newBadges.length} new badge${newBadges.length > 1 ? 's' : ''}!`, 'assertive');
         }
         prevBadges.current = [...unlockedBadges];
-    }, [unlockedBadges]);
+    }, [unlockedBadges, announce]);
 
     // Announce skill completions
     useEffect(() => {
@@ -61,18 +73,7 @@ export default function LiveRegions() {
                 announce(`${availableCount} new skill${availableCount > 1 ? 's' : ''} available to learn`, 'polite');
             }
         }
-    }, [nodes]);
-
-    const announce = (message: string, priority: 'polite' | 'assertive') => {
-        const ref = priority === 'assertive' ? assertiveRef : politeRef;
-        if (ref.current) {
-            ref.current.textContent = message;
-            // Clear after a delay to allow re-announcement of the same message
-            setTimeout(() => {
-                if (ref.current) ref.current.textContent = '';
-            }, 1000);
-        }
-    };
+    }, [nodes, announce]);
 
     return (
         <>

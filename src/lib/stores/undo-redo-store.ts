@@ -1,8 +1,9 @@
 import { StateCreator } from 'zustand';
 import { SkillsSlice } from './skills-store';
+import { SkillNode } from '@/types';
 
 interface HistoryEntry {
-    nodes: any[];
+    nodes: SkillNode[];
     timestamp: number;
     action: string;
 }
@@ -11,9 +12,9 @@ export interface UndoRedoSlice {
     history: HistoryEntry[];
     historyIndex: number;
     maxHistory: number;
-    
+
     // Actions
-    pushHistory: (nodes: any[], action: string) => void;
+    pushHistory: (nodes: SkillNode[], action: string) => void;
     undo: () => boolean;
     redo: () => boolean;
     canUndo: () => boolean;

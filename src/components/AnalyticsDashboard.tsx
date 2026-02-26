@@ -3,9 +3,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { useGameStore } from '@/lib/store';
-import { 
-    TrendingUp, X, Calendar, Clock, Target, Award, 
-    PieChart, Activity, Zap 
+import {
+    TrendingUp, X, Calendar, Clock, Target, Award,
+    PieChart, Activity, Zap
 } from 'lucide-react';
 import { useKeyboardShortcut } from '@/hooks/use-keyboard-shortcuts';
 import { useShallow } from 'zustand/react/shallow';
@@ -15,7 +15,7 @@ export default function AnalyticsDashboard() {
     const [isOpen, setIsOpen] = useState(false);
     const closeDashboard = () => setIsOpen(false);
     const dialogRef = useDialogA11y<HTMLDivElement>(isOpen, closeDashboard);
-    
+
     const { nodes, userXP, streak, lastVisit } = useGameStore(
         useShallow((state) => ({
             nodes: state.nodes,
@@ -31,12 +31,14 @@ export default function AnalyticsDashboard() {
     const totalSkills = nodes.length;
     const masteredSkills = nodes.filter(n => n.data.status === 'mastered').length;
     const completionRate = ((masteredSkills / totalSkills) * 100).toFixed(1);
-    
+
     const totalXPPossible = nodes.reduce((sum, node) => sum + node.data.xpReward, 0);
     const xpProgress = ((userXP / totalXPPossible) * 100).toFixed(1);
 
     // Calculate learning velocity (skills per day estimate)
-    const daysSinceStart = lastVisit > 0 ? Math.max(1, Math.floor((Date.now() - lastVisit) / (1000 * 60 * 60 * 24))) : 1;
+    // Use state with lazy initializer to capture time at mount (avoids impure Date.now() in render)
+    const [mountTime] = useState(() => Date.now());
+    const daysSinceStart = lastVisit > 0 ? Math.max(1, Math.floor((mountTime - lastVisit) / (1000 * 60 * 60 * 24))) : 1;
     const learningVelocity = (masteredSkills / daysSinceStart).toFixed(2);
 
     // Category breakdown

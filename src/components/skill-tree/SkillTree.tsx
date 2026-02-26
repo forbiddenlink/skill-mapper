@@ -124,7 +124,8 @@ export default function SkillTreeCanvas() {
                 edgeTypes={edgeTypes}
                 fitView
                 className="bg-transparent"
-
+                // Performance optimization: Only render nodes/edges in viewport
+                onlyRenderVisibleElements
                 proOptions={{ hideAttribution: true }}
             >
                 <Background gap={24} color="rgba(148,163,184,0.25)" className="opacity-20" />

@@ -144,4 +144,13 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
     );
 };
 
-export default memo(CustomNode);
+// Custom comparison to prevent unnecessary re-renders
+// Only re-render when status, title, tier, or selection changes
+export default memo(CustomNode, (prevProps, nextProps) => {
+    return (
+        prevProps.data.status === nextProps.data.status &&
+        prevProps.data.title === nextProps.data.title &&
+        prevProps.data.tier === nextProps.data.tier &&
+        prevProps.selected === nextProps.selected
+    );
+});

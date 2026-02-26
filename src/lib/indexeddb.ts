@@ -11,7 +11,7 @@ export interface StoredGameState {
     id: string; // Always 'current' for single-user app
     timestamp: number;
     version: number;
-    state: any;
+    state: unknown;
 }
 
 class IndexedDBHelper {
@@ -36,7 +36,7 @@ class IndexedDBHelper {
         return this.dbPromise;
     }
 
-    async saveState(state: any): Promise<void> {
+    async saveState(state: unknown): Promise<void> {
         try {
             const db = await this.getDB();
             const transaction = db.transaction([STORE_NAME], 'readwrite');
@@ -121,7 +121,7 @@ class IndexedDBHelper {
     }
 
     // Fallback methods for browsers without IndexedDB support
-    private fallbackSave(state: any): void {
+    private fallbackSave(state: unknown): void {
         try {
             localStorage.setItem('skill-mapper-storage', JSON.stringify(state));
         } catch (error) {
@@ -148,7 +148,7 @@ class IndexedDBHelper {
 export const idbHelper = new IndexedDBHelper();
 
 // Export convenience functions
-export const saveGameState = (state: any) => idbHelper.saveState(state);
+export const saveGameState = (state: unknown) => idbHelper.saveState(state);
 export const loadGameState = () => idbHelper.loadState();
 export const clearGameState = () => idbHelper.clearState();
 export const exportGameState = () => idbHelper.exportState();

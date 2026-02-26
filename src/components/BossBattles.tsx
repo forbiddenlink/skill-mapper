@@ -157,7 +157,7 @@ export function BossBattles() {
         return stored ? JSON.parse(stored) : { completed: false, attempts: 0, bestScore: 0 };
     };
 
-    const saveBattleData = (battleId: string, data: any) => {
+    const saveBattleData = (battleId: string, data: { completed: boolean; attempts: number; bestScore: number }) => {
         localStorage.setItem(`boss-battle-${battleId}`, JSON.stringify(data));
     };
 

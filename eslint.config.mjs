@@ -19,6 +19,9 @@ const eslintConfig = defineConfig([
     ".history/**",
     // Ignore Codacy tools configs
     ".codacy/**",
+    // Ignore generated PWA files
+    "public/sw.js",
+    "public/workbox-*.js",
   ]),
   ...storybook.configs["flat/recommended"]
 ]);

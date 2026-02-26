@@ -3,18 +3,17 @@ import { useEffect, useRef } from 'react';
 /**
  * Hook to measure component render performance
  * Useful for identifying performance bottlenecks
+ * Note: Returns void as accessing refs during render is not allowed in React 19
  */
-export function useRenderCount(componentName: string) {
+export function useRenderCount(componentName: string): void {
     const renderCount = useRef(0);
-    
+
     useEffect(() => {
         renderCount.current += 1;
         if (process.env.NODE_ENV === 'development') {
             console.log(`🔄 ${componentName} rendered ${renderCount.current} times`);
         }
     });
-    
-    return renderCount.current;
 }
 
 /**

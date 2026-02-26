@@ -452,7 +452,7 @@ export const useGameStore = create<GameState>()(
         {
             name: config.storage.key,
             version: config.storage.version,
-            migrate: (persistedState: any, version: number) => {
+            migrate: (persistedState: unknown, version: number) => {
                 if (version === 0) {
                     // Migration from version 0 to 1
                     // For now, we just return the persisted state as is, 

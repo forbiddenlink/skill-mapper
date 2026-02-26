@@ -5,6 +5,7 @@ import { Trophy, Flame, Volume2, VolumeX, Save, Upload } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useToast } from "./Toast";
 import { useShallow } from "zustand/react/shallow";
+import Image from "next/image";
 
 export default function HUD() {
     const { xp, level, unlockedBadges, streak, soundEnabled } = useGameStore(
@@ -98,10 +99,12 @@ export default function HUD() {
             <section className="panel-strong w-64 p-4 md:w-[17rem]" aria-label="Player information">
                 <div className="mb-3 flex items-center gap-3">
                     <div className="relative h-10 w-10 overflow-hidden rounded-md border border-neon-cyan/60" aria-hidden="true">
-                        <img 
-                            src="/avatars/operator.png" 
-                            alt="Operator Avatar" 
-                            className="w-full h-full object-cover"
+                        <Image
+                            src="/avatars/operator.png"
+                            alt="Operator Avatar"
+                            width={40}
+                            height={40}
+                            className="object-cover"
                         />
                     </div>
                     <div>

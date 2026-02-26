@@ -37,4 +37,4 @@ global.AudioContext = class MockAudioContext {
   get currentTime() {
     return 0;
   }
-} as any;
+} as unknown as typeof AudioContext;

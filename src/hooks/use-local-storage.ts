@@ -79,18 +79,18 @@ export function useLocalStorage<T>(
  * Hook to check if localStorage is available
  */
 export function useIsLocalStorageAvailable(): boolean {
-    const [isAvailable, setIsAvailable] = useState(false);
-
-    useEffect(() => {
+    // Initialize state with the check result directly to avoid setState in effect
+    const [isAvailable] = useState(() => {
+        if (typeof window === 'undefined') return false;
         try {
             const test = '__localStorage_test__';
             window.localStorage.setItem(test, test);
             window.localStorage.removeItem(test);
-            setIsAvailable(true);
+            return true;
         } catch {
-            setIsAvailable(false);
+            return false;
         }
-    }, []);
+    });
 
     return isAvailable;
 }

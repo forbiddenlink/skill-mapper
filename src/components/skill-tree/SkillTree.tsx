@@ -128,7 +128,13 @@ export default function SkillTreeCanvas() {
                 proOptions={{ hideAttribution: true }}
             >
                 <Background gap={24} color="rgba(148,163,184,0.25)" className="opacity-20" />
-                <Controls className="!bg-surface-2 !border !border-white/20 !rounded-[12px] !fill-slate-200" />
+                <Controls
+                    className="!bg-surface-2 !border !border-white/20 !rounded-[12px] !fill-slate-200"
+                    aria-label="Skill tree navigation controls"
+                    showZoom={true}
+                    showFitView={true}
+                    showInteractive={true}
+                />
                 <MiniMap
                     nodeColor={(node) => {
                         switch (node.data.status) {

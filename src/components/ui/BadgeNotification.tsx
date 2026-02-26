@@ -25,6 +25,7 @@ export default function BadgeNotification() {
                     <button
                         onClick={dismissBadge}
                         className="absolute top-2 right-2 text-gray-500 hover:text-white transition-colors"
+                        aria-label="Dismiss badge notification"
                     >
                         <X size={16} />
                     </button>

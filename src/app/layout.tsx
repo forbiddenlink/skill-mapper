@@ -13,13 +13,16 @@ const orbitron = Orbitron({
 });
 
 export const metadata: Metadata = {
-  title: "Skill Mapper - Gamified Learning Platform",
-  description: "An interactive, gamified skill tree learning platform with progression tracking, achievements, and XP system",
+  title: "Skill Mapper - Gamified Learning Platform for Interactive Skill Development",
+  description: "Master new skills with Skill Mapper, an interactive gamified learning platform featuring visual skill trees, progression tracking, achievements, XP rewards, and personalized learning paths.",
   applicationName: "Skill Mapper",
-  keywords: ["learning", "skills", "gamification", "education", "progress tracking", "skill tree"],
+  keywords: ["learning", "skills", "gamification", "education", "progress tracking", "skill tree", "interactive learning", "XP system", "achievements"],
   authors: [{ name: "Skill Mapper Team" }],
-  metadataBase: new URL("http://localhost:3000"),
+  metadataBase: new URL("https://skill-mapper.vercel.app"),
   manifest: "/manifest.json",
+  alternates: {
+    canonical: "https://skill-mapper.vercel.app",
+  },
   icons: {
     icon: [
       { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
@@ -40,22 +43,23 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Skill Mapper",
-    title: "Skill Mapper - Gamified Learning Platform",
-    description: "Interactive skill tree learning with XP, badges, and progress tracking",
+    title: "Skill Mapper - Gamified Learning Platform for Interactive Skill Development",
+    description: "Master new skills with Skill Mapper, an interactive gamified learning platform featuring visual skill trees, progression tracking, achievements, XP rewards, and personalized learning paths.",
+    url: "https://skill-mapper.vercel.app",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://skill-mapper.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Skill Mapper - Interactive skill tree visualization",
+        alt: "Skill Mapper - Interactive skill tree visualization with gamified learning experience",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Skill Mapper - Gamified Learning Platform",
-    description: "Interactive skill tree learning with XP, badges, and progress tracking",
-    images: ["/og-image.png"],
+    description: "Master new skills with interactive skill trees, XP rewards, achievements, and personalized learning paths.",
+    images: ["https://skill-mapper.vercel.app/og-image.png"],
   },
 };
 
@@ -75,6 +79,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta charSet="utf-8" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>

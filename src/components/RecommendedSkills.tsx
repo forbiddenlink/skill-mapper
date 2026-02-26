@@ -70,8 +70,8 @@ export default function RecommendedSkills() {
         >
           {/* Header */}
           <div className="flex items-center gap-2 border-b border-neon-cyan/30 bg-neon-cyan/10 px-4 py-3">
-            <Sparkles className="w-5 h-5 text-cyan-400" />
-            <h3 className="text-sm font-semibold text-cyan-300">AI Recommendations</h3>
+            <Sparkles className="w-5 h-5 text-cyan-400" aria-hidden="true" />
+            <h2 className="text-sm font-semibold text-cyan-300">AI Recommendations</h2>
             <span className="ml-auto text-xs text-text-muted">{recommendations.length} suggested</span>
           </div>
           
@@ -122,9 +122,9 @@ export default function RecommendedSkills() {
                     {/* Text */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <h4 className="text-sm font-medium text-white truncate">
+                        <h3 className="text-sm font-medium text-white truncate">
                           {skill.data.title}
-                        </h4>
+                        </h3>
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
                           isDecay 
                             ? 'bg-warning-amber/20 text-warning-amber'

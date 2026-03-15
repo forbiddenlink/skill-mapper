@@ -64,5 +64,7 @@
     "typescript": "^5",
     "vite": "^7.3.1",
     "vitest": "^1.6.0"
-  }
+  },
+  "description": "Production-grade gamified skill tree learning platform with progression tracking, achievements, and interactive challenges",
+  "license": "MIT"
 }

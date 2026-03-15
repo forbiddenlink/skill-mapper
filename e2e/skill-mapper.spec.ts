@@ -39,7 +39,17 @@ test.describe('Skill Mapper - Core Functionality', () => {
   test('should toggle sound', async ({ page }) => {
     await page.goto('/');
     await page.waitForSelector('.react-flow', { timeout: 10000 });
-    
+
+    // Dismiss onboarding modal if present
+    try {
+      const skipButton = page.locator('button:has-text("Skip and start from scratch")').first();
+      await skipButton.waitFor({ state: 'visible', timeout: 2000 });
+      await skipButton.click();
+      await page.waitForTimeout(500);
+    } catch {
+      // Modal not present, continue
+    }
+
     // Find and click sound toggle button
     const soundButton = page.getByRole('button', { name: /sound|volume/i });
     await soundButton.click();

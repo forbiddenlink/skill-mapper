@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useGameStore } from '@/lib/store';
 import {
     TrendingUp, X, Calendar, Clock, Target, Award,
@@ -15,6 +16,7 @@ export default function AnalyticsDashboard() {
     const [isOpen, setIsOpen] = useState(false);
     const closeDashboard = () => setIsOpen(false);
     const dialogRef = useDialogA11y<HTMLDivElement>(isOpen, closeDashboard);
+    const [activityListRef] = useAutoAnimate<HTMLDivElement>();
 
     const { nodes, userXP, streak, lastVisit } = useGameStore(
         useShallow((state) => ({
@@ -176,7 +178,7 @@ export default function AnalyticsDashboard() {
                                     <Clock size={20} className="text-electric-green" />
                                     Recent Activity
                                 </h3>
-                                <div className="space-y-2">
+                                <div ref={activityListRef} className="space-y-2">
                                     {recentActivity.length > 0 ? (
                                         recentActivity.map(node => (
                                             <div key={node.id} className="panel-base flex items-center justify-between p-3">

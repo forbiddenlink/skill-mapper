@@ -1,28 +1,31 @@
 'use client';
 
 import { useGameStore } from "@/lib/store";
-import { Trophy, Flame, Volume2, VolumeX, Save, Upload } from "lucide-react";
+import { Trophy, Flame, Volume2, VolumeX, Save, Upload, Star } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useToast } from "./Toast";
 import { useShallow } from "zustand/react/shallow";
 import Image from "next/image";
 
 export default function HUD() {
-    const { xp, level, unlockedBadges, streak, soundEnabled } = useGameStore(
+    const { xp, level, unlockedBadges, streak, soundEnabled, achievements } = useGameStore(
         useShallow((state) => ({
             xp: state.userXP,
             level: state.userLevel,
             unlockedBadges: state.unlockedBadges,
             streak: state.streak,
-            soundEnabled: state.soundEnabled
+            soundEnabled: state.soundEnabled,
+            achievements: state.achievements
         }))
     );
     const checkStreak = useGameStore((state) => state.checkStreak);
     const toggleSound = useGameStore((state) => state.toggleSound);
+    const getLevelInfo = useGameStore((state) => state.getLevelInfo);
     const { toast } = useToast();
 
-    // Calculate Progress to next level (assuming 1000 XP per level)
-    const progress = (xp % 1000) / 10; // 0-100%
+    // Get proper level info from gamification system
+    const levelInfo = getLevelInfo();
+    const progress = levelInfo.progressPercent;
 
     // File Input Ref for Load
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -43,7 +46,7 @@ export default function HUD() {
             // Export current state to JSON
             const state = useGameStore.getState();
             const saveData = {
-                version: 1,
+                version: 2,
                 timestamp: Date.now(),
                 state: {
                     nodes: state.nodes,
@@ -52,7 +55,10 @@ export default function HUD() {
                     userLevel: state.userLevel,
                     unlockedBadges: state.unlockedBadges,
                     streak: state.streak,
-                    lastVisit: state.lastVisit
+                    longestStreak: state.longestStreak,
+                    lastVisit: state.lastVisit,
+                    lastActivityDate: state.lastActivityDate,
+                    achievements: state.achievements,
                 }
             };
 
@@ -109,7 +115,7 @@ export default function HUD() {
                     </div>
                     <div>
                         <h2 className="text-sm font-semibold tracking-wide text-white">Operator</h2>
-                        <div className="font-mono text-xs text-text-muted">Level {level} Architect</div>
+                        <div className="font-mono text-xs text-text-muted">Level {level} {levelInfo.title}</div>
                     </div>
 
                     {/* Controls Row */}
@@ -184,19 +190,23 @@ export default function HUD() {
                     />
                 </div>
                 <div className="mt-1 flex justify-between text-[10px] font-mono uppercase text-text-muted">
-                    <span>XP: {xp}</span>
-                    <span>Next Lvl: {(level) * 1000}</span>
+                    <span>XP: {xp.toLocaleString()}</span>
+                    <span>Next: {levelInfo.xpForNextLevel.toLocaleString()}</span>
                 </div>
             </section>
 
             {/* Stats / Achievements */}
-            <section className="panel-base flex gap-3 p-3 text-xs font-mono text-text-muted" aria-label="Achievements and streaks">
+            <section className="panel-base flex flex-wrap gap-3 p-3 text-xs font-mono text-text-muted" aria-label="Achievements and streaks">
                 <div className="flex items-center gap-2">
-                    <Trophy className="w-3 h-3 text-yellow-500" aria-hidden="true" />
+                    <Trophy className="h-3 w-3 text-yellow-500" aria-hidden="true" />
                     <span className="text-white">{unlockedBadges.length} Badges</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Flame className="w-3 h-3 text-orange-500" aria-hidden="true" />
+                    <Star className="h-3 w-3 text-neon-cyan" aria-hidden="true" />
+                    <span className="text-white">{achievements.length} Achievements</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <Flame className="h-3 w-3 text-orange-500" aria-hidden="true" />
                     <span className="text-white">{streak} Day Streak</span>
                 </div>
             </section>

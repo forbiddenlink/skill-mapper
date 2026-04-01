@@ -1208,87 +1208,37 @@ const RAW_SKILLS: Omit<SkillNode, 'position'>[] = [
 
 
 // --- AUTO-LAYOUT ALGORITHM ---
-// Organized by Tier Level (Vertical)
-// foundation: 0, frontend-2: 1, backend-data: 2, ai-engineer: 3, systems: 4
+// Uses ELK.js for optimal hierarchical layout with edge crossing minimization.
+// Fallback barycenter heuristic is used for initial synchronous render.
 
-const TIER_LEVELS: Record<SkillTier, number> = {
-    'foundation': 0,
-    'frontend-2': 1,
-    'backend-data': 2,
-    'ai-engineer': 3,
-    'systems': 4
+import { applyElkLayout, applyFallbackLayout } from './elk-layout';
+
+/**
+ * Get raw skill nodes without positions (for ELK layout).
+ */
+export const getRawSkillNodes = (): SkillNode[] => {
+    return RAW_SKILLS.map(skill => ({
+        ...skill,
+        position: { x: 0, y: 0 },
+    } as SkillNode));
 };
 
+/**
+ * Get initial skills with synchronous fallback layout.
+ * Used for immediate render before ELK layout completes.
+ */
 export const getInitialSkills = (): SkillNode[] => {
-    // 1. Group by Tier
-    const nodesByTier: Record<number, SkillNode[]> = {};
-    const skillMap = new Map<string, SkillNode>();
+    const nodes = getRawSkillNodes();
+    return applyFallbackLayout(nodes);
+};
 
-    // Create map for easy lookup
-    RAW_SKILLS.forEach(skill => {
-        // Clone to avoid mutating raw data if we run this multiple times
-        const node = { ...skill, position: { x: 0, y: 0 } } as SkillNode;
-        skillMap.set(node.id, node);
-
-        const level = TIER_LEVELS[node.data.tier];
-        if (!nodesByTier[level]) nodesByTier[level] = [];
-        nodesByTier[level].push(node);
-    });
-
-    const positionedNodes: SkillNode[] = [];
-    const Y_SPACING = -180;
-    const X_SPACING = 240; // Increased spacing for larger titles
-
-    // 2. Iterate Tiers 0 -> N
-    const tiers = Object.keys(nodesByTier).map(Number).sort((a, b) => a - b);
-    const nodeWeights = new Map<string, number>();
-
-    tiers.forEach(level => {
-        const nodes = nodesByTier[level];
-        if (!nodes) return;
-
-        // Barycenter Heuristic: Sort by average parent X position
-        if (level > 0) {
-            nodes.forEach(node => {
-                const parents = node.data.prerequisites
-                    .map(id => skillMap.get(id))
-                    .filter(n => n && TIER_LEVELS[n.data.tier] < level); // Only look at parents in lower tiers
-
-                let weight = 0;
-                if (parents.length > 0) {
-                    const avgX = parents.reduce((sum, p) => sum + (p?.position.x || 0), 0) / parents.length;
-                    weight = avgX;
-                } else {
-                    // If no parents, keep roughly neutral or relative order
-                    weight = 0;
-                }
-                nodeWeights.set(node.id, weight);
-            });
-
-            // Sort!
-            nodes.sort((a, b) => {
-                const weightA = nodeWeights.get(a.id) ?? 0;
-                const weightB = nodeWeights.get(b.id) ?? 0;
-                return weightA - weightB;
-            });
-        }
-
-        // 3. Assign Positions (Centered)
-        const count = nodes.length;
-        const tierWidth = (count - 1) * X_SPACING;
-        const startX = -tierWidth / 2;
-
-        nodes.forEach((node, index) => {
-            node.position = {
-                x: startX + (index * X_SPACING),
-                // Since Y_SPACING is negative (growing upwards), we start from bottom
-                y: 600 + (level * Y_SPACING)
-            };
-            positionedNodes.push(node);
-        });
-    });
-
-    return positionedNodes;
+/**
+ * Apply ELK hierarchical layout to skill nodes.
+ * Returns nodes with optimized positions that minimize edge crossings.
+ */
+export const getElkLayoutedSkills = async (): Promise<SkillNode[]> => {
+    const nodes = getRawSkillNodes();
+    return applyElkLayout(nodes, INITIAL_EDGES);
 };
 
 // Auto-generate edges based on prerequisites

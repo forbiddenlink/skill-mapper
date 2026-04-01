@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import {
     SkillNode,
     getInitialSkills,
+    getElkLayoutedSkills,
     INITIAL_EDGES,
     SkillStatus,
     SkillCategory
@@ -11,6 +12,16 @@ import { BADGES } from './badges';
 import { config } from './config';
 import { Edge, NodeChange, EdgeChange, applyNodeChanges, applyEdgeChanges } from 'reactflow';
 import confetti from 'canvas-confetti';
+import {
+    calculateSkillXp,
+    calculateLevel,
+    getLevelInfo,
+    updateStreak,
+    checkAchievements,
+    getAchievement,
+    GamificationState,
+    LevelInfo,
+} from './gamification';
 
 /**
  * Recommended skill with reasoning and priority score
@@ -51,6 +62,10 @@ interface GameState {
     latestBadgeId: string | null; // Triggers UI popup
     lastVisit: number;
     streak: number;
+    longestStreak: number;
+    achievements: string[]; // Gamification achievement IDs
+    latestAchievementId: string | null; // Triggers achievement popup
+    lastActivityDate: string | null; // YYYY-MM-DD for streak tracking
     soundEnabled: boolean;
 
     // AI Recommendations
@@ -61,6 +76,7 @@ interface GameState {
     toggleSound: () => void;
     selectSkill: (id: string | null) => void;
     dismissBadge: () => void;
+    dismissAchievement: () => void;
 
     // React Flow Actions
     onNodesChange: (changes: NodeChange[]) => void;
@@ -80,6 +96,12 @@ interface GameState {
     checkDecay: () => void;
     checkStreak: () => void;
     resetProgress: () => void;
+
+    // Layout Actions
+    applyElkLayout: () => Promise<void>;
+
+    // Computed Getters
+    getLevelInfo: () => LevelInfo;
 }
 
 /**
@@ -117,33 +139,30 @@ export const useGameStore = create<GameState>()(
             latestBadgeId: null,
             lastVisit: 0,
             streak: 0,
+            longestStreak: 0,
+            achievements: [],
+            latestAchievementId: null,
+            lastActivityDate: null,
             soundEnabled: true,
             recommendations: [],
             lastCalculated: 0,
 
+            getLevelInfo: () => {
+                return getLevelInfo(get().userXP);
+            },
+
+            dismissAchievement: () => set({ latestAchievementId: null }),
+
             checkStreak: () => {
-                const { lastVisit, streak } = get();
-                const now = new Date();
-                const last = new Date(lastVisit);
+                const { streak, longestStreak, lastActivityDate } = get();
+                const streakResult = updateStreak(streak, longestStreak, lastActivityDate);
 
-                // Helper to strip time
-                const isSameDay = (d1: Date, d2: Date) =>
-                    d1.getDate() === d2.getDate() &&
-                    d1.getMonth() === d2.getMonth() &&
-                    d1.getFullYear() === d2.getFullYear();
-
-                if (isSameDay(now, last)) return; // Already visited today
-
-                const yesterday = new Date(now);
-                yesterday.setDate(now.getDate() - 1);
-
-                if (isSameDay(yesterday, last)) {
-                    // Visited yesterday! Increment
-                    set({ streak: streak + 1, lastVisit: now.getTime() });
-                } else {
-                    // Broken streak or first visit
-                    set({ streak: 1, lastVisit: now.getTime() });
-                }
+                set({
+                    streak: streakResult.streak,
+                    longestStreak: streakResult.longestStreak,
+                    lastActivityDate: streakResult.lastActivityDate,
+                    lastVisit: Date.now(),
+                });
             },
 
             onNodesChange: (changes) => {
@@ -191,15 +210,17 @@ export const useGameStore = create<GameState>()(
             },
 
             completeSkill: (id) => {
-                const { nodes, unlockedBadges } = get();
+                const { nodes, unlockedBadges, streak } = get();
                 const targetNode = nodes.find(n => n.id === id);
                 if (!targetNode || targetNode.data.status === 'mastered') return;
 
-                const xpGain = targetNode.data.xpReward;
+                // Calculate XP with streak bonus and tier multiplier
+                const xpGain = calculateSkillXp(targetNode, nodes, streak);
 
                 set((state) => {
                     const newXP = state.userXP + xpGain;
-                    const newLevel = Math.floor(newXP / 1000) + 1;
+                    const newLevel = calculateLevel(newXP);
+                    const oldLevel = state.userLevel;
 
                     // Updates status of Completed Node
                     const updatedNodes = state.nodes.map((n) =>
@@ -219,24 +240,49 @@ export const useGameStore = create<GameState>()(
                         return node;
                     });
 
-                    // Check Badges
+                    // Check Badges (existing system)
                     const newEarnedBadges = checkForNewBadges(nextNodes, unlockedBadges);
                     const latestBadge = newEarnedBadges.length > 0 ? newEarnedBadges[0] : state.latestBadgeId;
 
-                    if (newEarnedBadges.length > 0) {
+                    // Check Achievements (gamification system)
+                    const gamificationState: GamificationState = {
+                        xp: newXP,
+                        level: newLevel,
+                        streak: state.streak,
+                        longestStreak: state.longestStreak,
+                        achievements: state.achievements,
+                        lastActivityDate: state.lastActivityDate,
+                    };
+                    const newAchievements = checkAchievements(gamificationState, nextNodes);
+
+                    // Add XP bonus from new achievements
+                    let achievementXpBonus = 0;
+                    newAchievements.forEach(achievementId => {
+                        const achievement = getAchievement(achievementId);
+                        if (achievement?.xpBonus) {
+                            achievementXpBonus += achievement.xpBonus;
+                        }
+                    });
+                    const finalXP = newXP + achievementXpBonus;
+                    const finalLevel = calculateLevel(finalXP);
+
+                    // Trigger confetti on level up or badge/achievement unlock
+                    if (newLevel > oldLevel || newEarnedBadges.length > 0 || newAchievements.length > 0) {
                         confetti({
-                            particleCount: 150,
-                            spread: 70,
+                            particleCount: newLevel > oldLevel ? 200 : 150,
+                            spread: 100,
                             origin: { y: 0.6 }
                         });
                     }
 
                     return {
-                        userXP: newXP,
-                        userLevel: newLevel,
+                        userXP: finalXP,
+                        userLevel: finalLevel,
                         nodes: nextNodes,
                         unlockedBadges: [...state.unlockedBadges, ...newEarnedBadges],
-                        latestBadgeId: latestBadge
+                        latestBadgeId: latestBadge,
+                        achievements: [...state.achievements, ...newAchievements],
+                        latestAchievementId: newAchievements.length > 0 ? newAchievements[0] : state.latestAchievementId,
                     };
                 });
             },
@@ -273,19 +319,25 @@ export const useGameStore = create<GameState>()(
                     unlockedBadges: [],
                     latestBadgeId: null,
                     lastVisit: Date.now(),
-                    streak: 1
+                    streak: 1,
+                    longestStreak: 0,
+                    achievements: [],
+                    latestAchievementId: null,
+                    lastActivityDate: null,
                 });
             },
 
             unlockBatch: (ids) => {
-                const { nodes, unlockedBadges } = get();
+                const state = get();
+                const { nodes, unlockedBadges, streak } = state;
 
-                // 1. Mark target nodes as mastered
-                let newXP = get().userXP;
+                // 1. Mark target nodes as mastered with gamification XP calculation
+                let newXP = state.userXP;
                 const updatedNodes = nodes.map(node => {
                     if (ids.includes(node.id)) {
                         if (node.data.status !== 'mastered') {
-                            newXP += node.data.xpReward;
+                            // Use gamification XP calculation
+                            newXP += calculateSkillXp(node, nodes, streak);
                         }
                         return {
                             ...node,
@@ -314,7 +366,31 @@ export const useGameStore = create<GameState>()(
 
                 // Check Badges
                 const newEarnedBadges = checkForNewBadges(nextNodes, unlockedBadges);
-                if (newEarnedBadges.length > 0) {
+
+                // Check Achievements
+                const newLevel = calculateLevel(newXP);
+                const gamificationState: GamificationState = {
+                    xp: newXP,
+                    level: newLevel,
+                    streak: state.streak,
+                    longestStreak: state.longestStreak,
+                    achievements: state.achievements,
+                    lastActivityDate: state.lastActivityDate,
+                };
+                const newAchievements = checkAchievements(gamificationState, nextNodes);
+
+                // Add XP bonus from achievements
+                let achievementXpBonus = 0;
+                newAchievements.forEach(achievementId => {
+                    const achievement = getAchievement(achievementId);
+                    if (achievement?.xpBonus) {
+                        achievementXpBonus += achievement.xpBonus;
+                    }
+                });
+                const finalXP = newXP + achievementXpBonus;
+                const finalLevel = calculateLevel(finalXP);
+
+                if (newEarnedBadges.length > 0 || newAchievements.length > 0) {
                     confetti({
                         particleCount: 200,
                         spread: 100,
@@ -324,10 +400,12 @@ export const useGameStore = create<GameState>()(
 
                 set({
                     nodes: nextNodes,
-                    userXP: newXP,
-                    userLevel: Math.floor(newXP / 1000) + 1,
+                    userXP: finalXP,
+                    userLevel: finalLevel,
                     unlockedBadges: [...unlockedBadges, ...newEarnedBadges],
-                    latestBadgeId: newEarnedBadges.length > 0 ? newEarnedBadges[0] : null
+                    latestBadgeId: newEarnedBadges.length > 0 ? newEarnedBadges[0] : null,
+                    achievements: [...state.achievements, ...newAchievements],
+                    latestAchievementId: newAchievements.length > 0 ? newAchievements[0] : null,
                 });
             },
 
@@ -447,7 +525,12 @@ export const useGameStore = create<GameState>()(
             },
 
             dismissBadge: () => set({ latestBadgeId: null }),
-            toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled }))
+            toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
+
+            applyElkLayout: async () => {
+                const layoutedNodes = await getElkLayoutedSkills();
+                set({ nodes: layoutedNodes });
+            },
         }),
         {
             name: config.storage.key,

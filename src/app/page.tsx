@@ -3,6 +3,7 @@ import HUD from "@/components/ui/HUD";
 import SkillDetailsPanel from "@/components/skill-tree/SkillDetailsPanel";
 import OnboardingModal from "@/components/OnboardingModal";
 import BadgeNotification from "@/components/ui/BadgeNotification";
+import AchievementNotification from "@/components/ui/AchievementNotification";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ToastContainer } from "@/components/ui/Toast";
 import KeyboardShortcutsModal from "@/components/KeyboardShortcutsModal";
@@ -33,6 +34,7 @@ export default function Home() {
           <FeaturesHub />
           <OnboardingModal />
           <BadgeNotification />
+          <AchievementNotification />
           <HUD />
           <SkillDetailsPanel />
         </div>

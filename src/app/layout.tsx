@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Orbitron } from "next/font/google";
+import { PostHogProvider } from "@/lib/posthog";
 import "./globals.css";
 
 const inter = Inter({
@@ -86,7 +87,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${orbitron.variable} antialiased bg-deep-void text-foreground`}
       >
-        {children}
+        <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>
   );

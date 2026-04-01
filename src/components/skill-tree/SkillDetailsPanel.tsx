@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useGameStore } from '@/lib/store';
 import { useGameSounds } from '@/hooks/use-game-sounds';
+import { calculateSkillXp } from '@/lib/gamification';
 import ChallengeModal from '../ChallengeModal';
 import { useState } from 'react';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';
@@ -26,6 +27,7 @@ const getResourceIcon = (type: string) => {
 export default function SkillDetailsPanel() {
     const selectedSkillId = useGameStore((state) => state.selectedSkillId);
     const nodes = useGameStore((state) => state.nodes);
+    const streak = useGameStore((state) => state.streak);
     const selectSkill = useGameStore((state) => state.selectSkill);
     const unlockSkill = useGameStore((state) => state.unlockSkill);
     const completeSkill = useGameStore((state) => state.completeSkill);
@@ -70,6 +72,10 @@ export default function SkillDetailsPanel() {
 
     const { title, description, tier, status, resources, xpReward, quiz } = skill.data;
     const hasQuiz = quiz && quiz.length > 0;
+
+    // Calculate XP with streak bonus
+    const calculatedXp = calculateSkillXp(skill, nodes, streak);
+    const hasBonus = calculatedXp > xpReward;
 
     return (
         <>
@@ -117,7 +123,14 @@ export default function SkillDetailsPanel() {
                             <div className="panel-base flex items-center justify-between p-4">
                                 <div>
                                     <div className="mb-1 font-mono text-xs uppercase text-text-muted">Reward</div>
-                                    <div className="text-xl font-semibold text-neon-cyan">{xpReward} XP</div>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-xl font-semibold text-neon-cyan">{calculatedXp} XP</span>
+                                        {hasBonus && (
+                                            <span className="text-xs font-medium text-electric-green">
+                                                (+{calculatedXp - xpReward} streak)
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                                 {hasQuiz && (
                                     <div className="text-right">

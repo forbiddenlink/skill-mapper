@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import withPWA from 'next-pwa';
+import { withAxiom } from 'next-axiom';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -86,4 +87,4 @@ const config = withPWA({
   ],
 })(nextConfig);
 
-export default config;
+export default withAxiom(config);

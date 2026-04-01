@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Orbitron } from "next/font/google";
 import { PostHogProvider } from "@/lib/posthog";
 import "./globals.css";
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -88,6 +90,8 @@ export default function RootLayout({
         className={`${inter.variable} ${orbitron.variable} antialiased bg-deep-void text-foreground`}
       >
         <PostHogProvider>{children}</PostHogProvider>
+            <Analytics />
+      <SpeedInsights />
       </body>
     </html>
   );

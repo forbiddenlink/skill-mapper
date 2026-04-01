@@ -1,3 +1,4 @@
+import "./src/env.js";
 import type { NextConfig } from "next";
 import withPWA from 'next-pwa';
 import { withAxiom } from 'next-axiom';
@@ -10,6 +11,7 @@ const nextConfig: NextConfig = {
 };
 
 const config = withPWA({
+import { withSentryConfig } from "@sentry/nextjs";
   dest: 'public',
   register: true,
   skipWaiting: true,
@@ -87,4 +89,12 @@ const config = withPWA({
   ],
 })(nextConfig);
 
-export default withAxiom(config);
+export default withSentryConfig(withAxiom(config), {
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    silent: !process.env.CI,
+    widenClientFileUpload: true,
+    hideSourceMaps: true,
+    disableLogger: true,
+    automaticVercelMonitors: true,
+  });

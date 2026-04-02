@@ -1,6 +1,6 @@
-import "./src/env.ts";
 import type { NextConfig } from "next";
 import withPWA from 'next-pwa';
+import { withSentryConfig } from "@sentry/nextjs";
 import { withAxiom } from 'next-axiom';
 
 const nextConfig: NextConfig = {
@@ -11,7 +11,6 @@ const nextConfig: NextConfig = {
 };
 
 const config = withPWA({
-import { withSentryConfig } from "@sentry/nextjs";
   dest: 'public',
   register: true,
   skipWaiting: true,

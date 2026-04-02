@@ -102,7 +102,7 @@ function normRole(role: string): string {
 
 function buildOfflineReport(currentSkills: string[], targetRole: string): SkillGapReport {
   const roleKey = normRole(targetRole);
-  const roleTemplate = ROLE_SKILLS[roleKey] ?? ROLE_SKILLS['senior frontend engineer'];
+  const roleTemplate = (ROLE_SKILLS[roleKey] ?? ROLE_SKILLS['senior frontend engineer'])!;
 
   const currentSet = new Set(currentSkills.map((s) => s.toLowerCase()));
 

@@ -79,9 +79,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^4.2.1",
-    "@vitest/browser": "^1.6.0",
-    "@vitest/coverage-v8": "^1.6.0",
-    "@vitest/ui": "^1.6.0",
+    "@vitest/browser": "^4.1.4",
+    "@vitest/coverage-v8": "^4.1.4",
+    "@vitest/ui": "^4.1.4",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "eslint-plugin-storybook": "^10.2.8",
@@ -93,7 +93,7 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite": "^7.3.2",
-    "vitest": "^1.6.0"
+    "vitest": "^4.1.4"
   },
   "description": "Production-grade gamified skill tree learning platform with progression tracking, achievements, and interactive challenges",
   "license": "MIT",

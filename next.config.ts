@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 import withPWA from 'next-pwa';
 import { withSentryConfig } from "@sentry/nextjs";
 import { withAxiom } from 'next-axiom';
+import withBundleAnalyzerInit from "@next/bundle-analyzer";
+const withBundleAnalyzer = withBundleAnalyzerInit({ enabled: process.env.ANALYZE === "true" });
+
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -88,11 +91,11 @@ const config = withPWA({
   ],
 })(nextConfig);
 
-export default withSentryConfig(withAxiom(config), {
+export default withBundleAnalyzer(withSentryConfig(withAxiom(config), {
     org: process.env.SENTRY_ORG,
     project: process.env.SENTRY_PROJECT,
     silent: !process.env.CI,
     widenClientFileUpload: true,
     disableLogger: true,
     automaticVercelMonitors: true,
-  });
+  }));

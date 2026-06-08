@@ -99,7 +99,7 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite": "^8.0.16",
-    "vitest": "^1.6.0"
+    "vitest": "^4.1.0"
   },
   "description": "Production-grade gamified skill tree learning platform with progression tracking, achievements, and interactive challenges",
   "license": "MIT",

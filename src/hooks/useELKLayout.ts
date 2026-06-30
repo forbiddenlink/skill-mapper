@@ -127,6 +127,7 @@ export function useELKLayout(
 
   // Re-layout whenever inputs change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- runLayout is an async ELK computation that writes layout state; calling it from an effect is the correct pattern here
     void runLayout();
   }, [runLayout]);
 

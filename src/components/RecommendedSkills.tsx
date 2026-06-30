@@ -146,6 +146,7 @@ export default function RecommendedSkills() {
                           <>
                             <span className="text-gray-600">•</span>
                             <span className="text-yellow-400/60">
+                              {/* eslint-disable-next-line react-hooks/purity -- Date.now() is intentional here: display-only relative time that re-reads on each render is correct behavior */}
                               {Math.floor((Date.now() - skill.data.lastPracticedAt) / (1000 * 60 * 60 * 24))} days ago
                             </span>
                           </>

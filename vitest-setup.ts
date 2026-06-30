@@ -1,4 +1,5 @@
 import { beforeAll, afterEach, afterAll } from 'vitest'
+import '@testing-library/jest-dom'
 import { server } from './src/mocks/server'
 
 // Start server before all tests

@@ -29,4 +29,4 @@ jobs:
           name: ally-a11y-report
           path: ".ally/**"
           if-no-files-found: warn
-          retention-days: 30
+          retention-days: 7

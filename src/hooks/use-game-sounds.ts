@@ -49,13 +49,15 @@ export const useGameSounds = () => {
                 setTimeout(() => createOscillator(ctx, 'square', 554, 0.1, 0.1), 100);
                 setTimeout(() => createOscillator(ctx, 'square', 659, 0.2, 0.1), 200);
                 break;
-            case 'mastery':
-                // Victory chord
-                createOscillator(ctx, 'sawtooth', 523.25, 0.4, 0.1); // C
-                createOscillator(ctx, 'sawtooth', 659.25, 0.4, 0.1); // E
-                createOscillator(ctx, 'sawtooth', 783.99, 0.4, 0.1); // G
-                setTimeout(() => createOscillator(ctx, 'sawtooth', 1046.50, 0.6, 0.1), 100); // High C
+            case 'mastery': {
+                // Real generated victory jingle instead of the synth chord
+                const jingle = new Audio('/music/victory.mp3');
+                jingle.volume = 0.5;
+                jingle.play().catch(() => {
+                    // Ignore autoplay restrictions.
+                });
                 break;
+            }
             case 'error':
                 // Low buzz
                 createOscillator(ctx, 'sawtooth', 150, 0.3, 0.2);

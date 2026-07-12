@@ -1,7 +1,7 @@
 'use client';
 
 import { useGameStore } from "@/lib/store";
-import { Trophy, Flame, Volume2, VolumeX, Save, Upload, Star } from "lucide-react";
+import { Trophy, Flame, Volume2, VolumeX, Music, Save, Upload, Star } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useToast } from "./Toast";
 import { useShallow } from "zustand/react/shallow";
@@ -20,6 +20,8 @@ export default function HUD() {
     );
     const checkStreak = useGameStore((state) => state.checkStreak);
     const toggleSound = useGameStore((state) => state.toggleSound);
+    const toggleMusic = useGameStore((state) => state.toggleMusic);
+    const musicEnabled = useGameStore((state) => state.musicEnabled);
     const getLevelInfo = useGameStore((state) => state.getLevelInfo);
     const { toast } = useToast();
 
@@ -161,6 +163,20 @@ export default function HUD() {
                                 <VolumeX size={16} aria-hidden="true" />
                             </button>
                         )}
+                        <button
+                            type="button"
+                            onClick={toggleMusic}
+                            className="icon-btn grid place-items-center"
+                            title={musicEnabled ? "Stop Music" : "Play Music"}
+                            aria-label={musicEnabled ? "Stop background music" : "Play background music"}
+                            aria-pressed={musicEnabled}
+                        >
+                            <Music
+                                size={16}
+                                aria-hidden="true"
+                                className={musicEnabled ? "" : "opacity-50"}
+                            />
+                        </button>
                     </div>
                 </div>
 

@@ -13,6 +13,7 @@ import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import MilestoneCelebrations from "@/components/MilestoneCelebrations";
 import RecommendedSkills from "@/components/RecommendedSkills";
 import { FeaturesHub } from "@/components/FeaturesHub";
+import MusicManager from "@/components/MusicManager";
 
 export default function Home() {
   return (
@@ -36,6 +37,7 @@ export default function Home() {
           <BadgeNotification />
           <AchievementNotification />
           <HUD />
+          <MusicManager />
           <SkillDetailsPanel />
         </div>
       </main>

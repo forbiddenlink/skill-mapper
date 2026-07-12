@@ -67,6 +67,7 @@ interface GameState {
     latestAchievementId: string | null; // Triggers achievement popup
     lastActivityDate: string | null; // YYYY-MM-DD for streak tracking
     soundEnabled: boolean;
+    musicEnabled: boolean; // background category music (off until user opts in)
 
     // AI Recommendations
     recommendations: RecommendedSkill[];
@@ -74,6 +75,7 @@ interface GameState {
 
     // UI Actions
     toggleSound: () => void;
+    toggleMusic: () => void;
     selectSkill: (id: string | null) => void;
     dismissBadge: () => void;
     dismissAchievement: () => void;
@@ -144,6 +146,7 @@ export const useGameStore = create<GameState>()(
             latestAchievementId: null,
             lastActivityDate: null,
             soundEnabled: true,
+            musicEnabled: false,
             recommendations: [],
             lastCalculated: 0,
 
@@ -526,6 +529,7 @@ export const useGameStore = create<GameState>()(
 
             dismissBadge: () => set({ latestBadgeId: null }),
             toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
+            toggleMusic: () => set((state) => ({ musicEnabled: !state.musicEnabled })),
 
             applyElkLayout: async () => {
                 const layoutedNodes = await getElkLayoutedSkills();

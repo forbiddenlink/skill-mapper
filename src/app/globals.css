@@ -6,6 +6,7 @@
    Token NAMES preserved so all components re-skin globally.
    ============================================================ */
 :root {
+  color-scheme: dark;
   /* --- ground: violet-biased deep neutrals (chosen, not defaulted) --- */
   --background: #0e0f13;
   --foreground: #eceef3;
@@ -15,7 +16,7 @@
   --surface-2: #1c1f28;
   --surface-3: #262a35;
   --text-muted: #9ba0ae;
-  --text-faint: #6b7080;
+  --text-faint: #868ca0;
 
   /* --- accent: one primary violet. (name kept as --neon-cyan for compat) --- */
   --neon-cyan: #8b7cff;          /* PRIMARY accent: violet */
@@ -60,6 +61,7 @@
 
 /* --- LIGHT THEME (premium = both first-class) --- */
 :root[data-theme="light"] {
+  color-scheme: light;
   --background: #f7f7fb;
   --foreground: #1a1a22;
   --deep-void: #eef0f6;
@@ -67,11 +69,16 @@
   --surface-2: #f3f4f9;
   --surface-3: #e8eaf2;
   --text-muted: #5c6072;
-  --text-faint: #8b90a2;
+  --text-faint: #6a6f80;
   --neon-cyan: #6d5cf0;
   --neon-cyan-strong: #7c6bff;
   --plasma-pink: #a94fe0;
   --electric-green: #22a35a;
+  /* energy + semantic accents retuned for light panels (were dark-only) */
+  --tree-energy: #0a9fc4;
+  --tree-energy-soft: rgba(10, 159, 196, 0.4);
+  --warning-amber: #b26a00;
+  --alert-red: #d23048;
   --border-muted: rgba(20, 20, 40, 0.10);
   --border-accent: rgba(109, 92, 240, 0.5);
   --hologram-blue: rgba(109, 92, 240, 0.08);

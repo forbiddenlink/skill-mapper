@@ -2,12 +2,13 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import { Lock, ShieldCheck, Zap, BookOpen, TriangleAlert } from 'lucide-react';
 import clsx from 'clsx';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
 import { SkillData } from '@/lib/skill-data';
 
 const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
     const { status, title, tier } = data;
     const ref = useRef<HTMLDivElement>(null);
+    const reduce = useReducedMotion();
 
     // Squash-and-stretch pop when a node becomes freshly unlocked / mastered.
     const prevStatus = useRef(status);
@@ -46,7 +47,7 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
     const glareOpacity = useTransform(mouseX, [-0.5, 0.5], [0, 1]);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!ref.current || isLocked) return;
+        if (!ref.current || isLocked || reduce) return;
 
         const rect = ref.current.getBoundingClientRect();
         const width = rect.width;
@@ -74,8 +75,8 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{
-                rotateX: isLocked ? 0 : rotateX,
-                rotateY: isLocked ? 0 : rotateY,
+                rotateX: isLocked || reduce ? 0 : rotateX,
+                rotateY: isLocked || reduce ? 0 : rotateY,
                 transformStyle: "preserve-3d",
             }}
             className={clsx(
@@ -151,7 +152,7 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
 
             {/* Hover Information */}
             {!isLocked && (
-                <div className="pointer-events-none absolute -bottom-8 z-30 whitespace-nowrap rounded-[8px] border border-neon-cyan/35 bg-black/75 px-2 py-1 text-[10px] text-neon-cyan opacity-0 transition-opacity translate-z-30 group-hover:opacity-100">
+                <div className="pointer-events-none absolute -bottom-8 z-30 whitespace-nowrap rounded-[8px] border border-neon-cyan/35 bg-black/75 px-2 py-1 text-[10px] text-neon-cyan opacity-0 transition-opacity translate-z-30 group-hover:opacity-100 group-focus-within:opacity-100">
                     Click to View Details
                 </div>
             )}

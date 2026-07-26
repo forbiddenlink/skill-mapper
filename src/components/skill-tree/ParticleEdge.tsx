@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { EdgeProps, getBezierPath } from 'reactflow';
+import { useReducedMotion } from 'framer-motion';
 
 /**
  * Premium "energy" edge for the skill tree.
@@ -35,7 +36,9 @@ function ParticleEdge({
         targetPosition,
     });
 
+    const reduce = useReducedMotion();
     const active = data?.active ?? false;
+    const animate = active && !reduce;
     const gradId = `edge-grad-${id}`;
     const blurId = `edge-blur-${id}`;
 
@@ -74,8 +77,8 @@ function ParticleEdge({
                 strokeLinecap="round"
             />
 
-            {/* Flowing dash overlay — the "energy travelling" feel */}
-            {active && (
+            {/* Flowing dash overlay — the "energy travelling" feel (motion-gated) */}
+            {animate && (
                 <path
                     d={edgePath}
                     fill="none"
@@ -88,8 +91,8 @@ function ParticleEdge({
                 />
             )}
 
-            {/* Single faint travelling spark */}
-            {active && (
+            {/* Single faint travelling spark (motion-gated; SMIL ignores CSS reduced-motion) */}
+            {animate && (
                 <circle r="2.2" fill="var(--tree-energy)" className="sm-edge-spark">
                     <animateMotion dur="2.6s" repeatCount="indefinite" path={edgePath} />
                 </circle>

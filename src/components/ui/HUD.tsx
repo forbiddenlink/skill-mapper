@@ -109,7 +109,7 @@ export default function HUD() {
                     <div className="relative h-10 w-10 overflow-hidden rounded-md border border-neon-cyan/60" aria-hidden="true">
                         <Image
                             src="/avatars/operator.png"
-                            alt="Operator Avatar"
+                            alt=""
                             width={40}
                             height={40}
                             className="object-cover"
@@ -229,12 +229,6 @@ export default function HUD() {
                 </div>
             </section>
 
-            {/* Badges Mini-Display (Optional - just listing icons would be cool) */}
-            {unlockedBadges.length > 0 && (
-                <div className="flex gap-1">
-                    {/* We could map a few small icons here, but count is enough for V1 */}
-                </div>
-            )}
         </aside>
     );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useGameStore } from '@/lib/store';
 import { Sparkles, Code, Server, Layers } from 'lucide-react';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';
@@ -48,6 +48,7 @@ const ROLES = [
 
 export default function OnboardingModal() {
     const { unlockBatch, nodes } = useGameStore();
+    const reduce = useReducedMotion();
     const [isOpen, setIsOpen] = useState(false);
     const closeModal = () => setIsOpen(false);
     const dialogRef = useDialogA11y<HTMLDivElement>(isOpen, closeModal);
@@ -86,8 +87,8 @@ export default function OnboardingModal() {
                     className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
                 >
                     <motion.div
-                        initial={{ scale: 0.96, y: 12 }}
-                        animate={{ scale: 1, y: 0 }}
+                        initial={reduce ? { opacity: 0 } : { scale: 0.96, y: 12 }}
+                        animate={reduce ? { opacity: 1 } : { scale: 1, y: 0 }}
                         ref={dialogRef}
                         role="dialog"
                         aria-modal="true"
@@ -118,11 +119,11 @@ export default function OnboardingModal() {
                                     key={role.id}
                                     type="button"
                                     onClick={() => handleSelect(role.id)}
-                                    initial={{ opacity: 0, y: 14 }}
+                                    initial={reduce ? { opacity: 0 } : { opacity: 0, y: 14 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.08 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                                    whileHover={{ y: -3 }}
-                                    whileTap={{ scale: 0.985 }}
+                                    transition={{ delay: reduce ? 0 : 0.08 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                                    whileHover={reduce ? undefined : { y: -3 }}
+                                    whileTap={reduce ? undefined : { scale: 0.985 }}
                                     className="panel-base group relative flex items-start gap-4 overflow-hidden p-5 text-left transition-[border-color,box-shadow] duration-200 hover:border-neon-cyan/50 hover:shadow-[var(--glow-accent)]"
                                 >
                                     <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[12px] border border-neon-cyan/25 bg-neon-cyan/10 text-neon-cyan transition-colors group-hover:border-neon-cyan/55 group-hover:bg-neon-cyan/15">
@@ -147,7 +148,7 @@ export default function OnboardingModal() {
                             <button
                                 type="button"
                                 onClick={closeModal}
-                                className="text-sm text-text-muted hover:text-white"
+                                className="-mx-3 rounded-md px-3 py-2 text-sm text-text-muted hover:text-white"
                             >
                                 Skip and start from scratch
                             </button>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import DemoLoop from "@/components/showcase/DemoLoop";
 
 export const metadata: Metadata = {
-  title: "Skill Mapper — Case Study",
+  title: "Skill Mapper: Case Study",
   description:
     "How a gamified skill-tree learning platform was designed and built: the problem, three explored art directions, and the result. Next.js 16, React 19, an animated node graph, and a full gamification system.",
 };
@@ -41,7 +41,7 @@ const DIRECTIONS = [
     tag: "Direction B",
     name: "Refined Premium",
     verdict: "Chosen base",
-    body: "Linear / Vercel-tier restraint — deep neutrals, one violet accent, editorial serif display, spring motion. Says “senior” fastest and photographs beautifully.",
+    body: "Linear / Vercel-tier restraint: deep neutrals, one violet accent, editorial serif display, spring motion. Says “senior” fastest and photographs beautifully.",
     tone: "text-neon-cyan-strong",
     chosen: true,
   },
@@ -49,7 +49,7 @@ const DIRECTIONS = [
     tag: "Direction C",
     name: "Bold & Playful",
     verdict: "Most memorable",
-    body: "Duolingo / Arc energy — chunky outlines, bouncy physics, character. Widest appeal, but risks reading “toy” if the execution slips.",
+    body: "Duolingo / Arc energy: chunky outlines, bouncy physics, character. Widest appeal, but risks reading “toy” if the execution slips.",
     tone: "text-warning-amber",
   },
 ];
@@ -61,7 +61,7 @@ const FEATURES = [
   },
   {
     k: "Full gamification loop",
-    d: "XP, levels, badges, achievements, streaks, daily challenges, and boss battles — with squash-pop unlocks, confetti, and generated victory jingles.",
+    d: "XP, levels, badges, achievements, streaks, daily challenges, and boss battles, with squash-pop unlocks, confetti, and generated victory jingles.",
   },
   {
     k: "AI recommendations",
@@ -123,7 +123,7 @@ export default function ShowcasePage() {
           Turn learning into a <span className="text-neon-cyan-strong">skill tree</span> you actually finish.
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-text-muted md:text-xl">
-          Map any domain as a branching tree of skills, then progress through it like a game — XP,
+          Map any domain as a branching tree of skills, then progress through it like a game: XP,
           unlocks, streaks, and an AI that tells you what to learn next. Built as a study in design
           and frontend craft.
         </p>
@@ -165,10 +165,10 @@ export default function ShowcasePage() {
       {/* metrics */}
       <section className="mx-auto max-w-5xl px-6 py-6">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          <Stat value="~40" label="Skills mapped" sub="4 tiers, auto-laid-out" />
+          <Stat value="100" label="Accessibility" sub="Lighthouse, WCAG 2.2 AA" />
           <Stat value="100" label="Best-practices & SEO" sub="Lighthouse, desktop" />
-          <Stat value="95" label="Accessibility" sub="Lighthouse + keyboard/SR" />
           <Stat value="0" label="Layout shift (CLS)" sub="FCP under 1s" />
+          <Stat value="~40" label="Skills mapped" sub="4 tiers, auto-laid-out" />
         </div>
       </section>
 
@@ -201,7 +201,7 @@ export default function ShowcasePage() {
         </h2>
         <p className="mt-5 max-w-2xl text-text-muted">
           Rather than settle on the first idea, each direction was mocked up on the actual product and
-          judged side by side. The base shipped is Refined Premium — with the best moments of the other
+          judged side by side. The base shipped is Refined Premium, with the best moments of the other
           two grafted in.
         </p>
         <div className="mt-10 grid gap-4 md:grid-cols-3">
@@ -286,7 +286,7 @@ export default function ShowcasePage() {
 
       <footer className="border-t border-border-muted">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-6 py-8 font-mono text-xs text-text-faint sm:flex-row">
-          <span>Skill Mapper — a design &amp; frontend case study</span>
+          <span>Skill Mapper: a design &amp; frontend case study</span>
           <Link href="/" className="hover:text-foreground">
             skill-mapper.app
           </Link>

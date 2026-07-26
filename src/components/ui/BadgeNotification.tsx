@@ -42,7 +42,7 @@ export default function BadgeNotification() {
 
                     <button
                         onClick={dismissBadge}
-                        className="px-6 py-2 bg-white text-black font-bold rounded-full hover:bg-gray-200 hover:scale-105 transition-all text-sm"
+                        className="rounded-full bg-gradient-to-b from-neon-cyan-strong to-neon-cyan px-6 py-2 text-sm font-semibold text-[#0b0715] shadow-[var(--glow-accent)] transition-all hover:scale-105 hover:brightness-110"
                     >
                         Awesome!
                     </button>

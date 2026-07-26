@@ -82,7 +82,8 @@ describe('CustomNode', () => {
       </TestWrapper>
     );
 
-    const node = container.firstChild as HTMLElement;
+    // The tilt/selection layer is the inner node (wrapped by a pop container).
+    const node = (container.firstChild as HTMLElement).firstChild as HTMLElement;
     expect(node).toHaveClass('ring-2', 'ring-neon-cyan');
   });
 });

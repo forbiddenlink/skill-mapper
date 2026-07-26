@@ -80,7 +80,7 @@ export default function AchievementNotification() {
 
                     <button
                         onClick={dismissAchievement}
-                        className="rounded-full bg-white px-6 py-2 text-sm font-bold text-black transition-all hover:scale-105 hover:bg-gray-200"
+                        className="rounded-full bg-gradient-to-b from-neon-cyan-strong to-neon-cyan px-6 py-2 text-sm font-semibold text-[#0b0715] shadow-[var(--glow-accent)] transition-all hover:scale-105 hover:brightness-110"
                     >
                         Nice!
                     </button>

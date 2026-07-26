@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import { Lock, ShieldCheck, Zap, BookOpen, TriangleAlert } from 'lucide-react';
 import clsx from 'clsx';
@@ -8,6 +8,20 @@ import { SkillData } from '@/lib/skill-data';
 const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
     const { status, title, tier } = data;
     const ref = useRef<HTMLDivElement>(null);
+
+    // Squash-and-stretch pop when a node becomes freshly unlocked / mastered.
+    const prevStatus = useRef(status);
+    const [popping, setPopping] = useState(false);
+    useEffect(() => {
+        const changed = prevStatus.current !== status;
+        prevStatus.current = status;
+        if (changed && (status === 'available' || status === 'in-progress' || status === 'mastered')) {
+            setPopping(true);
+            const t = setTimeout(() => setPopping(false), 480);
+            return () => clearTimeout(t);
+        }
+        return undefined;
+    }, [status]);
 
     const isLocked = status === 'locked';
     const isAvailable = status === 'available';
@@ -54,6 +68,7 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
     };
 
     return (
+        <div className={clsx('relative', popping && 'sm-node-pop')}>
         <motion.div
             ref={ref}
             onMouseMove={handleMouseMove}
@@ -66,10 +81,10 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
             className={clsx(
                 "perspective-1000 group relative flex h-[92px] w-44 items-center justify-center overflow-visible rounded-[12px] border p-2 backdrop-blur-md transition-colors duration-200",
                 // Status Styles
-                isLocked && "border-white/15 bg-surface-1/85 text-gray-400",
-                isAvailable && "cursor-pointer border-neon-cyan/60 bg-surface-2/80 shadow-[0_6px_16px_rgba(0,0,0,0.26)]",
-                isMastered && "border-plasma-pink/65 bg-plasma-pink/10 text-white shadow-[0_6px_16px_rgba(0,0,0,0.3)]",
-                isDecayed && "border-alert-red/70 bg-alert-red/10 text-gray-300 shadow-[0_6px_16px_rgba(0,0,0,0.3)]",
+                isLocked && "border-white/10 bg-surface-1/70 text-text-faint opacity-70 saturate-50",
+                isAvailable && "cursor-pointer border-neon-cyan/60 bg-surface-2/85 shadow-[0_0_0_1px_rgba(139,124,255,0.2),0_10px_28px_-12px_rgba(139,124,255,0.55)]",
+                isMastered && "border-neon-cyan/70 bg-gradient-to-b from-neon-cyan/15 to-plasma-pink/10 text-white shadow-[0_0_0_1px_rgba(139,124,255,0.35),0_14px_34px_-14px_rgba(139,124,255,0.7)]",
+                isDecayed && "border-alert-red/70 bg-alert-red/10 text-gray-300 shadow-[0_10px_28px_-14px_rgba(244,98,111,0.6)]",
                 // Selection
                 selected && "ring-2 ring-neon-cyan ring-offset-2 ring-offset-deep-void"
             )}
@@ -141,6 +156,7 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
                 </div>
             )}
         </motion.div>
+        </div>
     );
 };
 

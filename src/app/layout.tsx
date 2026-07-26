@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Orbitron } from "next/font/google";
+import { Inter, Fraunces, JetBrains_Mono } from "next/font/google";
 import { PostHogProvider } from "@/lib/posthog";
 import "./globals.css";
 import { Analytics } from '@vercel/analytics/react';
@@ -10,8 +10,16 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const orbitron = Orbitron({
-  variable: "--font-orbitron",
+// Editorial serif display — the premium/senior signal (replaces Orbitron)
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  axes: ["opsz", "SOFT", "WONK"],
+});
+
+// Technical mono for HUD data, tiers, XP — a disciplined nod to the "operator" origin
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
 });
 
@@ -67,7 +75,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#00f3ff",
+  themeColor: "#8b7cff",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -87,7 +95,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body
-        className={`${inter.variable} ${orbitron.variable} antialiased bg-deep-void text-foreground`}
+        className={`${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable} antialiased bg-deep-void text-foreground`}
       >
         <PostHogProvider>{children}</PostHogProvider>
             <Analytics />

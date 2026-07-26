@@ -97,37 +97,49 @@ export default function OnboardingModal() {
                         className="modal-shell relative w-full max-w-4xl overflow-hidden p-5 md:p-8"
                     >
                         {/* Background Gradient */}
-                        <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-neon-cyan/85 via-neon-cyan/20 to-plasma-pink/85" />
+                        <div className="absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-neon-cyan/70 to-transparent" />
+                        <div className="pointer-events-none absolute -top-24 left-1/2 h-48 w-[36rem] -translate-x-1/2 rounded-full bg-neon-cyan/10 blur-3xl" />
 
                         <div className="text-center mb-8">
-                            <h2 id="onboarding-title" className="text-3xl font-semibold text-white md:text-[40px] md:leading-[44px]">
-                                Welcome to the AI Stack
+                            <span className="mb-4 inline-block font-mono text-[11px] uppercase tracking-[0.28em] text-text-faint">
+                                Calibrate your path
+                            </span>
+                            <h2 id="onboarding-title" className="font-display text-4xl font-medium tracking-tight text-white text-balance md:text-[52px] md:leading-[1.05]">
+                                Where are you starting?
                             </h2>
-                            <p id="onboarding-description" className="mt-2 text-base text-text-muted md:text-lg">
-                                Choose your current experience level to jumpstart your skill tree.
+                            <p id="onboarding-description" className="mx-auto mt-3 max-w-md text-base text-text-muted md:text-lg">
+                                Pick your current level and we&rsquo;ll pre-light the skill tree so you begin where you actually are.
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {ROLES.map((role) => (
-                                <button
+                            {ROLES.map((role, i) => (
+                                <motion.button
                                     key={role.id}
                                     type="button"
                                     onClick={() => handleSelect(role.id)}
-                                    className="panel-base group relative flex items-start gap-4 p-5 text-left hover:border-neon-cyan/45"
+                                    initial={{ opacity: 0, y: 14 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.08 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                                    whileHover={{ y: -3 }}
+                                    whileTap={{ scale: 0.985 }}
+                                    className="panel-base group relative flex items-start gap-4 overflow-hidden p-5 text-left transition-[border-color,box-shadow] duration-200 hover:border-neon-cyan/50 hover:shadow-[var(--glow-accent)]"
                                 >
-                                    <div className="grid h-11 w-11 place-items-center rounded-[12px] border border-neon-cyan/25 bg-neon-cyan/10 text-neon-cyan transition-colors group-hover:border-neon-cyan/55">
+                                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[12px] border border-neon-cyan/25 bg-neon-cyan/10 text-neon-cyan transition-colors group-hover:border-neon-cyan/55 group-hover:bg-neon-cyan/15">
                                         <role.icon size={22} />
                                     </div>
-                                    <div>
-                                        <h3 className="mb-1 text-xl font-semibold text-white">
+                                    <div className="min-w-0">
+                                        <h3 className="mb-1 text-lg font-semibold tracking-tight text-white">
                                             {role.title}
                                         </h3>
                                         <p className="text-sm leading-relaxed text-text-muted">
                                             {role.description}
                                         </p>
                                     </div>
-                                </button>
+                                    <span aria-hidden className="ml-auto self-center text-text-faint opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-neon-cyan group-hover:opacity-100">
+                                        &rarr;
+                                    </span>
+                                </motion.button>
                             ))}
                         </div>
 

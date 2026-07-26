@@ -251,6 +251,24 @@ function SkillTreeInner() {
         [filteredNodes, collapsed, childrenMap]
     );
 
+    // Light up edges whose source skill is mastered — the "allocated route"
+    // through the tree (Path-of-Exile model). Everything else stays dim.
+    const activeSources = useMemo(() => {
+        const s = new Set<string>();
+        for (const n of filteredNodes) {
+            if (n.data.status === 'mastered') s.add(n.id);
+        }
+        return s;
+    }, [filteredNodes]);
+
+    const animatedEdges = useMemo(() =>
+        filteredEdges.map(edge => ({
+            ...edge,
+            data: { ...edge.data, active: activeSources.has(edge.source) },
+        })),
+        [filteredEdges, activeSources]
+    );
+
     return (
         <div className="h-full w-full bg-transparent" data-skill-tree>
             <AnimatePresence mode="wait">
@@ -263,7 +281,7 @@ function SkillTreeInner() {
                 >
                     <ReactFlow
                         nodes={animatedNodes}
-                        edges={filteredEdges}
+                        edges={animatedEdges}
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
                         onNodeClick={onNodeClick}

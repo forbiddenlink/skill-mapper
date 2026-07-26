@@ -116,8 +116,10 @@ export default function HUD() {
                         />
                     </div>
                     <div>
-                        <h2 className="text-sm font-semibold tracking-wide text-white">Operator</h2>
-                        <div className="font-mono text-xs text-text-muted">Level {level} {levelInfo.title}</div>
+                        <h2 className="text-sm font-semibold tracking-tight text-white">Operator</h2>
+                        <div className="font-mono text-[11px] uppercase tracking-wide text-text-muted">
+                            <span className="text-neon-cyan-strong">Lv {level}</span> · {levelInfo.title}
+                        </div>
                     </div>
 
                     {/* Controls Row */}
@@ -201,29 +203,29 @@ export default function HUD() {
                     />
                     <div
                         ref={progressBarRef}
-                        className="xp-progress-fill h-full bg-neon-cyan transition-all duration-700 ease-out"
+                        className="xp-progress-fill h-full rounded-full bg-gradient-to-r from-neon-cyan to-neon-cyan-strong shadow-[0_0_12px_rgba(139,124,255,0.6)] transition-all duration-700 ease-out"
                         aria-hidden="true"
                     />
                 </div>
-                <div className="mt-1 flex justify-between text-[10px] font-mono uppercase text-text-muted">
-                    <span>XP: {xp.toLocaleString()}</span>
-                    <span>Next: {levelInfo.xpForNextLevel.toLocaleString()}</span>
+                <div className="mt-1.5 flex justify-between text-[10px] font-mono uppercase tracking-wide text-text-faint tabular-nums">
+                    <span><span className="text-text-muted">XP</span> {xp.toLocaleString()}</span>
+                    <span><span className="text-text-muted">Next</span> {levelInfo.xpForNextLevel.toLocaleString()}</span>
                 </div>
             </section>
 
             {/* Stats / Achievements */}
-            <section className="panel-base flex flex-wrap gap-3 p-3 text-xs font-mono text-text-muted" aria-label="Achievements and streaks">
-                <div className="flex items-center gap-2">
-                    <Trophy className="h-3 w-3 text-yellow-500" aria-hidden="true" />
-                    <span className="text-white">{unlockedBadges.length} Badges</span>
+            <section className="panel-base flex flex-wrap gap-x-4 gap-y-2 p-3 text-xs font-mono text-text-muted tabular-nums" aria-label="Achievements and streaks">
+                <div className="flex items-center gap-1.5">
+                    <Trophy className="h-3.5 w-3.5 text-warning-amber" aria-hidden="true" />
+                    <span className="text-white">{unlockedBadges.length}</span><span className="text-text-faint">Badges</span>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Star className="h-3 w-3 text-neon-cyan" aria-hidden="true" />
-                    <span className="text-white">{achievements.length} Achievements</span>
+                <div className="flex items-center gap-1.5">
+                    <Star className="h-3.5 w-3.5 text-neon-cyan-strong" aria-hidden="true" />
+                    <span className="text-white">{achievements.length}</span><span className="text-text-faint">Achievements</span>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Flame className="h-3 w-3 text-orange-500" aria-hidden="true" />
-                    <span className="text-white">{streak} Day Streak</span>
+                <div className="flex items-center gap-1.5">
+                    <Flame className="h-3.5 w-3.5 text-warning-amber" aria-hidden="true" />
+                    <span className="text-white">{streak}</span><span className="text-text-faint">Day streak</span>
                 </div>
             </section>
 

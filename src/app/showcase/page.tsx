@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import DemoLoop from "@/components/showcase/DemoLoop";
 
 export const metadata: Metadata = {
   title: "Skill Mapper — Case Study",
@@ -154,20 +155,10 @@ export default function ShowcasePage() {
               backgroundSize: "44px 44px",
             }}
           />
-          <div className="absolute inset-0 grid place-items-center px-6 text-center">
-            <div>
-              <div id="demo" className="font-mono text-xs uppercase tracking-[0.24em] text-text-faint">
-                Live demo
-              </div>
-              <p className="mt-3 max-w-md text-sm text-text-muted">
-                A 30-second product film lands here. For now,{" "}
-                <Link href="/" className="text-neon-cyan-strong underline-offset-4 hover:underline">
-                  open the live app
-                </Link>{" "}
-                and pick a starting path to watch the tree light up.
-              </p>
-            </div>
-          </div>
+          <span id="demo" className="absolute left-4 top-3 z-10 font-mono text-[10px] uppercase tracking-[0.24em] text-text-faint">
+            Live demo
+          </span>
+          <DemoLoop />
         </div>
       </section>
 

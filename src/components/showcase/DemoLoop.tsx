@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 /**
@@ -52,16 +52,40 @@ export default function DemoLoop() {
   const reduce = useReducedMotion();
   // step = how many STEPS have landed (0..STEPS.length)
   const [step, setStep] = useState(reduce ? STEPS.length : 0);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (reduce) return;
+    const el = rootRef.current;
+    if (!el) return;
+
+    let iv: ReturnType<typeof setInterval> | null = null;
     let n = 0;
-    const tick = () => {
-      n = n >= STEPS.length ? 0 : n + 1;
-      setStep(n);
+    const start = () => {
+      if (iv) return;
+      iv = setInterval(() => {
+        n = n >= STEPS.length ? 0 : n + 1;
+        setStep(n);
+      }, 1500);
     };
-    const iv = setInterval(tick, 1500);
-    return () => clearInterval(iv);
+    const stop = () => {
+      if (iv) {
+        clearInterval(iv);
+        iv = null;
+      }
+    };
+
+    // Only animate while the demo is actually on screen — saves the main thread
+    // (and the visitor's battery) when it's scrolled out of view.
+    const io = new IntersectionObserver(
+      ([entry]) => (entry?.isIntersecting ? start() : stop()),
+      { threshold: 0.25 },
+    );
+    io.observe(el);
+    return () => {
+      stop();
+      io.disconnect();
+    };
   }, [reduce]);
 
   const unlocked = new Set(STEPS.slice(0, step).map((s) => s.unlock));
@@ -71,7 +95,7 @@ export default function DemoLoop() {
   const isActiveEdge = (e: EdgeDef) => unlocked.has(e.from);
 
   return (
-    <div className="absolute inset-0" aria-hidden="true">
+    <div ref={rootRef} className="absolute inset-0" aria-hidden="true">
       {/* wires */}
       <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         <defs>

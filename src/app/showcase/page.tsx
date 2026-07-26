@@ -166,9 +166,9 @@ export default function ShowcasePage() {
       <section className="mx-auto max-w-5xl px-6 py-6">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <Stat value="~40" label="Skills mapped" sub="4 tiers, auto-laid-out" />
-          <Stat value="19" label="Feature systems" sub="XP → boss battles" />
-          <Stat value="60fps" label="Graph interactions" sub="target, audited Phase 5" />
-          <Stat value="A11y" label="Keyboard + SR" sub="live regions, focus mgmt" />
+          <Stat value="100" label="Best-practices & SEO" sub="Lighthouse, desktop" />
+          <Stat value="95" label="Accessibility" sub="Lighthouse + keyboard/SR" />
+          <Stat value="0" label="Layout shift (CLS)" sub="FCP under 1s" />
         </div>
       </section>
 

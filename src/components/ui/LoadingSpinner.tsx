@@ -6,7 +6,7 @@ interface LoadingSpinnerProps {
 }
 
 /**
- * Loading spinner component with animated cyberpunk aesthetic
+ * Loading spinner with Signal Atlas accent
  */
 export function LoadingSpinner({ size = 'md', className = '' }: LoadingSpinnerProps) {
     const sizeClasses = {
@@ -31,7 +31,7 @@ export function LoadingSpinner({ size = 'md', className = '' }: LoadingSpinnerPr
                     strokeWidth="4"
                     strokeLinecap="round"
                     strokeDasharray="80, 200"
-                    className="text-neon-cyan"
+                    className="text-signal"
                 />
             </svg>
         </motion.div>

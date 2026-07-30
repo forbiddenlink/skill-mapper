@@ -49,7 +49,7 @@ export default function MilestoneCelebrations() {
                     x: randomInRange(0.1, 0.9),
                     y: Math.random() - 0.2,
                 },
-                colors: ['#00f3ff', '#ff00ff', '#00ff88'],
+                colors: ['#7ad4c8', '#8fd99a', '#e8c36a'],
             });
         }, 250);
 
@@ -79,7 +79,7 @@ export default function MilestoneCelebrations() {
                 angle: 60,
                 spread: 55,
                 origin: { x: 0 },
-                colors: ['#00f3ff', '#ff00ff'],
+                colors: ['#7ad4c8', '#8fd99a'],
             });
             
             confetti({
@@ -87,7 +87,7 @@ export default function MilestoneCelebrations() {
                 angle: 120,
                 spread: 55,
                 origin: { x: 1 },
-                colors: ['#00ff88', '#00f3ff'],
+                colors: ['#e8c36a', '#7ad4c8'],
             });
         }, 30);
 
@@ -104,7 +104,7 @@ export default function MilestoneCelebrations() {
                 gravity: 0,
                 decay: 0.94,
                 startVelocity: 30,
-                colors: ['#FFD700', '#FFA500', '#FF69B4'],
+                colors: ['#e8c36a', '#7ad4c8', '#8fd99a'],
             };
 
             const shoot = () => {

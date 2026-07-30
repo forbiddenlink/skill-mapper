@@ -29,12 +29,12 @@ function ParticleEdge({
             <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
 
             {/* Moving Particle */}
-            <circle r="3" fill="#00f3ff">
+            <circle r="3" fill="var(--signal)">
                 <animateMotion dur="2s" repeatCount="indefinite" path={edgePath} />
             </circle>
 
             {/* Optional: Second slower particle for trail effect */}
-            <circle r="2" fill="#00f3ff" opacity="0.5">
+            <circle r="2" fill="var(--signal)" opacity="0.5">
                 <animateMotion dur="2s" begin="0.1s" repeatCount="indefinite" path={edgePath} />
             </circle>
         </>

@@ -279,9 +279,9 @@ function SkillTreeInner() {
                         maxZoom={2}
                         defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
                     >
-                        <Background gap={24} color="rgba(148,163,184,0.25)" className="opacity-20" />
+                        <Background gap={56} color="rgba(148,163,184,0.12)" className="opacity-40" />
                         <Controls
-                            className="!bg-surface-2 !border !border-white/20 !rounded-[12px] !fill-slate-200"
+                            className="!rounded-[10px] !border !border-white/12 !bg-surface-2 !fill-slate-200"
                             aria-label="Skill tree navigation controls"
                             showZoom={true}
                             showFitView={true}
@@ -290,13 +290,15 @@ function SkillTreeInner() {
                         <MiniMap
                             nodeColor={(node) => {
                                 switch (node.data.status) {
-                                    case 'mastered': return '#ff00ff';
-                                    case 'available': return '#00f3ff';
-                                    default: return '#333';
+                                    case 'mastered': return 'oklch(0.78 0.13 150)';
+                                    case 'available': return 'oklch(0.76 0.11 185)';
+                                    case 'in-progress': return 'oklch(0.72 0.1 230)';
+                                    case 'decayed': return 'oklch(0.66 0.16 28)';
+                                    default: return 'oklch(0.38 0.03 255)';
                                 }
                             }}
-                            maskColor="rgba(0,0,0, 0.7)"
-                            className="!border !border-white/20 !rounded-[12px] !bg-surface-1"
+                            maskColor="rgba(18, 24, 32, 0.72)"
+                            className="!rounded-[10px] !border !border-white/12 !bg-surface-1"
                             ariaLabel="Skill tree minimap overview"
                         />
                     </ReactFlow>
@@ -309,7 +311,7 @@ function SkillTreeInner() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute bottom-20 left-1/2 -translate-x-1/2 rounded-lg bg-surface-2/90 px-4 py-2 text-sm text-gray-300 backdrop-blur-sm border border-white/10"
+                    className="absolute bottom-20 left-1/2 -translate-x-1/2 rounded-[10px] border border-white/12 bg-surface-2 px-4 py-2 text-sm text-foreground/85"
                 >
                     Double-click or press Enter to {collapsed[selectedSkillId] ? 'expand' : 'collapse'} branch
                 </motion.div>

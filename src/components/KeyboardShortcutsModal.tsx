@@ -105,14 +105,13 @@ export default function KeyboardShortcutsModal() {
                             aria-modal="true"
                             tabIndex={-1}
                         >
-                            {/* Header */}
-                            <div className="flex items-center justify-between mb-6">
+                            <div className="mb-6 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="grid h-10 w-10 place-items-center rounded-[12px] border border-neon-cyan/35 bg-neon-cyan/10 text-neon-cyan">
+                                    <div className="grid h-10 w-10 place-items-center rounded-[10px] border border-signal/35 bg-signal/10 text-signal">
                                         <Keyboard size={24} />
                                     </div>
-                                    <h2 id="shortcuts-title" className="text-xl font-semibold text-white">
-                                        Keyboard Shortcuts
+                                    <h2 id="shortcuts-title" className="font-display text-xl font-semibold text-foreground">
+                                        Keyboard shortcuts
                                     </h2>
                                 </div>
                                 <button
@@ -129,13 +128,13 @@ export default function KeyboardShortcutsModal() {
                             <div className="space-y-3">
                                 {SHORTCUTS.map((shortcut) => (
                                     <div
-                                        key={`${shortcut.key}-${shortcut.ctrlKey || ''}-${shortcut.shiftKey || ''}`}
+                                        key={`${shortcut.key}-${shortcut.ctrlKey || ''}-${shortcut.shiftKey || ''}-${shortcut.metaKey || ''}`}
                                         className="panel-base flex items-center justify-between p-3"
                                     >
-                                        <span className="text-sm text-gray-200">
+                                        <span className="text-sm text-foreground/90">
                                             {shortcut.description}
                                         </span>
-                                        <kbd className="rounded-[8px] border border-white/20 bg-black/30 px-3 py-1.5 font-mono text-xs text-neon-cyan">
+                                        <kbd className="rounded-[8px] border border-white/12 bg-surface-1 px-3 py-1.5 font-mono text-xs text-signal">
                                             {formatShortcut(shortcut)}
                                         </kbd>
                                     </div>
@@ -145,7 +144,7 @@ export default function KeyboardShortcutsModal() {
                             {/* Footer */}
                             <div className="divider-soft mt-6 border-t pt-4">
                                 <p className="text-center text-xs text-text-muted">
-                                    Press <kbd className="rounded-[8px] border border-white/20 bg-black/30 px-2 py-1 font-mono text-neon-cyan">Shift + ?</kbd> to toggle this menu
+                                    Press <kbd className="rounded-[8px] border border-white/12 bg-surface-1 px-2 py-1 font-mono text-signal">Shift + ?</kbd> to toggle this menu
                                 </p>
                             </div>
                         </motion.div>

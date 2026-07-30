@@ -15,7 +15,7 @@ export const BADGES: Badge[] = [
         label: 'Foundation Layer',
         description: 'Mastered the bedrock of the web (HTML, Git, JS).',
         icon: Shield,
-        color: 'text-blue-400',
+        color: 'text-progress',
         requirements: ['web-standards', 'git-ops', 'es-next']
     },
     {
@@ -23,7 +23,7 @@ export const BADGES: Badge[] = [
         label: 'React Pro',
         description: 'Built a mastery of modern Frontend Engineering.',
         icon: Atom,
-        color: 'text-cyan-400',
+        color: 'text-signal',
         requirements: ['react-core', 'tailwind', 'typescript', 'state-machines']
     },
     {
@@ -31,7 +31,7 @@ export const BADGES: Badge[] = [
         label: 'Backend Architect',
         description: 'Databases, APIs, and Server Runtimes are your playground.',
         icon: Layers,
-        color: 'text-green-400',
+        color: 'text-mastery',
         requirements: ['node-runtime', 'postgresql', 'drizzle-orm']
     },
     {
@@ -39,7 +39,7 @@ export const BADGES: Badge[] = [
         label: 'AI Pioneer',
         description: 'Bridging the gap between software and intelligence.',
         icon: Bot,
-        color: 'text-purple-400',
+        color: 'text-reward',
         requirements: ['llm-integration', 'rag-arch', 'vector-db']
     },
     {
@@ -47,7 +47,7 @@ export const BADGES: Badge[] = [
         label: 'Full Stack Hero',
         description: 'You have conquered the entire core stack.',
         icon: Trophy,
-        color: 'text-yellow-400',
+        color: 'text-reward',
         requirements: [
             'web-standards', 'git-ops', 'es-next',
             'react-core', 'tailwind', 'typescript',

@@ -102,8 +102,8 @@ export default function HUD() {
     return (
         <aside className="pointer-events-none fixed left-4 top-4 z-30 flex flex-col gap-3 md:left-6 md:top-6" aria-label="Game statistics">
             <section className="panel-strong pointer-events-auto w-64 p-4 md:w-[17rem]" aria-label="Player information">
-                <div className="mb-3 flex items-center gap-3">
-                    <div className="relative h-10 w-10 overflow-hidden rounded-[8px] border border-signal/45" aria-hidden="true">
+                    <div className="mb-3 flex items-start gap-3">
+                    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-[8px] border border-signal/45" aria-hidden="true">
                         <Image
                             src="/avatars/operator.png"
                             alt="Operator Avatar"
@@ -118,8 +118,9 @@ export default function HUD() {
                             Lvl {level} · {levelInfo.title}
                         </div>
                     </div>
+                </div>
 
-                    <div className="ml-auto flex shrink-0 gap-1">
+                <div className="mb-3 flex flex-wrap gap-1">
                         <ShareProgressCard />
                         <button
                             type="button"
@@ -167,7 +168,6 @@ export default function HUD() {
                                 className={musicEnabled ? "text-signal" : "opacity-50"}
                             />
                         </button>
-                    </div>
                 </div>
 
                 <input

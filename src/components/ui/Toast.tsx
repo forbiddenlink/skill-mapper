@@ -81,10 +81,10 @@ function ToastItem({ toast }: { toast: Toast }) {
     };
 
     const colors = {
-        success: 'bg-electric-green/10 border-electric-green/55 text-electric-green',
-        error: 'bg-alert-red/10 border-alert-red/55 text-alert-red',
-        info: 'bg-neon-cyan/10 border-neon-cyan/55 text-neon-cyan',
-        warning: 'bg-warning-amber/10 border-warning-amber/55 text-warning-amber',
+        success: 'bg-mastery/10 border-mastery/55 text-mastery',
+        error: 'bg-decay/10 border-decay/55 text-decay',
+        info: 'bg-signal/10 border-signal/55 text-signal',
+        warning: 'bg-reward/10 border-reward/55 text-reward',
     };
 
     const Icon = icons[toast.type];
@@ -94,7 +94,7 @@ function ToastItem({ toast }: { toast: Toast }) {
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, x: 100, scale: 0.95 }}
-            className={`flex min-w-[300px] max-w-md items-start justify-between gap-3 rounded-[12px] border p-4 shadow-lg backdrop-blur-md ${colors[toast.type]}`}
+            className={`flex min-w-[300px] max-w-md items-start justify-between gap-3 rounded-[10px] border p-4 shadow-lg ${colors[toast.type]}`}
         >
             <div className="flex items-center gap-3">
                 <Icon className="h-5 w-5 flex-shrink-0" />

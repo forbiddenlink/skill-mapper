@@ -24,11 +24,11 @@ const ACHIEVEMENT_ICONS: Record<string, React.ReactNode> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-    mastery: 'text-neon-cyan border-neon-cyan/30 bg-neon-cyan/10',
-    streak: 'text-orange-400 border-orange-400/30 bg-orange-400/10',
-    xp: 'text-yellow-400 border-yellow-400/30 bg-yellow-400/10',
-    exploration: 'text-purple-400 border-purple-400/30 bg-purple-400/10',
-    special: 'text-plasma-pink border-plasma-pink/30 bg-plasma-pink/10',
+    mastery: 'text-mastery border-mastery/30 bg-mastery/10',
+    streak: 'text-reward border-reward/30 bg-reward/10',
+    xp: 'text-reward border-reward/30 bg-reward/10',
+    exploration: 'text-progress border-progress/30 bg-progress/10',
+    special: 'text-signal border-signal/30 bg-signal/10',
 };
 
 export default function AchievementNotification() {
@@ -49,14 +49,11 @@ export default function AchievementNotification() {
                     initial={{ scale: 0.5, opacity: 0, y: 50 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.5, opacity: 0, y: 50 }}
-                    className="fixed left-1/2 top-20 z-[70] flex max-w-sm -translate-x-1/2 flex-col items-center rounded-[16px] border border-neon-cyan/30 bg-[#111]/95 p-6 shadow-2xl shadow-neon-cyan/10 backdrop-blur-md"
+                    className="fixed left-1/2 top-20 z-[70] flex max-w-sm -translate-x-1/2 flex-col items-center rounded-[14px] border border-signal/25 bg-surface-2 p-6 shadow-2xl"
                 >
-                    {/* Glow effect */}
-                    <div className="absolute inset-0 rounded-2xl bg-neon-cyan/5 animate-pulse" />
-
                     <button
                         onClick={dismissAchievement}
-                        className="absolute right-2 top-2 text-gray-500 transition-colors hover:text-white"
+                        className="absolute right-2 top-2 text-text-muted transition-colors hover:text-foreground"
                         aria-label="Dismiss achievement notification"
                     >
                         <X size={16} />
@@ -66,21 +63,21 @@ export default function AchievementNotification() {
                         {icon}
                     </div>
 
-                    <h3 className="mb-1 font-mono text-xs uppercase tracking-wider text-text-muted">Achievement Unlocked</h3>
-                    <h4 className="mb-2 text-lg font-semibold text-white">{achievement.name}</h4>
-                    <p className="mb-4 text-center text-sm leading-relaxed text-gray-400">
+                    <h3 className="mb-1 font-mono text-xs uppercase tracking-wider text-text-muted">Achievement unlocked</h3>
+                    <h4 className="font-display mb-2 text-lg font-semibold text-foreground">{achievement.name}</h4>
+                    <p className="mb-4 text-center text-sm leading-relaxed text-text-muted">
                         {achievement.description}
                     </p>
 
                     {achievement.xpBonus && (
-                        <div className="mb-4 rounded-full border border-electric-green/30 bg-electric-green/10 px-3 py-1 font-mono text-sm text-electric-green">
-                            +{achievement.xpBonus} XP Bonus
+                        <div className="mb-4 rounded-[8px] border border-mastery/30 bg-mastery/10 px-3 py-1 font-mono text-sm text-mastery">
+                            +{achievement.xpBonus} XP bonus
                         </div>
                     )}
 
                     <button
                         onClick={dismissAchievement}
-                        className="rounded-full bg-white px-6 py-2 text-sm font-bold text-black transition-all hover:scale-105 hover:bg-gray-200"
+                        className="btn-primary px-6"
                     >
                         Nice!
                     </button>

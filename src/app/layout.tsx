@@ -1,18 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Orbitron } from "next/font/google";
+import { Bricolage_Grotesque, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
 import { PostHogProvider } from "@/lib/posthog";
 import "./globals.css";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-const inter = Inter({
-  variable: "--font-inter",
+const instrument = Instrument_Sans({
+  variable: "--font-instrument",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const orbitron = Orbitron({
-  variable: "--font-orbitron",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -67,7 +76,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#00f3ff",
+  themeColor: "#1a2e38",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -87,11 +96,11 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body
-        className={`${inter.variable} ${orbitron.variable} antialiased bg-deep-void text-foreground`}
+        className={`${instrument.variable} ${bricolage.variable} ${plexMono.variable} antialiased bg-canvas text-foreground`}
       >
         <PostHogProvider>{children}</PostHogProvider>
-            <Analytics />
-      <SpeedInsights />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -83,6 +83,6 @@ describe('CustomNode', () => {
     );
 
     const node = container.firstChild as HTMLElement;
-    expect(node).toHaveClass('ring-2', 'ring-neon-cyan');
+    expect(node).toHaveClass('ring-2', 'ring-signal');
   });
 });

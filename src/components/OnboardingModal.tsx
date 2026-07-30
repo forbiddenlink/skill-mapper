@@ -96,12 +96,12 @@ export default function OnboardingModal() {
                         tabIndex={-1}
                         className="modal-shell relative w-full max-w-4xl overflow-hidden p-5 md:p-8"
                     >
-                        {/* Background Gradient */}
-                        <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-neon-cyan/85 via-neon-cyan/20 to-plasma-pink/85" />
+                        {/* Signal rule */}
+                        <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-signal via-signal/30 to-mastery/80" />
 
                         <div className="text-center mb-8">
-                            <h2 id="onboarding-title" className="text-3xl font-semibold text-white md:text-[40px] md:leading-[44px]">
-                                Welcome to the AI Stack
+                            <h2 id="onboarding-title" className="font-display text-3xl font-semibold text-foreground md:text-[40px] md:leading-[44px]">
+                                Welcome to Skill Mapper
                             </h2>
                             <p id="onboarding-description" className="mt-2 text-base text-text-muted md:text-lg">
                                 Choose your current experience level to jumpstart your skill tree.
@@ -114,13 +114,13 @@ export default function OnboardingModal() {
                                     key={role.id}
                                     type="button"
                                     onClick={() => handleSelect(role.id)}
-                                    className="panel-base group relative flex items-start gap-4 p-5 text-left hover:border-neon-cyan/45"
+                                    className="panel-base group relative flex items-start gap-4 p-5 text-left hover:border-signal/45"
                                 >
-                                    <div className="grid h-11 w-11 place-items-center rounded-[12px] border border-neon-cyan/25 bg-neon-cyan/10 text-neon-cyan transition-colors group-hover:border-neon-cyan/55">
+                                    <div className="grid h-11 w-11 place-items-center rounded-[10px] border border-signal/25 bg-signal/10 text-signal transition-colors group-hover:border-signal/55">
                                         <role.icon size={22} />
                                     </div>
                                     <div>
-                                        <h3 className="mb-1 text-xl font-semibold text-white">
+                                        <h3 className="font-display mb-1 text-xl font-semibold text-foreground">
                                             {role.title}
                                         </h3>
                                         <p className="text-sm leading-relaxed text-text-muted">

@@ -25,11 +25,9 @@ export default function HUD() {
     const getLevelInfo = useGameStore((state) => state.getLevelInfo);
     const { toast } = useToast();
 
-    // Get proper level info from gamification system
     const levelInfo = getLevelInfo();
     const progress = levelInfo.progressPercent;
 
-    // File Input Ref for Load
     const fileInputRef = useRef<HTMLInputElement>(null);
     const progressBarRef = useRef<HTMLDivElement>(null);
 
@@ -45,7 +43,6 @@ export default function HUD() {
 
     const handleSave = () => {
         try {
-            // Export current state to JSON
             const state = useGameStore.getState();
             const saveData = {
                 version: 2,
@@ -71,7 +68,7 @@ export default function HUD() {
             a.download = `skill-mapper-save-${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            
+
             toast.success('Progress exported successfully!');
         } catch (error) {
             console.error('Failed to export save:', error);
@@ -96,17 +93,15 @@ export default function HUD() {
             console.error("Failed to load save file", err);
             toast.error('Failed to load save file');
         }
-        
-        // Reset file input
+
         e.target.value = '';
     };
 
     return (
         <aside className="pointer-events-none fixed left-4 top-4 z-30 flex flex-col gap-3 md:left-6 md:top-6" aria-label="Game statistics">
-            {/* User Card */}
-            <section className="panel-strong w-64 p-4 md:w-[17rem]" aria-label="Player information">
+            <section className="panel-strong pointer-events-auto w-64 p-4 md:w-[17rem]" aria-label="Player information">
                 <div className="mb-3 flex items-center gap-3">
-                    <div className="relative h-10 w-10 overflow-hidden rounded-md border border-neon-cyan/60" aria-hidden="true">
+                    <div className="relative h-10 w-10 overflow-hidden rounded-[8px] border border-signal/45" aria-hidden="true">
                         <Image
                             src="/avatars/operator.png"
                             alt="Operator Avatar"
@@ -115,72 +110,63 @@ export default function HUD() {
                             className="object-cover"
                         />
                     </div>
-                    <div>
-                        <h2 className="text-sm font-semibold tracking-wide text-white">Operator</h2>
-                        <div className="font-mono text-xs text-text-muted">Level {level} {levelInfo.title}</div>
+                    <div className="min-w-0 flex-1">
+                        <h2 className="font-display text-sm font-semibold tracking-wide text-foreground">Operator</h2>
+                        <div className="font-mono text-[11px] text-text-muted">
+                            Lvl {level} · {levelInfo.title}
+                        </div>
                     </div>
 
-                    {/* Controls Row */}
-                    <div className="ml-auto flex gap-1 pointer-events-auto">
+                    <div className="ml-auto flex shrink-0 gap-1">
                         <button
                             type="button"
                             onClick={handleSave}
-                            className="icon-btn grid place-items-center"
+                            className="icon-btn grid h-8 w-8 place-items-center"
                             title="Export Save"
                             aria-label="Export progress to file"
                         >
-                            <Save size={16} aria-hidden="true" />
+                            <Save size={14} aria-hidden="true" />
                         </button>
                         <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className="icon-btn grid place-items-center"
+                            className="icon-btn grid h-8 w-8 place-items-center"
                             title="Import Save"
                             aria-label="Import progress from file"
                         >
-                            <Upload size={16} aria-hidden="true" />
+                            <Upload size={14} aria-hidden="true" />
                         </button>
-                        {soundEnabled ? (
-                            <button
-                                type="button"
-                                onClick={toggleSound}
-                                className="icon-btn grid place-items-center"
-                                title="Mute Sounds"
-                                aria-label="Mute sound effects"
-                                aria-pressed="true"
-                            >
-                                <Volume2 size={16} aria-hidden="true" />
-                            </button>
-                        ) : (
-                            <button
-                                type="button"
-                                onClick={toggleSound}
-                                className="icon-btn grid place-items-center"
-                                title="Enable Sounds"
-                                aria-label="Enable sound effects"
-                                aria-pressed="false"
-                            >
-                                <VolumeX size={16} aria-hidden="true" />
-                            </button>
-                        )}
+                        <button
+                            type="button"
+                            onClick={toggleSound}
+                            className="icon-btn grid h-8 w-8 place-items-center"
+                            title={soundEnabled ? "Mute Sounds" : "Enable Sounds"}
+                            aria-label={soundEnabled ? "Mute sound effects" : "Enable sound effects"}
+                            aria-pressed={soundEnabled}
+                        >
+                            {soundEnabled ? (
+                                <Volume2 size={14} aria-hidden="true" />
+                            ) : (
+                                <VolumeX size={14} aria-hidden="true" />
+                            )}
+                        </button>
                         <button
                             type="button"
                             onClick={toggleMusic}
-                            className="icon-btn grid place-items-center"
+                            className="icon-btn grid h-8 w-8 place-items-center"
                             title={musicEnabled ? "Stop Music" : "Play Music"}
                             aria-label={musicEnabled ? "Stop background music" : "Play background music"}
                             aria-pressed={musicEnabled}
                         >
                             <Music
-                                size={16}
+                                size={14}
                                 aria-hidden="true"
-                                className={musicEnabled ? "" : "opacity-50"}
+                                className={musicEnabled ? "text-signal" : "opacity-50"}
                             />
                         </button>
                     </div>
                 </div>
 
-                {/* Hidden File Input */}
                 <input
                     type="file"
                     ref={fileInputRef}
@@ -191,48 +177,42 @@ export default function HUD() {
                     aria-label="Import save file"
                 />
 
-                {/* XP Bar */}
-                <div className="relative h-2 w-full overflow-hidden rounded-full border border-white/15 bg-black/30">
-                    <progress 
-                        value={progress} 
-                        max={100} 
+                <div className="xp-track">
+                    <progress
+                        value={progress}
+                        max={100}
                         aria-label="Experience progress to next level"
                         className="xp-progress-bar"
                     />
                     <div
                         ref={progressBarRef}
-                        className="xp-progress-fill h-full bg-neon-cyan transition-all duration-700 ease-out"
+                        className="xp-progress-fill"
                         aria-hidden="true"
                     />
                 </div>
-                <div className="mt-1 flex justify-between text-[10px] font-mono uppercase text-text-muted">
-                    <span>XP: {xp.toLocaleString()}</span>
-                    <span>Next: {levelInfo.xpForNextLevel.toLocaleString()}</span>
+                <div className="mt-1.5 flex justify-between font-mono text-[10px] uppercase tracking-wider text-text-muted">
+                    <span>XP {xp.toLocaleString()}</span>
+                    <span>Next {levelInfo.xpForNextLevel.toLocaleString()}</span>
                 </div>
             </section>
 
-            {/* Stats / Achievements */}
-            <section className="panel-base flex flex-wrap gap-3 p-3 text-xs font-mono text-text-muted" aria-label="Achievements and streaks">
-                <div className="flex items-center gap-2">
-                    <Trophy className="h-3 w-3 text-yellow-500" aria-hidden="true" />
-                    <span className="text-white">{unlockedBadges.length} Badges</span>
+            <section className="panel-base pointer-events-auto flex flex-wrap gap-x-4 gap-y-2 px-3 py-2.5 font-mono text-[11px] text-text-muted" aria-label="Achievements and streaks">
+                <div className="flex items-center gap-1.5">
+                    <Trophy className="h-3 w-3 text-reward" aria-hidden="true" />
+                    <span className="text-foreground">{unlockedBadges.length}</span>
+                    <span>Badges</span>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Star className="h-3 w-3 text-neon-cyan" aria-hidden="true" />
-                    <span className="text-white">{achievements.length} Achievements</span>
+                <div className="flex items-center gap-1.5">
+                    <Star className="h-3 w-3 text-signal" aria-hidden="true" />
+                    <span className="text-foreground">{achievements.length}</span>
+                    <span>Achievements</span>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Flame className="h-3 w-3 text-orange-500" aria-hidden="true" />
-                    <span className="text-white">{streak} Day Streak</span>
+                <div className="flex items-center gap-1.5">
+                    <Flame className="h-3 w-3 text-reward" aria-hidden="true" />
+                    <span className="text-foreground">{streak}</span>
+                    <span>Day streak</span>
                 </div>
             </section>
-
-            {/* Badges Mini-Display (Optional - just listing icons would be cool) */}
-            {unlockedBadges.length > 0 && (
-                <div className="flex gap-1">
-                    {/* We could map a few small icons here, but count is enough for V1 */}
-                </div>
-            )}
         </aside>
     );
 }

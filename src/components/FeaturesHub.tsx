@@ -25,10 +25,10 @@ export function FeaturesHub() {
     const dialogRef = useDialogA11y<HTMLDivElement>(Boolean(activeView), closeHub);
 
     const features = [
-        { id: 'challenges' as View, icon: Target, label: 'Daily Challenge', tone: 'text-neon-cyan' },
-        { id: 'streaks' as View, icon: Flame, label: 'Streaks', tone: 'text-warning-amber' },
-        { id: 'paths' as View, icon: Map, label: 'Learning Paths', tone: 'text-electric-green' },
-        { id: 'bosses' as View, icon: Trophy, label: 'Boss Battles', tone: 'text-plasma-pink' },
+        { id: 'challenges' as View, icon: Target, label: 'Daily Challenge', tone: 'text-signal' },
+        { id: 'streaks' as View, icon: Flame, label: 'Streaks', tone: 'text-reward' },
+        { id: 'paths' as View, icon: Map, label: 'Learning Paths', tone: 'text-progress' },
+        { id: 'bosses' as View, icon: Trophy, label: 'Boss Battles', tone: 'text-mastery' },
     ];
     const activeLabel = features.find((feature) => feature.id === activeView)?.label ?? 'Features Hub';
 

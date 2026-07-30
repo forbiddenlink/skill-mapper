@@ -1,25 +1,66 @@
 @import "tailwindcss";
 
+/*
+  Signal Atlas — Skill Mapper design tokens
+  Primitive → semantic → component. See DESIGN.md.
+*/
+
 :root {
-  --background: #070b12;
-  --foreground: #e6ecf5;
+  /* ——— Primitives (oklch) ——— */
+  --slate-950: oklch(0.145 0.025 255);
+  --slate-900: oklch(0.185 0.028 255);
+  --slate-850: oklch(0.22 0.03 255);
+  --slate-800: oklch(0.265 0.032 255);
+  --slate-700: oklch(0.38 0.03 255);
+  --slate-400: oklch(0.7 0.025 255);
+  --slate-200: oklch(0.9 0.015 255);
+  --slate-100: oklch(0.95 0.01 255);
 
-  --deep-void: #070b12;
-  --surface-1: #0d131d;
-  --surface-2: #121a26;
-  --surface-3: #172233;
-  --text-muted: #94a3b8;
+  --teal-400: oklch(0.76 0.11 185);
+  --teal-500: oklch(0.7 0.12 185);
+  --green-400: oklch(0.78 0.13 150);
+  --blue-400: oklch(0.72 0.1 230);
+  --amber-400: oklch(0.82 0.13 85);
+  --coral-450: oklch(0.66 0.16 28);
+  --rose-500: oklch(0.62 0.18 20);
 
-  --neon-cyan: #2ed3ff;
-  --plasma-pink: #c85cff;
-  --electric-green: #36d399;
-  --warning-amber: #f59e0b;
-  --alert-red: #f43f5e;
-  --hologram-blue: rgba(46, 211, 255, 0.12);
+  /* ——— Semantic ——— */
+  --canvas: var(--slate-950);
+  --background: var(--canvas);
+  --foreground: var(--slate-100);
+  --text-muted: var(--slate-400);
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --surface-1: var(--slate-900);
+  --surface-2: var(--slate-850);
+  --surface-3: var(--slate-800);
+
+  --border-muted: color-mix(in oklab, var(--slate-400) 28%, transparent);
+  --border-strong: color-mix(in oklab, var(--teal-400) 45%, transparent);
+
+  --signal: var(--teal-400);
+  --signal-strong: var(--teal-500);
+  --mastery: var(--green-400);
+  --progress: var(--blue-400);
+  --reward: var(--amber-400);
+  --decay: var(--coral-450);
+  --danger: var(--rose-500);
+
+  --ring-focus: 0 0 0 2px color-mix(in oklab, var(--signal) 80%, white 20%);
+
+  /* Legacy aliases (compat with existing class names) */
+  --deep-void: var(--canvas);
+  --neon-cyan: var(--signal);
+  --plasma-pink: var(--mastery);
+  --electric-green: var(--progress);
+  --warning-amber: var(--reward);
+  --alert-red: var(--decay);
+  --hologram-blue: color-mix(in oklab, var(--signal) 14%, transparent);
+
+  /* ——— Space / radius / motion ——— */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -27,31 +68,58 @@
   --space-4: 16px;
   --space-5: 24px;
   --space-6: 32px;
+  --space-7: 48px;
 
-  --border-muted: rgba(148, 163, 184, 0.22);
-  --border-accent: rgba(46, 211, 255, 0.55);
-  --shadow-1: 0 4px 12px rgba(0, 0, 0, 0.28);
-  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --ring-focus: 0 0 0 2px rgba(46, 211, 255, 0.85);
+  --shadow-1: 0 1px 0 color-mix(in oklab, white 4%, transparent),
+    0 8px 24px color-mix(in oklab, black 35%, transparent);
+  --shadow-2: 0 1px 0 color-mix(in oklab, white 5%, transparent),
+    0 16px 40px color-mix(in oklab, black 45%, transparent);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 420ms;
+
+  --z-tree: 0;
+  --z-hud: 30;
+  --z-panel: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+  --z-celebration: 70;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-canvas: var(--canvas);
   --color-deep-void: var(--deep-void);
   --color-surface-1: var(--surface-1);
   --color-surface-2: var(--surface-2);
   --color-surface-3: var(--surface-3);
-  --color-neon-cyan: var(--neon-cyan);
-  --color-plasma-pink: var(--plasma-pink);
-  --color-electric-green: var(--electric-green);
-  --color-warning-amber: var(--warning-amber);
-  --color-alert-red: var(--alert-red);
-  --color-hologram-blue: var(--hologram-blue);
   --color-text-muted: var(--text-muted);
 
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-orbitron);
+  --color-signal: var(--signal);
+  --color-mastery: var(--mastery);
+  --color-progress: var(--progress);
+  --color-reward: var(--reward);
+  --color-decay: var(--decay);
+  --color-danger: var(--danger);
+
+  /* Legacy Tailwind color names → Signal Atlas */
+  --color-neon-cyan: var(--signal);
+  --color-plasma-pink: var(--mastery);
+  --color-electric-green: var(--progress);
+  --color-warning-amber: var(--reward);
+  --color-alert-red: var(--decay);
+  --color-hologram-blue: var(--hologram-blue);
+
+  --font-sans: var(--font-instrument);
+  --font-display: var(--font-bricolage);
+  --font-mono: var(--font-plex-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
 }
 
 *,
@@ -61,11 +129,20 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--canvas);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: var(--font-sans), system-ui, sans-serif;
   overflow: hidden;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 button,
@@ -74,7 +151,9 @@ a,
 input,
 select,
 textarea {
-  transition-duration: 160ms;
+  transition-property: color, background-color, border-color, opacity, transform, filter;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
 }
 
 :focus-visible {
@@ -82,48 +161,51 @@ textarea {
   box-shadow: var(--ring-focus);
 }
 
+/* ——— Surfaces ——— */
+
 .panel-base {
-  background: color-mix(in srgb, var(--surface-1) 90%, black 10%);
+  background: var(--surface-1);
   border: 1px solid var(--border-muted);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-1);
-  backdrop-filter: blur(10px);
 }
 
 .panel-strong {
-  background: color-mix(in srgb, var(--surface-2) 92%, black 8%);
-  border: 1px solid var(--border-accent);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-2);
-  backdrop-filter: blur(14px);
 }
 
 .modal-shell {
-  background: color-mix(in srgb, var(--surface-2) 94%, black 6%);
+  background: var(--surface-2);
   border: 1px solid var(--border-muted);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-2);
 }
 
 .metric-card {
-  background: color-mix(in srgb, var(--surface-1) 88%, black 12%);
+  background: var(--surface-1);
   border: 1px solid var(--border-muted);
   border-radius: var(--radius-md);
   min-height: 112px;
 }
 
+/* ——— Buttons ——— */
+
 .btn-primary {
   height: 44px;
   padding: 0 16px;
   border-radius: var(--radius-md);
-  border: 1px solid color-mix(in srgb, var(--neon-cyan) 50%, transparent 50%);
-  background: var(--neon-cyan);
-  color: #041019;
+  border: 1px solid color-mix(in oklab, var(--signal) 55%, transparent);
+  background: var(--signal);
+  color: oklch(0.16 0.03 185);
   font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .btn-primary:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.06);
   transform: translateY(-1px);
 }
 
@@ -132,12 +214,12 @@ textarea {
   padding: 0 12px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-muted);
-  background: color-mix(in srgb, var(--surface-1) 80%, transparent 20%);
+  background: color-mix(in oklab, var(--surface-1) 88%, transparent);
   color: var(--foreground);
 }
 
 .btn-ghost:hover {
-  border-color: color-mix(in srgb, var(--neon-cyan) 45%, var(--border-muted) 55%);
+  border-color: color-mix(in oklab, var(--signal) 40%, var(--border-muted));
   transform: translateY(-1px);
 }
 
@@ -146,22 +228,34 @@ textarea {
   height: 40px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-muted);
-  background: color-mix(in srgb, var(--surface-2) 80%, transparent 20%);
+  background: var(--surface-2);
   color: var(--text-muted);
 }
 
 .icon-btn:hover {
   color: var(--foreground);
-  border-color: color-mix(in srgb, var(--neon-cyan) 40%, var(--border-muted) 60%);
+  border-color: color-mix(in oklab, var(--signal) 35%, var(--border-muted));
   transform: translateY(-1px);
 }
 
 .divider-soft {
-  border-color: rgba(148, 163, 184, 0.18);
+  border-color: color-mix(in oklab, var(--slate-400) 22%, transparent);
 }
 
 .text-muted {
   color: var(--text-muted);
+}
+
+/* ——— XP track ——— */
+
+.xp-track {
+  position: relative;
+  height: 6px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--surface-3) 80%, black 20%);
+  border: 1px solid var(--border-muted);
 }
 
 .xp-progress-bar {
@@ -174,6 +268,38 @@ textarea {
 
 .xp-progress-fill {
   width: var(--xp-progress, 0%);
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--signal) 0%,
+    var(--reward) 100%
+  );
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+/* ——— Atlas canvas atmosphere (subtle, not neon fog) ——— */
+
+.atlas-atmosphere {
+  background:
+    radial-gradient(
+      ellipse 80% 50% at 12% 0%,
+      color-mix(in oklab, var(--signal) 8%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 100% 100%,
+      color-mix(in oklab, var(--mastery) 6%, transparent),
+      transparent 50%
+    );
+}
+
+.atlas-grid {
+  background-image:
+    linear-gradient(to bottom, color-mix(in oklab, var(--slate-400) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to right, color-mix(in oklab, var(--slate-400) 7%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 75%);
 }
 
 @media (prefers-reduced-motion: reduce) {

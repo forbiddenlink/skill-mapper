@@ -8,3 +8,4 @@ export { createUndoRedoSlice, type UndoRedoSlice } from './undo-redo-store';
 export { createSkillsSlice, type SkillsSlice } from './skills-store';
 export { createUserSlice, type UserSlice } from './user-store';
 export { idbStateStorage } from './idb-storage';
+export type { RecommendedSkill, RecommendationReason } from './types';

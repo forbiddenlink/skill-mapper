@@ -61,7 +61,7 @@ export default function RecommendedSkills() {
   };
   
   return (
-    <div className="fixed bottom-6 right-[5.5rem] z-30 max-w-sm md:bottom-8 md:right-[6rem]">
+    <div className="fixed bottom-[9.5rem] right-14 z-30 hidden max-w-sm sm:block md:bottom-8 md:right-[5.5rem] lg:right-[6rem]">
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

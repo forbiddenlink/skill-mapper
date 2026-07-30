@@ -59,8 +59,24 @@ const SHORTCUTS: KeyboardShortcut[] = [
     },
 ];
 
-export default function KeyboardShortcutsModal() {
-    const [isOpen, setIsOpen] = useState(false);
+type KeyboardShortcutsModalProps = {
+    isOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    showTrigger?: boolean;
+};
+
+export default function KeyboardShortcutsModal({
+    isOpen: controlledOpen,
+    onOpenChange,
+    showTrigger = true,
+}: KeyboardShortcutsModalProps = {}) {
+    const [internalOpen, setInternalOpen] = useState(false);
+    const isControlled = controlledOpen !== undefined;
+    const isOpen = isControlled ? controlledOpen : internalOpen;
+    const setIsOpen = (open: boolean) => {
+        if (!isControlled) setInternalOpen(open);
+        onOpenChange?.(open);
+    };
     const closeModal = () => setIsOpen(false);
     const dialogRef = useDialogA11y<HTMLDivElement>(isOpen, closeModal);
 
@@ -80,17 +96,18 @@ export default function KeyboardShortcutsModal() {
 
     return (
         <>
-            {/* Help Button */}
-            <button
-                onClick={() => setIsOpen(true)}
-                className="icon-btn fixed bottom-6 right-6 z-30 grid place-items-center md:bottom-8 md:right-6"
-                title="Keyboard Shortcuts (Shift + ?)"
-                aria-label="Show keyboard shortcuts"
-            >
-                <Keyboard size={20} />
-            </button>
+            {showTrigger && (
+                <button
+                    type="button"
+                    onClick={() => setIsOpen(true)}
+                    className="icon-btn fixed bottom-6 right-6 z-30 grid place-items-center md:bottom-8 md:right-6"
+                    title="Keyboard Shortcuts (Shift + ?)"
+                    aria-label="Show keyboard shortcuts"
+                >
+                    <Keyboard size={20} />
+                </button>
+            )}
 
-            {/* Modal */}
             <AnimatePresence>
                 {isOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">

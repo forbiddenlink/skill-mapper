@@ -36,8 +36,8 @@ export function FeaturesHub() {
     return (
         <>
             {/* Features Button - Bottom Left */}
-            <div className="fixed bottom-6 left-6 z-30 md:bottom-8 md:left-6">
-                <div className="flex flex-col gap-2">
+            <div className="fixed bottom-4 left-3 z-30 sm:bottom-6 sm:left-6 md:bottom-8 md:left-6">
+                <div className="flex flex-col gap-1.5 sm:gap-2">
                     {features.map((feature, idx) => (
                         <motion.button
                             key={feature.id}

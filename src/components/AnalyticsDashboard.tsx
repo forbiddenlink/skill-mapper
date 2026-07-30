@@ -12,8 +12,24 @@ import { useKeyboardShortcut } from '@/hooks/use-keyboard-shortcuts';
 import { useShallow } from 'zustand/react/shallow';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';
 
-export default function AnalyticsDashboard() {
-    const [isOpen, setIsOpen] = useState(false);
+type AnalyticsDashboardProps = {
+    isOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    showTrigger?: boolean;
+};
+
+export default function AnalyticsDashboard({
+    isOpen: controlledOpen,
+    onOpenChange,
+    showTrigger = true,
+}: AnalyticsDashboardProps = {}) {
+    const [internalOpen, setInternalOpen] = useState(false);
+    const isControlled = controlledOpen !== undefined;
+    const isOpen = isControlled ? controlledOpen : internalOpen;
+    const setIsOpen = (open: boolean) => {
+        if (!isControlled) setInternalOpen(open);
+        onOpenChange?.(open);
+    };
     const closeDashboard = () => setIsOpen(false);
     const dialogRef = useDialogA11y<HTMLDivElement>(isOpen, closeDashboard);
     const [activityListRef] = useAutoAnimate<HTMLDivElement>();
@@ -75,14 +91,17 @@ export default function AnalyticsDashboard() {
 
     return (
         <>
-            <button
-                onClick={() => setIsOpen(true)}
-                className="icon-btn fixed bottom-[10rem] right-6 z-30 grid place-items-center md:bottom-[10.5rem] md:right-6"
-                title="Analytics Dashboard"
-                aria-label="Open analytics dashboard"
-            >
-                <Activity size={20} />
-            </button>
+            {showTrigger && (
+                <button
+                    type="button"
+                    onClick={() => setIsOpen(true)}
+                    className="icon-btn fixed bottom-[10rem] right-6 z-30 grid place-items-center md:bottom-[10.5rem] md:right-6"
+                    title="Analytics Dashboard"
+                    aria-label="Open analytics dashboard"
+                >
+                    <Activity size={20} />
+                </button>
+            )}
 
             <AnimatePresence>
                 {isOpen && (

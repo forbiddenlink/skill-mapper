@@ -102,26 +102,5 @@
     "vitest": "^4.1.9"
   },
   "description": "Production-grade gamified skill tree learning platform with progression tracking, achievements, and interactive challenges",
-  "license": "MIT",
-  "pnpm": {
-    "overrides": {
-      "esbuild": ">=0.28.1",
-      "ajv": ">=8.18.0",
-      "@eslint/eslintrc>ajv": "^6.14.0",
-      "eslint>ajv": "^6.14.0",
-      "minimatch": ">=10.2.3",
-      "rollup": ">=4.59.0",
-      "storybook": ">=10.2.10",
-      "serialize-javascript": ">=7.0.5",
-      "next": ">=16.2.3",
-      "flatted": ">=3.4.2",
-      "picomatch": ">=4.0.4",
-      "brace-expansion": ">=2.0.3",
-      "lodash": ">=4.18.0",
-      "cookie": ">=0.7.0 <2.0.0",
-      "systeminformation": ">=5.31.0",
-      "vite": ">=8.0.16",
-      "fast-uri": ">=3.1.2"
-    }
-  }
+  "license": "MIT"
 }

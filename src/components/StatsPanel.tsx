@@ -9,8 +9,24 @@ import { useKeyboardShortcut } from '@/hooks/use-keyboard-shortcuts';
 import { useShallow } from 'zustand/react/shallow';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';
 
-export default function StatsPanel() {
-    const [isOpen, setIsOpen] = useState(false);
+type StatsPanelProps = {
+    isOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    showTrigger?: boolean;
+};
+
+export default function StatsPanel({
+    isOpen: controlledOpen,
+    onOpenChange,
+    showTrigger = true,
+}: StatsPanelProps = {}) {
+    const [internalOpen, setInternalOpen] = useState(false);
+    const isControlled = controlledOpen !== undefined;
+    const isOpen = isControlled ? controlledOpen : internalOpen;
+    const setIsOpen = (open: boolean) => {
+        if (!isControlled) setInternalOpen(open);
+        onOpenChange?.(open);
+    };
     const closePanel = () => setIsOpen(false);
     const dialogRef = useDialogA11y<HTMLDivElement>(isOpen, closePanel);
     const { nodes, userXP, userLevel, unlockedBadges, streak } = useGameStore(
@@ -64,17 +80,18 @@ export default function StatsPanel() {
 
     return (
         <>
-            {/* Stats Button */}
-            <button
-                onClick={() => setIsOpen(true)}
-                className="icon-btn fixed bottom-[5.75rem] right-6 z-30 grid place-items-center md:bottom-[6.25rem] md:right-6"
-                title="View Stats"
-                aria-label="View statistics"
-            >
-                <BarChart3 size={20} />
-            </button>
+            {showTrigger && (
+                <button
+                    type="button"
+                    onClick={() => setIsOpen(true)}
+                    className="icon-btn fixed bottom-[5.75rem] right-6 z-30 grid place-items-center md:bottom-[6.25rem] md:right-6"
+                    title="View Stats"
+                    aria-label="View statistics"
+                >
+                    <BarChart3 size={20} />
+                </button>
+            )}
 
-            {/* Stats Modal */}
             <AnimatePresence>
                 {isOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">

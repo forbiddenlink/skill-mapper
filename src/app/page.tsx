@@ -6,14 +6,9 @@ import BadgeNotification from "@/components/ui/BadgeNotification";
 import AchievementNotification from "@/components/ui/AchievementNotification";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ToastContainer } from "@/components/ui/Toast";
-import KeyboardShortcutsModal from "@/components/KeyboardShortcutsModal";
-import StatsPanel from "@/components/StatsPanel";
 import LiveRegions from "@/components/LiveRegions";
-import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import MilestoneCelebrations from "@/components/MilestoneCelebrations";
-import RecommendedSkills from "@/components/RecommendedSkills";
-import { FeaturesHub } from "@/components/FeaturesHub";
-import EmptyStateCoach from "@/components/EmptyStateCoach";
+import TreeOverlays from "@/components/TreeOverlays";
 import UndoRedoShortcuts from "@/components/UndoRedoShortcuts";
 import MusicManager from "@/components/MusicManager";
 
@@ -31,22 +26,13 @@ export default function Home() {
           <MilestoneCelebrations />
           <ToastContainer />
           <UndoRedoShortcuts />
-          <KeyboardShortcutsModal />
-          <StatsPanel />
-          <AnalyticsDashboard />
-          <RecommendedSkills />
-          <FeaturesHub />
+          <TreeOverlays />
           <OnboardingModal />
           <BadgeNotification />
           <AchievementNotification />
           <HUD />
           <MusicManager />
           <SkillDetailsPanel />
-          <div className="pointer-events-none fixed bottom-28 left-6 z-20 hidden w-72 md:block">
-            <div className="pointer-events-auto">
-              <EmptyStateCoach compact />
-            </div>
-          </div>
         </div>
       </main>
     </ErrorBoundary>

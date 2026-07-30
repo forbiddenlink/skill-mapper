@@ -16,10 +16,17 @@ import { checkForNewBadges } from './badge-helpers';
 import type { SkillsSlice } from './skills-store';
 import type { UndoRedoSlice } from './undo-redo-store';
 import type { UISlice } from './ui-store';
+import { trackSkillEvent } from '../posthog';
 
 function todayUtc(): string {
     return new Date().toISOString().slice(0, 10);
 }
+
+export type BossProgressEntry = {
+    completed: boolean;
+    attempts: number;
+    bestScore: number;
+};
 
 export interface UserSlice {
     userXP: number;
@@ -35,6 +42,7 @@ export interface UserSlice {
     lastActivityDate: string | null;
     activityCalendar: Record<string, number>;
     completedDailyChallenges: string[];
+    bossProgress: Record<string, BossProgressEntry>;
 
     getLevelInfo: () => LevelInfo;
     dismissBadge: () => void;
@@ -42,6 +50,13 @@ export interface UserSlice {
     checkStreak: () => void;
     recordActivity: (xpEarned: number) => void;
     completeDailyChallenge: (challengeId: string, xpBonus: number) => boolean;
+    recordBossResult: (input: {
+        bossId: string;
+        score: number;
+        questionCount: number;
+        xpReward: number;
+        badgeId: string;
+    }) => boolean;
     completeSkill: (id: string) => void;
     unlockBatch: (ids: string[]) => void;
     resetProgress: () => void;
@@ -63,6 +78,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
     lastActivityDate: null,
     activityCalendar: {},
     completedDailyChallenges: [],
+    bossProgress: {},
 
     getLevelInfo: () => getLevelInfo(get().userXP),
 
@@ -120,7 +136,48 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
         get().recordActivity(xpBonus);
         confetti({ particleCount: 120, spread: 90, origin: { y: 0.65 } });
         openSharePrompt('daily-challenge');
+        trackSkillEvent.dailyChallengeCompleted(challengeId, xpBonus);
         return true;
+    },
+
+    recordBossResult: ({ bossId, score, questionCount, xpReward, badgeId }) => {
+        const state = get();
+        const prev = state.bossProgress[bossId] ?? { completed: false, attempts: 0, bestScore: 0 };
+        const passed = score >= Math.ceil(questionCount * 0.7);
+        const firstClear = passed && !prev.completed;
+
+        const nextEntry: BossProgressEntry = {
+            completed: prev.completed || passed,
+            attempts: prev.attempts + 1,
+            bestScore: Math.max(prev.bestScore, score),
+        };
+
+        set({
+            bossProgress: { ...state.bossProgress, [bossId]: nextEntry },
+            ...(firstClear
+                ? {
+                      userXP: state.userXP + xpReward,
+                      userLevel: calculateLevel(state.userXP + xpReward),
+                      unlockedBadges: state.unlockedBadges.includes(badgeId)
+                          ? state.unlockedBadges
+                          : [...state.unlockedBadges, badgeId],
+                      latestBadgeId: state.unlockedBadges.includes(badgeId)
+                          ? state.latestBadgeId
+                          : badgeId,
+                  }
+                : {}),
+        });
+
+        if (firstClear) {
+            get().recordActivity(xpReward);
+            confetti({ particleCount: 180, spread: 100, origin: { y: 0.6 } });
+            get().openSharePrompt('boss-battle');
+            trackSkillEvent.bossBattleCompleted(bossId, score, true);
+        } else {
+            trackSkillEvent.bossBattleCompleted(bossId, score, passed);
+        }
+
+        return passed;
     },
 
     completeSkill: (id) => {
@@ -207,9 +264,18 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
             };
         });
 
+        const day = todayUtc();
+        const wasFirstActivityToday = !((get().activityCalendar[day] ?? 0) > 0);
         get().recordActivity(Math.max(0, get().userXP - xpBefore));
+        const skill = get().nodes.find((n) => n.id === id);
+        if (skill) {
+            trackSkillEvent.skillCompleted(id, skill.data.title, get().userXP - xpBefore);
+        }
         if (get().userLevel > userLevel) {
+            trackSkillEvent.levelUp(get().userLevel, get().userXP);
             get().openSharePrompt('level-up');
+        } else if (wasFirstActivityToday) {
+            get().openSharePrompt('skill-mastery');
         }
     },
 
@@ -309,6 +375,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
             lastActivityDate: null,
             activityCalendar: {},
             completedDailyChallenges: [],
+            bossProgress: {},
             history: [],
             historyIndex: -1,
         });

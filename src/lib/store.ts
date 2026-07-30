@@ -24,7 +24,7 @@ export const useGameStore = create<GameState>()(
         }),
         {
             name: config.storage.key,
-            version: 3,
+            version: 4,
             storage: createJSONStorage(() => idbStateStorage),
             partialize: (state) => ({
                 nodes: state.nodes,
@@ -40,6 +40,7 @@ export const useGameStore = create<GameState>()(
                 lastActivityDate: state.lastActivityDate,
                 activityCalendar: state.activityCalendar,
                 completedDailyChallenges: state.completedDailyChallenges,
+                bossProgress: state.bossProgress,
                 soundEnabled: state.soundEnabled,
                 musicEnabled: state.musicEnabled,
             }),
@@ -54,6 +55,12 @@ export const useGameStore = create<GameState>()(
                         ...next,
                         activityCalendar: next.activityCalendar ?? {},
                         completedDailyChallenges: next.completedDailyChallenges ?? [],
+                    };
+                }
+                if (version < 4) {
+                    next = {
+                        ...next,
+                        bossProgress: next.bossProgress ?? {},
                     };
                 }
                 return next as GameState;

@@ -141,7 +141,9 @@ const BOSS_BATTLES: Omit<BossBattle, 'completed' | 'attempts' | 'bestScore'>[] =
 ];
 
 export function BossBattles() {
-    const { nodes, userXP, unlockedBadges } = useGameStore();
+    const nodes = useGameStore((s) => s.nodes);
+    const bossProgress = useGameStore((s) => s.bossProgress);
+    const recordBossResult = useGameStore((s) => s.recordBossResult);
     const [activeBattle, setActiveBattle] = useState<string | null>(null);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -151,31 +153,21 @@ export function BossBattles() {
     const closeBattle = () => setActiveBattle(null);
     const dialogRef = useDialogA11y<HTMLDivElement>(Boolean(activeBattle), closeBattle);
 
-    // Get battle progress data from localStorage
-    const getBattleData = (battleId: string) => {
-        const stored = localStorage.getItem(`boss-battle-${battleId}`);
-        return stored ? JSON.parse(stored) : { completed: false, attempts: 0, bestScore: 0 };
-    };
-
-    const saveBattleData = (battleId: string, data: { completed: boolean; attempts: number; bestScore: number }) => {
-        localStorage.setItem(`boss-battle-${battleId}`, JSON.stringify(data));
-    };
-
     const battles = useMemo(() => {
-        return BOSS_BATTLES.map(boss => {
-            const data = getBattleData(boss.id);
-            const requiredMastered = boss.requiredSkills.every(skillId => {
-                const node = nodes.find(n => n.id === skillId);
+        return BOSS_BATTLES.map((boss) => {
+            const data = bossProgress[boss.id] ?? { completed: false, attempts: 0, bestScore: 0 };
+            const requiredMastered = boss.requiredSkills.every((skillId) => {
+                const node = nodes.find((n) => n.id === skillId);
                 return node?.data.status === 'mastered';
             });
 
             return {
                 ...boss,
                 ...data,
-                isUnlocked: requiredMastered
+                isUnlocked: requiredMastered,
             };
         });
-    }, [nodes]);
+    }, [nodes, bossProgress]);
 
     const handleStartBattle = (battleId: string) => {
         setActiveBattle(battleId);
@@ -196,33 +188,20 @@ export function BossBattles() {
             setScore(score + 1);
         }
 
-        // Move to next question after delay
         setTimeout(() => {
             if (currentQuestion < battle.questions.length - 1) {
                 setCurrentQuestion(currentQuestion + 1);
                 setSelectedAnswer(null);
                 setShowResult(false);
             } else {
-                // Battle complete
                 const finalScore = correct ? score + 1 : score;
-                const passed = finalScore >= Math.ceil(battle.questions.length * 0.7); // 70% to pass
-                
-                const battleData = getBattleData(battle.id);
-                const newData = {
-                    completed: battleData.completed || passed,
-                    attempts: battleData.attempts + 1,
-                    bestScore: Math.max(battleData.bestScore, finalScore)
-                };
-                saveBattleData(battle.id, newData);
-
-                if (passed && !battleData.completed) {
-                    // Award XP and badge
-                    useGameStore.setState({ 
-                        userXP: userXP + battle.xpReward,
-                        unlockedBadges: [...unlockedBadges, battle.unlocksBadge]
-                    });
-                }
-
+                recordBossResult({
+                    bossId: battle.id,
+                    score: finalScore,
+                    questionCount: battle.questions.length,
+                    xpReward: battle.xpReward,
+                    badgeId: battle.unlocksBadge,
+                });
                 setBattleCompleted(true);
             }
         }, 2000);
@@ -233,6 +212,7 @@ export function BossBattles() {
         if (!battle) return null;
 
         const question = battle.questions[currentQuestion];
+        if (!question) return null;
 
         return (
             <motion.div

@@ -80,7 +80,7 @@ export default function SkillDetailsPanel() {
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 28, stiffness: 220 }}
                         ref={dialogRef}
-                        className="fixed bottom-0 right-0 top-0 z-40 flex w-full flex-col border-l border-white/10 bg-surface-2 p-4 shadow-2xl sm:w-[420px] sm:p-5"
+                        className="fixed inset-x-0 bottom-0 top-auto z-40 flex max-h-[88dvh] w-full flex-col rounded-t-[16px] border border-white/10 bg-surface-2 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl sm:inset-y-0 sm:right-0 sm:top-0 sm:max-h-none sm:w-[420px] sm:rounded-none sm:border-l sm:p-5"
                         role="dialog"
                         aria-labelledby="skill-title"
                         aria-describedby="skill-description"

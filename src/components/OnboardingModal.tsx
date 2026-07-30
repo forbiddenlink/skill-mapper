@@ -21,14 +21,14 @@ const ROLES = [
         title: 'Frontend Specialist',
         icon: Code,
         description: 'I know React, CSS, and basic Web Standards.',
-        unlocks: ['web-standards', 'git-ops', 'es-next', 'react-core', 'tailwind', 'typescript', 'testing-quality', 'async-state']
+        unlocks: ['web-standards', 'git-ops', 'es-next', 'react-core', 'tailwind', 'typescript', 'accessibility', 'testing-quality', 'async-state']
     },
     {
         id: 'backend',
         title: 'Backend Engineer',
         icon: Server,
         description: 'Comfortable with Node.js, Databases, and APIs.',
-        unlocks: ['web-standards', 'git-ops', 'es-next', 'node-runtime', 'postgresql', 'drizzle-orm', 'vector-db']
+        unlocks: ['web-standards', 'git-ops', 'es-next', 'http-fundamentals', 'node-runtime', 'postgresql', 'drizzle-orm', 'redis-caching', 'rest-api']
     },
     {
         id: 'fullstack',
@@ -36,12 +36,9 @@ const ROLES = [
         icon: Layers,
         description: 'I do it all. Frontend, Backend, and everything in between.',
         unlocks: [
-            // Tier 1
-            'web-standards', 'git-ops', 'es-next',
-            // Tier 2
-            'react-core', 'tailwind', 'typescript', 'testing-quality', 'async-state', 'state-machines',
-            // Tier 3
-            'node-runtime', 'postgresql', 'drizzle-orm', 'vector-db'
+            'web-standards', 'git-ops', 'es-next', 'http-fundamentals',
+            'react-core', 'tailwind', 'typescript', 'accessibility', 'testing-quality', 'async-state', 'state-machines',
+            'node-runtime', 'postgresql', 'drizzle-orm', 'redis-caching', 'rest-api'
         ]
     }
 ];
@@ -101,10 +98,10 @@ export default function OnboardingModal() {
 
                         <div className="text-center mb-8">
                             <h2 id="onboarding-title" className="font-display text-3xl font-semibold text-foreground md:text-[40px] md:leading-[44px]">
-                                Welcome to Skill Mapper
+                                Skill Mapper
                             </h2>
                             <p id="onboarding-description" className="mt-2 text-base text-text-muted md:text-lg">
-                                Choose your current experience level to jumpstart your skill tree.
+                                Pick a starting role. We’ll unlock matching skills so your first session has a clear next node.
                             </p>
                         </div>
 

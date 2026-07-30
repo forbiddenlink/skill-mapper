@@ -1434,6 +1434,166 @@ const RAW_SKILLS: Omit<SkillNode, 'position'>[] = [
             ],
         },
     },
+    {
+        id: 'data-structures',
+        type: 'skill',
+        data: {
+            id: 'data-structures',
+            title: 'Data Structures',
+            description: 'Arrays, hash maps, trees, graphs — pick the right structure under pressure.',
+            tier: 'foundation',
+            category: 'cs',
+            status: 'locked',
+            prerequisites: ['es-next', 'python-core'],
+            xpReward: 200,
+            resources: [
+                { label: 'VisuAlgo', url: 'https://visualgo.net/en', type: 'lab' },
+                { label: 'Big-O Cheat Sheet', url: 'https://www.bigocheatsheet.com/', type: 'article' },
+            ],
+            quiz: [
+                {
+                    question: 'Average lookup time for a well-sized hash map is…',
+                    options: ['O(n)', 'O(1)', 'O(log n)', 'O(n²)'],
+                    correctIndex: 1,
+                },
+                {
+                    question: 'Which structure is best for BFS on an unweighted graph?',
+                    options: ['Stack', 'Queue', 'Heap only', 'Linked list only'],
+                    correctIndex: 1,
+                },
+            ],
+        },
+    },
+    {
+        id: 'algorithms-basics',
+        type: 'skill',
+        data: {
+            id: 'algorithms-basics',
+            title: 'Algorithms Basics',
+            description: 'Sorting, searching, recursion, and complexity trade-offs you can explain aloud.',
+            tier: 'frontend-2',
+            category: 'cs',
+            status: 'locked',
+            prerequisites: ['data-structures'],
+            xpReward: 250,
+            resources: [
+                { label: 'Algorithms, 4th ed.', url: 'https://algs4.cs.princeton.edu/home/', type: 'course' },
+                { label: 'NeetCode roadmap', url: 'https://neetcode.io/', type: 'lab' },
+            ],
+            quiz: [
+                {
+                    question: 'Binary search requires the input to be…',
+                    options: ['Random', 'Sorted', 'A graph', 'Encrypted'],
+                    correctIndex: 1,
+                },
+                {
+                    question: 'Merge sort’s typical time complexity is…',
+                    options: ['O(n)', 'O(n log n)', 'O(n²)', 'O(1)'],
+                    correctIndex: 1,
+                },
+            ],
+        },
+    },
+    {
+        id: 'sql-analytics',
+        type: 'skill',
+        data: {
+            id: 'sql-analytics',
+            title: 'SQL Analytics',
+            description: 'Window functions, CTEs, and analytical queries for product and ops questions.',
+            tier: 'backend-data',
+            category: 'data',
+            status: 'locked',
+            prerequisites: ['postgresql'],
+            xpReward: 280,
+            resources: [
+                { label: 'Mode SQL Tutorial', url: 'https://mode.com/sql-tutorial/', type: 'course' },
+                { label: 'PostgreSQL Window Functions', url: 'https://www.postgresql.org/docs/current/tutorial-window.html', type: 'article' },
+            ],
+            quiz: [
+                {
+                    question: 'ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY created_at) is a…',
+                    options: ['Primary key', 'Window function', 'Foreign key', 'Trigger'],
+                    correctIndex: 1,
+                },
+                {
+                    question: 'A CTE is typically introduced with…',
+                    options: ['WITH', 'HAVING', 'LIMIT', 'VACUUM'],
+                    correctIndex: 0,
+                },
+            ],
+        },
+    },
+    {
+        id: 'data-visualization',
+        type: 'skill',
+        data: {
+            id: 'data-visualization',
+            title: 'Data Visualization',
+            description: 'Charts that tell the truth — encodings, accessibility, and dashboard craft.',
+            tier: 'backend-data',
+            category: 'data',
+            status: 'locked',
+            prerequisites: ['sql-analytics', 'react-core'],
+            xpReward: 260,
+            resources: [
+                { label: 'Fundamentals of Data Visualization', url: 'https://clauswilke.com/dataviz/', type: 'article' },
+                { label: 'Observable Plot', url: 'https://observablehq.com/plot/', type: 'lab' },
+            ],
+            quiz: [
+                {
+                    question: 'Encoding quantity with color hue alone is risky because…',
+                    options: [
+                        'Hue is not ordered and fails for many color-vision deficiencies',
+                        'Browsers cannot render color',
+                        'SQL cannot store color',
+                        'CSS forbids it',
+                    ],
+                    correctIndex: 0,
+                },
+                {
+                    question: 'A good default for comparing categories is often a…',
+                    options: ['3D pie chart', 'Bar chart', 'Word cloud', 'Radar chart of 20 metrics'],
+                    correctIndex: 1,
+                },
+            ],
+        },
+    },
+    {
+        id: 'networking-basics',
+        type: 'skill',
+        data: {
+            id: 'networking-basics',
+            title: 'Networking Basics',
+            description: 'DNS, TLS, TCP/UDP, and how packets become product latency.',
+            tier: 'foundation',
+            category: 'cs',
+            status: 'locked',
+            prerequisites: ['http-fundamentals'],
+            xpReward: 180,
+            resources: [
+                { label: 'High Performance Browser Networking', url: 'https://hpbn.co/', type: 'article' },
+                { label: 'Cloudflare Learning Center', url: 'https://www.cloudflare.com/learning/', type: 'course' },
+            ],
+            quiz: [
+                {
+                    question: 'TLS primarily provides…',
+                    options: [
+                        'Database indexing',
+                        'Encryption and authenticity for connections',
+                        'CSS compression',
+                        'Git history rewriting',
+                    ],
+                    correctIndex: 1,
+                },
+                {
+                    question: 'DNS resolves…',
+                    options: ['CSS selectors', 'Hostnames to IP addresses', 'SQL joins', 'React props'],
+                    correctIndex: 1,
+                },
+            ],
+        },
+    },
 ];
 
 

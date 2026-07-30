@@ -35,6 +35,7 @@ export default function RecommendedSkills() {
   const calculateRecommendations = useGameStore((state) => state.calculateRecommendations);
   const dismissRecommendation = useGameStore((state) => state.dismissRecommendation);
   const selectSkill = useGameStore((state) => state.selectSkill);
+  const openFeaturesHub = useGameStore((state) => state.openFeaturesHub);
   
   // Calculate recommendations on mount and when nodes change
   useEffect(() => {
@@ -165,8 +166,15 @@ export default function RecommendedSkills() {
           </div>
           
           {/* Footer */}
-          <div className="border-t border-white/10 bg-black/20 px-4 py-2 text-center text-xs text-text-muted">
-            Personalized based on your progress
+          <div className="flex items-center justify-between gap-2 border-t border-white/10 bg-black/20 px-4 py-2 text-xs text-text-muted">
+            <span>Personalized based on your progress</span>
+            <button
+              type="button"
+              className="font-medium text-signal hover:underline"
+              onClick={() => openFeaturesHub('paths')}
+            >
+              View paths
+            </button>
           </div>
         </motion.div>
       </AnimatePresence>

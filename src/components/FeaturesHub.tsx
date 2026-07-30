@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Map, Trophy, Flame, Target, X } from 'lucide-react';
 import { LearningPaths } from './LearningPaths';
@@ -11,31 +11,35 @@ import EmptyStateCoach from './EmptyStateCoach';
 
 import { useGameStore } from '@/lib/store';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';
-
-type View = 'challenges' | 'streaks' | 'paths' | 'bosses' | null;
+import type { FeaturesHubView } from '@/lib/stores/ui-store';
 
 export function FeaturesHub() {
-    const [activeView, setActiveView] = useState<View>(null);
-    const selectSkill = useGameStore(state => state.selectSkill);
+    const activeView = useGameStore((s) => s.featuresHubView);
+    const openFeaturesHub = useGameStore((s) => s.openFeaturesHub);
+    const closeFeaturesHub = useGameStore((s) => s.closeFeaturesHub);
+    const selectSkill = useGameStore((s) => s.selectSkill);
 
-    const handleViewChange = (view: View) => {
-        setActiveView(view);
-        if (view) selectSkill(null); // Close sidebar when opening modal
+    useEffect(() => {
+        if (activeView) selectSkill(null);
+    }, [activeView, selectSkill]);
+
+    const handleViewChange = (view: FeaturesHubView) => {
+        if (view) openFeaturesHub(view);
+        else closeFeaturesHub();
     };
-    const closeHub = () => handleViewChange(null);
-    const dialogRef = useDialogA11y<HTMLDivElement>(Boolean(activeView), closeHub);
+
+    const dialogRef = useDialogA11y<HTMLDivElement>(Boolean(activeView), closeFeaturesHub);
 
     const features = [
-        { id: 'challenges' as View, icon: Target, label: 'Daily Challenge', tone: 'text-signal' },
-        { id: 'streaks' as View, icon: Flame, label: 'Streaks', tone: 'text-reward' },
-        { id: 'paths' as View, icon: Map, label: 'Learning Paths', tone: 'text-progress' },
-        { id: 'bosses' as View, icon: Trophy, label: 'Boss Battles', tone: 'text-mastery' },
+        { id: 'challenges' as const, icon: Target, label: 'Daily Challenge', tone: 'text-signal' },
+        { id: 'streaks' as const, icon: Flame, label: 'Streaks', tone: 'text-reward' },
+        { id: 'paths' as const, icon: Map, label: 'Learning Paths', tone: 'text-progress' },
+        { id: 'bosses' as const, icon: Trophy, label: 'Boss Battles', tone: 'text-mastery' },
     ];
     const activeLabel = features.find((feature) => feature.id === activeView)?.label ?? 'Features Hub';
 
     return (
         <>
-            {/* Features Button - Bottom Left */}
             <div className="fixed bottom-4 left-3 z-30 sm:bottom-6 sm:left-6 md:bottom-8 md:left-6">
                 <div className="flex flex-col gap-1.5 sm:gap-2">
                     {features.map((feature, idx) => (
@@ -51,8 +55,6 @@ export function FeaturesHub() {
                             aria-label={feature.label}
                         >
                             <feature.icon className={feature.tone} size={20} />
-                            
-                            {/* Hover tooltip */}
                             <div className="pointer-events-none absolute left-full top-1/2 ml-3 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100">
                                 <div className="panel-base whitespace-nowrap px-3 py-2 text-sm font-medium text-white">
                                     {feature.label}
@@ -63,15 +65,14 @@ export function FeaturesHub() {
                 </div>
             </div>
 
-            {/* Modal Overlay */}
             <AnimatePresence>
                 {activeView && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm p-4 md:p-6"
-                        onClick={() => handleViewChange(null)}
+                        className="fixed inset-0 z-50 overflow-y-auto bg-black/75 p-4 backdrop-blur-sm md:p-6"
+                        onClick={closeFeaturesHub}
                     >
                         <motion.div
                             initial={{ scale: 0.96, y: 12 }}
@@ -82,23 +83,21 @@ export function FeaturesHub() {
                             aria-modal="true"
                             aria-labelledby="features-hub-title"
                             tabIndex={-1}
-                            className="max-w-7xl mx-auto relative"
+                            className="relative mx-auto max-w-7xl"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <h2 id="features-hub-title" className="sr-only">
                                 {activeLabel}
                             </h2>
-                            {/* Close button */}
                             <button
                                 type="button"
-                                onClick={() => handleViewChange(null)}
+                                onClick={closeFeaturesHub}
                                 className="icon-btn absolute -right-2 -top-2 z-10 grid place-items-center"
                                 aria-label="Close features hub"
                             >
                                 <X className="text-white" size={20} />
                             </button>
 
-                            {/* Content */}
                             <div className="modal-shell space-y-4 p-4 md:p-8">
                                 {activeView === 'challenges' && (
                                     <>

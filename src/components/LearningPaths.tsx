@@ -75,6 +75,26 @@ const LEARNING_PATHS: LearningPath[] = [
         targetRole: 'Platform Engineer',
         estimatedWeeks: 18,
         color: 'border-signal/40'
+    },
+    {
+        id: 'data-analyst',
+        title: 'Data Analyst',
+        description: 'Turn warehouse tables into decisions with SQL and clear visuals',
+        icon: Layers,
+        skills: ['python-core', 'postgresql', 'sql-analytics', 'data-pipelines', 'data-visualization'],
+        targetRole: 'Data Analyst',
+        estimatedWeeks: 14,
+        color: 'border-progress/40'
+    },
+    {
+        id: 'cs-foundations',
+        title: 'CS Foundations',
+        description: 'Structures, algorithms, and the network under every request',
+        icon: Brain,
+        skills: ['es-next', 'python-core', 'http-fundamentals', 'networking-basics', 'data-structures', 'algorithms-basics', 'system-design'],
+        targetRole: 'Software Engineer',
+        estimatedWeeks: 16,
+        color: 'border-mastery/40'
     }
 ];
 

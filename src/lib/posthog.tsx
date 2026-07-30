@@ -101,6 +101,27 @@ export const trackSkillEvent = {
       category,
     });
   },
+
+  dailyChallengeCompleted: (challengeId: string, xpBonus: number) => {
+    posthog.capture('daily_challenge_completed', {
+      challenge_id: challengeId,
+      xp_bonus: xpBonus,
+    });
+  },
+
+  bossBattleCompleted: (bossId: string, score: number, passed: boolean) => {
+    posthog.capture('boss_battle_completed', {
+      boss_id: bossId,
+      score,
+      passed,
+    });
+  },
+
+  shareOpened: (reason: string) => {
+    posthog.capture('share_opened', {
+      reason,
+    });
+  },
 };
 
 export { posthog }

@@ -7,6 +7,7 @@ import { useGameStore } from '@/lib/store';
 import { useShallow } from 'zustand/react/shallow';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';
 import { calculateSkillStats } from '@/lib/gamification';
+import { trackSkillEvent } from '@/lib/posthog';
 
 function formatXp(xp: number) {
   return new Intl.NumberFormat('en-US').format(xp);
@@ -133,6 +134,7 @@ export default function ShareProgressCard() {
 
   useEffect(() => {
     if (sharePromptOpen) {
+      trackSkillEvent.shareOpened(sharePromptReason ?? 'manual');
       requestAnimationFrame(() => drawCard());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- redraw when prompt opens / stats change
@@ -162,7 +164,11 @@ export default function ShareProgressCard() {
       ? 'Daily challenge cleared — share the streak.'
       : sharePromptReason === 'level-up'
         ? 'Level up — show the atlas.'
-        : null;
+        : sharePromptReason === 'boss-battle'
+          ? 'Boss defeated — claim the brag.'
+          : sharePromptReason === 'skill-mastery'
+            ? 'First mastery today — keep the loop going.'
+            : null;
 
   return (
     <>

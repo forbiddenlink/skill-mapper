@@ -69,10 +69,10 @@ export default function RecommendedSkills() {
           className="panel-strong overflow-hidden"
         >
           {/* Header */}
-          <div className="flex items-center gap-2 border-b border-neon-cyan/30 bg-neon-cyan/10 px-4 py-3">
-            <Sparkles className="w-5 h-5 text-cyan-400" aria-hidden="true" />
-            <h2 className="text-sm font-semibold text-cyan-300">AI Recommendations</h2>
-            <span className="ml-auto text-xs text-text-muted">{recommendations.length} suggested</span>
+          <div className="flex items-center gap-2 border-b border-signal/25 bg-signal/10 px-4 py-3">
+            <Sparkles className="h-5 w-5 text-signal" aria-hidden="true" />
+            <h2 className="font-display text-sm font-semibold text-signal">Recommendations</h2>
+            <span className="ml-auto font-mono text-xs text-text-muted">{recommendations.length} suggested</span>
           </div>
           
           {/* Recommendations List */}
@@ -91,8 +91,8 @@ export default function RecommendedSkills() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ delay: index * 0.05 }}
-                  className={`group relative cursor-pointer border-b border-white/10 p-4 transition-colors hover:bg-white/5 ${
-                    isDecay ? 'bg-yellow-500/5' : ''
+                  className={`group relative cursor-pointer border-b border-white/10 p-4 transition-colors hover:bg-surface-3/40 ${
+                    isDecay ? 'bg-reward/5' : ''
                   }`}
                   onClick={() => handleSkillClick(rec.skillId)}
                 >
@@ -102,39 +102,39 @@ export default function RecommendedSkills() {
                       e.stopPropagation();
                       dismissRecommendation(rec.skillId);
                     }}
-                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-700 rounded"
+                    className="absolute top-2 right-2 rounded p-1 opacity-0 transition-opacity hover:bg-surface-3 group-hover:opacity-100"
                     aria-label="Dismiss recommendation"
                   >
-                    <X className="w-3 h-3 text-gray-400" />
+                    <X className="h-3 w-3 text-text-muted" />
                   </button>
                   
                   {/* Content */}
                   <div className="flex items-start gap-3">
                     {/* Icon */}
-                    <div className={`shrink-0 p-2 rounded-lg ${
-                      isDecay ? 'bg-warning-amber/15 border border-warning-amber/25' : 'bg-neon-cyan/10 border border-neon-cyan/25'
+                    <div className={`shrink-0 rounded-[8px] border p-2 ${
+                      isDecay ? 'border-reward/25 bg-reward/15' : 'border-signal/25 bg-signal/10'
                     }`}>
-                      <Icon className={`w-4 h-4 ${
-                        isDecay ? 'text-warning-amber' : 'text-cyan-300'
+                      <Icon className={`h-4 w-4 ${
+                        isDecay ? 'text-reward' : 'text-signal'
                       }`} />
                     </div>
                     
                     {/* Text */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-sm font-medium text-white truncate">
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-1 flex items-center gap-2">
+                        <h3 className="truncate text-sm font-medium text-foreground">
                           {skill.data.title}
                         </h3>
-                        <span className={`px-2 py-0.5 text-xs rounded-full ${
+                        <span className={`rounded-[6px] px-2 py-0.5 font-mono text-[10px] uppercase ${
                           isDecay 
-                            ? 'bg-warning-amber/20 text-warning-amber'
-                            : 'bg-neon-cyan/20 text-cyan-200'
+                            ? 'bg-reward/20 text-reward'
+                            : 'bg-signal/20 text-signal'
                         }`}>
                           {reasonLabels[rec.reason]}
                         </span>
                       </div>
                       
-                      <p className="text-xs text-gray-400 mb-1">
+                      <p className="mb-1 text-xs text-text-muted">
                         {reasonDescriptions[rec.reason]}
                       </p>
                       

@@ -125,63 +125,52 @@ export function StreakTracker() {
     const calendarDays = generateCalendarDays(mountTime, streakData.activityCalendar);
 
     const getActivityColor = (xp: number) => {
-        if (xp === 0) return 'bg-gray-800';
-        if (xp < 100) return 'bg-green-900';
-        if (xp < 500) return 'bg-green-700';
-        if (xp < 1000) return 'bg-green-500';
-        return 'bg-green-300';
+        if (xp === 0) return 'bg-surface-3';
+        if (xp < 100) return 'bg-mastery/25';
+        if (xp < 500) return 'bg-mastery/45';
+        if (xp < 1000) return 'bg-mastery/70';
+        return 'bg-mastery';
     };
 
     const firstCalendarDay = calendarDays[0];
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
             className="panel-strong p-4 md:p-6"
         >
-            {/* Streak Stats */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="mb-6 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                    <motion.div
-                        animate={{ scale: [1, 1.1, 1] }}
-                        transition={{ repeat: Infinity, duration: 2 }}
-                        className="grid h-10 w-10 place-items-center rounded-[12px] border border-warning-amber/40 bg-warning-amber/10"
-                    >
-                        <Flame className="text-warning-amber" size={20} />
-                    </motion.div>
+                    <div className="grid h-10 w-10 place-items-center rounded-[10px] border border-reward/40 bg-reward/10">
+                        <Flame className="text-reward" size={20} />
+                    </div>
                     <div>
-                        <h3 className="text-2xl font-semibold text-white">{streakData.currentStreak} Day Streak</h3>
+                        <h3 className="font-display text-2xl font-semibold text-foreground">{streakData.currentStreak} day streak</h3>
                         <p className="text-sm text-text-muted">Keep the momentum going.</p>
                     </div>
                 </div>
-                <div className="text-right">
-                    <div className="flex items-center gap-2 text-warning-amber">
-                        <Award size={20} />
-                        <span className="font-semibold">Best: {streakData.longestStreak}</span>
-                    </div>
+                <div className="flex items-center gap-2 font-mono text-sm text-reward">
+                    <Award size={18} />
+                    <span className="font-semibold">Best {streakData.longestStreak}</span>
                 </div>
             </div>
 
-            {/* Calendar */}
             <div className="panel-base p-4">
-                <div className="flex items-center gap-2 mb-3">
-                    <Calendar className="text-neon-cyan" size={20} />
-                    <h4 className="text-lg font-semibold text-white">Last 30 Days</h4>
+                <div className="mb-3 flex items-center gap-2">
+                    <Calendar className="text-signal" size={20} />
+                    <h4 className="font-display text-lg font-semibold text-foreground">Last 30 days</h4>
                 </div>
 
-                {/* Day labels */}
-                <div className="grid grid-cols-7 gap-1 mb-2">
+                <div className="mb-2 grid grid-cols-7 gap-1">
                     {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, idx) => (
-                        <div key={idx} className="text-center text-xs font-medium text-text-muted">
+                        <div key={idx} className="text-center font-mono text-[10px] font-medium text-text-muted">
                             {day}
                         </div>
                     ))}
                 </div>
 
-                {/* Calendar grid */}
                 <div className="grid grid-cols-7 gap-1">
-                    {/* Fill empty cells at start */}
                     {firstCalendarDay && Array.from({ length: firstCalendarDay.dayOfWeek }).map((_, idx) => (
                         <div key={`empty-${idx}`} className="aspect-square"></div>
                     ))}
@@ -189,41 +178,39 @@ export function StreakTracker() {
                     {calendarDays.map((day, idx) => (
                         <motion.div
                             key={day.date}
-                            initial={{ opacity: 0, scale: 0 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: idx * 0.01 }}
-                            className={`aspect-square rounded-[8px] ${getActivityColor(day.xp)} cursor-pointer transition-all hover:ring-2 hover:ring-neon-cyan`}
+                            className={`aspect-square cursor-pointer rounded-[6px] transition-all hover:ring-2 hover:ring-signal ${getActivityColor(day.xp)}`}
                             title={`${day.date}: ${day.xp} XP`}
                         />
                     ))}
                 </div>
 
-                {/* Legend */}
                 <div className="mt-4 flex items-center gap-2 text-xs text-text-muted">
                     <span>Less</span>
                     <div className="flex gap-1">
-                        <div className="h-3 w-3 rounded-[4px] bg-gray-800"></div>
-                        <div className="h-3 w-3 rounded-[4px] bg-green-900"></div>
-                        <div className="h-3 w-3 rounded-[4px] bg-green-700"></div>
-                        <div className="h-3 w-3 rounded-[4px] bg-green-500"></div>
-                        <div className="h-3 w-3 rounded-[4px] bg-green-300"></div>
+                        <div className="h-3 w-3 rounded-[3px] bg-surface-3"></div>
+                        <div className="h-3 w-3 rounded-[3px] bg-mastery/25"></div>
+                        <div className="h-3 w-3 rounded-[3px] bg-mastery/45"></div>
+                        <div className="h-3 w-3 rounded-[3px] bg-mastery/70"></div>
+                        <div className="h-3 w-3 rounded-[3px] bg-mastery"></div>
                     </div>
                     <span>More</span>
                 </div>
             </div>
 
-            {/* Motivation */}
-            <div className="mt-4 rounded-[12px] border border-warning-amber/35 bg-warning-amber/10 p-3">
-                <div className="flex items-center gap-2 text-gray-200">
-                    <TrendingUp size={18} className="text-warning-amber" />
+            <div className="mt-4 rounded-[10px] border border-reward/30 bg-reward/10 p-3">
+                <div className="flex items-center gap-2 text-foreground/90">
+                    <TrendingUp size={18} className="text-reward" />
                     <p className="text-sm font-medium">
                         {streakData.currentStreak === 0
-                            ? "Start your streak today! Complete any skill to begin."
+                            ? "Start your streak today — complete any skill to begin."
                             : streakData.currentStreak < 7
-                            ? `Great start! ${7 - streakData.currentStreak} more days to reach a 1-week streak!`
+                            ? `Great start. ${7 - streakData.currentStreak} more days to a one-week streak.`
                             : streakData.currentStreak < 30
-                            ? `Amazing! You're ${streakData.currentStreak} days strong. Keep pushing!`
-                            : "Legendary streak! You're a true master of consistency!"}
+                            ? `${streakData.currentStreak} days strong. Keep going.`
+                            : "Legendary consistency. Protect this streak."}
                     </p>
                 </div>
             </div>

@@ -92,11 +92,11 @@ export default function StatsPanel() {
                             {/* Header */}
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-3">
-                                    <div className="grid h-10 w-10 place-items-center rounded-[12px] border border-plasma-pink/35 bg-plasma-pink/10 text-plasma-pink">
+                                    <div className="grid h-10 w-10 place-items-center rounded-[10px] border border-mastery/35 bg-mastery/10 text-mastery">
                                         <BarChart3 size={24} />
                                     </div>
-                                    <h2 id="stats-title" className="text-xl font-semibold text-white">
-                                        Learning Statistics
+                                    <h2 id="stats-title" className="font-display text-xl font-semibold text-foreground">
+                                        Learning statistics
                                     </h2>
                                 </div>
                                 <button
@@ -109,89 +109,86 @@ export default function StatsPanel() {
                                 </button>
                             </div>
 
-                            {/* Key Metrics */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                            <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
                                 <div className="metric-card p-4">
-                                    <div className="flex items-center gap-2 text-neon-cyan mb-2">
+                                    <div className="mb-2 flex items-center gap-2 text-signal">
                                         <Target size={18} />
-                                        <span className="text-xs uppercase font-mono">Completion</span>
+                                        <span className="font-mono text-xs uppercase">Completion</span>
                                     </div>
-                                    <div className="text-2xl font-bold text-white">{completionRate}%</div>
-                                    <div className="text-xs text-gray-400">{masteredSkills} / {totalSkills} skills</div>
+                                    <div className="font-display text-2xl font-bold text-foreground">{completionRate}%</div>
+                                    <div className="text-xs text-text-muted">{masteredSkills} / {totalSkills} skills</div>
                                 </div>
 
                                 <div className="metric-card p-4">
-                                    <div className="flex items-center gap-2 text-electric-green mb-2">
+                                    <div className="mb-2 flex items-center gap-2 text-progress">
                                         <TrendingUp size={18} />
-                                        <span className="text-xs uppercase font-mono">Level</span>
+                                        <span className="font-mono text-xs uppercase">Level</span>
                                     </div>
-                                    <div className="text-2xl font-bold text-white">{userLevel}</div>
-                                    <div className="text-xs text-gray-400">{userXP} XP</div>
+                                    <div className="font-display text-2xl font-bold text-foreground">{userLevel}</div>
+                                    <div className="text-xs text-text-muted">{userXP} XP</div>
                                 </div>
 
                                 <div className="metric-card p-4">
-                                    <div className="flex items-center gap-2 text-yellow-500 mb-2">
+                                    <div className="mb-2 flex items-center gap-2 text-reward">
                                         <Award size={18} />
-                                        <span className="text-xs uppercase font-mono">Badges</span>
+                                        <span className="font-mono text-xs uppercase">Badges</span>
                                     </div>
-                                    <div className="text-2xl font-bold text-white">{unlockedBadges.length}</div>
-                                    <div className="text-xs text-gray-400">Achievements</div>
+                                    <div className="font-display text-2xl font-bold text-foreground">{unlockedBadges.length}</div>
+                                    <div className="text-xs text-text-muted">Achievements</div>
                                 </div>
 
                                 <div className="metric-card p-4">
-                                    <div className="flex items-center gap-2 text-orange-500 mb-2">
+                                    <div className="mb-2 flex items-center gap-2 text-reward">
                                         <Zap size={18} />
-                                        <span className="text-xs uppercase font-mono">Streak</span>
+                                        <span className="font-mono text-xs uppercase">Streak</span>
                                     </div>
-                                    <div className="text-2xl font-bold text-white">{streak}</div>
-                                    <div className="text-xs text-gray-400">Days</div>
+                                    <div className="font-display text-2xl font-bold text-foreground">{streak}</div>
+                                    <div className="text-xs text-text-muted">Days</div>
                                 </div>
                             </div>
 
-                            {/* Status Breakdown */}
                             <div className="mb-8">
-                                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Skill Status</h3>
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                    <div className="panel-base rounded-[12px] p-3">
-                                        <div className="text-plasma-pink text-sm font-mono">Mastered</div>
-                                        <div className="text-2xl font-bold text-white">{masteredSkills}</div>
+                                <h3 className="mb-4 font-mono text-sm font-bold uppercase tracking-wider text-foreground">Skill status</h3>
+                                <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                                    <div className="panel-base rounded-[10px] p-3">
+                                        <div className="font-mono text-sm text-mastery">Mastered</div>
+                                        <div className="font-display text-2xl font-bold text-foreground">{masteredSkills}</div>
                                     </div>
-                                    <div className="panel-base rounded-[12px] p-3">
-                                        <div className="text-electric-green text-sm font-mono">In Progress</div>
-                                        <div className="text-2xl font-bold text-white">{inProgressSkills}</div>
+                                    <div className="panel-base rounded-[10px] p-3">
+                                        <div className="font-mono text-sm text-progress">In progress</div>
+                                        <div className="font-display text-2xl font-bold text-foreground">{inProgressSkills}</div>
                                     </div>
-                                    <div className="panel-base rounded-[12px] p-3">
-                                        <div className="text-neon-cyan text-sm font-mono">Available</div>
-                                        <div className="text-2xl font-bold text-white">{availableSkills}</div>
+                                    <div className="panel-base rounded-[10px] p-3">
+                                        <div className="font-mono text-sm text-signal">Available</div>
+                                        <div className="font-display text-2xl font-bold text-foreground">{availableSkills}</div>
                                     </div>
-                                    <div className="panel-base rounded-[12px] p-3">
-                                        <div className="text-gray-400 text-sm font-mono">Locked</div>
-                                        <div className="text-2xl font-bold text-white">{lockedSkills}</div>
+                                    <div className="panel-base rounded-[10px] p-3">
+                                        <div className="font-mono text-sm text-text-muted">Locked</div>
+                                        <div className="font-display text-2xl font-bold text-foreground">{lockedSkills}</div>
                                     </div>
                                     {decayedSkills > 0 && (
-                                        <div className="rounded-[12px] border border-alert-red/50 bg-alert-red/10 p-3">
-                                            <div className="text-alert-red text-sm font-mono">Decayed</div>
-                                            <div className="text-2xl font-bold text-white">{decayedSkills}</div>
+                                        <div className="rounded-[10px] border border-decay/50 bg-decay/10 p-3">
+                                            <div className="font-mono text-sm text-decay">Decayed</div>
+                                            <div className="font-display text-2xl font-bold text-foreground">{decayedSkills}</div>
                                         </div>
                                     )}
                                 </div>
                             </div>
 
-                            {/* Tier Progress */}
                             <div className="mb-8">
-                                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Progress by Tier</h3>
+                                <h3 className="mb-4 font-mono text-sm font-bold uppercase tracking-wider text-foreground">Progress by tier</h3>
                                 <div className="space-y-3">
                                     {tierStats.map((tier) => (
-                                        <div key={tier.name} className="panel-base rounded-[12px] p-3">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <span className="text-sm text-gray-300">{tier.name}</span>
-                                                <span className="text-xs font-mono text-gray-400">
+                                        <div key={tier.name} className="panel-base rounded-[10px] p-3">
+                                            <div className="mb-2 flex items-center justify-between">
+                                                <span className="text-sm text-foreground/85">{tier.name}</span>
+                                                <span className="font-mono text-xs text-text-muted">
                                                     {tier.mastered} / {tier.total}
                                                 </span>
                                             </div>
-                                            <div className="h-2 w-full overflow-hidden rounded-full bg-black/35">
+                                            <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-3">
                                                 <div
-                                                    className="h-full bg-gradient-to-r from-neon-cyan to-plasma-pink transition-all duration-500"
+                                                    className="h-full bg-gradient-to-r from-signal to-mastery transition-all duration-500"
                                                     style={{ width: `${tier.percentage}%` }}
                                                 />
                                             </div>
@@ -200,15 +197,14 @@ export default function StatsPanel() {
                                 </div>
                             </div>
 
-                            {/* Category Progress */}
                             <div>
-                                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Progress by Category</h3>
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                <h3 className="mb-4 font-mono text-sm font-bold uppercase tracking-wider text-foreground">Progress by category</h3>
+                                <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                                     {categoryStats.map((cat) => (
-                                        <div key={cat.name} className="panel-base rounded-[12px] p-3">
-                                            <div className="text-sm text-gray-300 mb-1">{cat.name}</div>
-                                            <div className="text-xl font-bold text-white mb-2">{cat.percentage}%</div>
-                                            <div className="text-xs text-gray-400">{cat.mastered} / {cat.total}</div>
+                                        <div key={cat.name} className="panel-base rounded-[10px] p-3">
+                                            <div className="mb-1 font-mono text-sm text-foreground/85">{cat.name}</div>
+                                            <div className="font-display mb-2 text-xl font-bold text-foreground">{cat.percentage}%</div>
+                                            <div className="text-xs text-text-muted">{cat.mastered} / {cat.total}</div>
                                         </div>
                                     ))}
                                 </div>

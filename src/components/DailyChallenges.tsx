@@ -132,19 +132,19 @@ export function DailyChallenges() {
             animate={{ opacity: 1, y: 0 }}
             className="panel-strong p-4 md:p-6"
         >
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-[12px] border border-warning-amber/35 bg-warning-amber/10">
-                        <Trophy className="text-warning-amber" size={20} />
+                    <div className="grid h-10 w-10 place-items-center rounded-[10px] border border-reward/35 bg-reward/10">
+                        <Trophy className="text-reward" size={20} />
                     </div>
                     <div>
-                        <h3 className="text-xl font-semibold text-white">{dailyChallenge.title}</h3>
+                        <h3 className="font-display text-xl font-semibold text-foreground">{dailyChallenge.title}</h3>
                         <p className="text-sm text-text-muted">Complete for +{dailyChallenge.xpBonus} XP bonus.</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-2 rounded-full border border-white/20 bg-black/20 px-3 py-1">
+                <div className="flex items-center gap-2 rounded-[8px] border border-white/12 bg-surface-1 px-3 py-1.5 font-mono text-sm">
                     <Clock className="text-text-muted" size={16} />
-                    <span className="text-sm font-semibold text-gray-200">{timeRemaining}</span>
+                    <span className="font-semibold text-foreground">{timeRemaining}</span>
                 </div>
             </div>
 
@@ -157,34 +157,35 @@ export function DailyChallenges() {
                         exit={{ opacity: 0 }}
                     >
                         <div className="panel-base mb-4 p-4">
-                            <p className="text-lg text-white mb-4">{question.question}</p>
+                            <p className="mb-4 text-lg text-foreground">{question.question}</p>
                             <div className="space-y-2">
                                 {question.options.map((option, idx) => (
                                     <button
                                         key={idx}
+                                        type="button"
                                         onClick={() => {
                                             if (!showResult) {
                                                 setSelectedAnswer(idx);
                                             }
                                         }}
                                         disabled={showResult}
-                                        className={`w-full rounded-[12px] border p-3 text-left transition-all ${
+                                        className={`w-full rounded-[10px] border p-3 text-left transition-all ${
                                             selectedAnswer === idx
                                                 ? showResult
                                                     ? idx === question.correctIndex
-                                                        ? 'border-electric-green/60 bg-electric-green/20'
-                                                        : 'border-alert-red/60 bg-alert-red/20'
-                                                    : 'border-neon-cyan/55 bg-neon-cyan/15'
-                                                : 'border-white/20 bg-black/20 hover:border-neon-cyan/45 hover:bg-white/5'
+                                                        ? 'border-mastery/60 bg-mastery/20'
+                                                        : 'border-decay/60 bg-decay/20'
+                                                    : 'border-signal/55 bg-signal/15'
+                                                : 'border-white/12 bg-surface-1 hover:border-signal/40 hover:bg-surface-3/40'
                                         }`}
                                     >
                                         <div className="flex items-center justify-between">
-                                            <span className="text-white">{option}</span>
+                                            <span className="text-foreground">{option}</span>
                                             {showResult && idx === question.correctIndex && (
-                                                <CheckCircle2 className="text-electric-green" size={20} />
+                                                <CheckCircle2 className="text-mastery" size={20} />
                                             )}
                                             {showResult && selectedAnswer === idx && idx !== question.correctIndex && (
-                                                <XCircle className="text-alert-red" size={20} />
+                                                <XCircle className="text-decay" size={20} />
                                             )}
                                         </div>
                                     </button>
@@ -204,21 +205,21 @@ export function DailyChallenges() {
                         )}
 
                         {showResult && !challengeCompleted && (
-                            <div className="rounded-[12px] border border-alert-red/45 bg-alert-red/10 p-4">
-                                <p className="text-alert-red">Incorrect. Try again tomorrow for a new challenge.</p>
+                            <div className="rounded-[10px] border border-decay/45 bg-decay/10 p-4">
+                                <p className="text-decay">Incorrect. Try again tomorrow for a new challenge.</p>
                             </div>
                         )}
                     </motion.div>
                 ) : (
                     <motion.div
                         key="completed"
-                        initial={{ scale: 0.8, opacity: 0 }}
+                        initial={{ scale: 0.96, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="rounded-[12px] border border-electric-green/45 bg-electric-green/10 p-6 text-center"
+                        className="rounded-[10px] border border-mastery/45 bg-mastery/10 p-6 text-center"
                     >
-                        <CheckCircle2 className="mx-auto mb-3 text-electric-green" size={48} />
-                        <h4 className="mb-2 text-2xl font-semibold text-white">Challenge Complete</h4>
-                        <p className="text-gray-100">You earned +{dailyChallenge.xpBonus} bonus XP.</p>
+                        <CheckCircle2 className="mx-auto mb-3 text-mastery" size={48} />
+                        <h4 className="font-display mb-2 text-2xl font-semibold text-foreground">Challenge complete</h4>
+                        <p className="text-foreground/90">You earned +{dailyChallenge.xpBonus} bonus XP.</p>
                         <p className="mt-2 text-sm text-text-muted">Come back tomorrow for a new challenge.</p>
                     </motion.div>
                 )}

@@ -98,13 +98,13 @@ export default function AnalyticsDashboard() {
                             aria-modal="true"
                             tabIndex={-1}
                         >
-                            <div className="flex items-center justify-between mb-6">
+                            <div className="mb-6 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="grid h-10 w-10 place-items-center rounded-[12px] border border-electric-green/35 bg-electric-green/10 text-electric-green">
+                                    <div className="grid h-10 w-10 place-items-center rounded-[10px] border border-progress/35 bg-progress/10 text-progress">
                                         <TrendingUp size={24} />
                                     </div>
-                                    <h2 id="analytics-title" className="text-xl font-semibold text-white">
-                                        Learning Analytics
+                                    <h2 id="analytics-title" className="font-display text-xl font-semibold text-foreground">
+                                        Learning analytics
                                     </h2>
                                 </div>
                                 <button
@@ -117,53 +117,51 @@ export default function AnalyticsDashboard() {
                                 </button>
                             </div>
 
-                            {/* Key Metrics Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                            <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                                 <MetricCard
                                     icon={<Target />}
-                                    label="Completion Rate"
+                                    label="Completion rate"
                                     value={`${completionRate}%`}
-                                    color="text-neon-cyan"
+                                    color="text-signal"
                                 />
                                 <MetricCard
                                     icon={<Zap />}
-                                    label="XP Progress"
+                                    label="XP progress"
                                     value={`${xpProgress}%`}
                                     subtitle={`${userXP}/${totalXPPossible}`}
-                                    color="text-electric-green"
+                                    color="text-mastery"
                                 />
                                 <MetricCard
                                     icon={<Calendar />}
                                     label="Streak"
                                     value={`${streak} days`}
-                                    color="text-plasma-pink"
+                                    color="text-reward"
                                 />
                                 <MetricCard
                                     icon={<Activity />}
-                                    label="Learning Velocity"
+                                    label="Learning velocity"
                                     value={`${learningVelocity} /day`}
-                                    color="text-alert-red"
+                                    color="text-progress"
                                 />
                             </div>
 
-                            {/* Category Breakdown */}
                             <div className="mb-6">
-                                <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                                    <PieChart size={20} className="text-neon-cyan" />
-                                    Category Progress
+                                <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-semibold text-foreground">
+                                    <PieChart size={20} className="text-signal" />
+                                    Category progress
                                 </h3>
                                 <div className="space-y-3">
                                     {categoryData.map(cat => (
                                         <div key={cat.name} className="panel-base p-3">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <span className="text-sm font-medium text-gray-300">{cat.name}</span>
-                                                <span className="text-sm text-gray-400">
+                                            <div className="mb-2 flex items-center justify-between">
+                                                <span className="font-mono text-sm font-medium text-foreground/85">{cat.name}</span>
+                                                <span className="font-mono text-sm text-text-muted">
                                                     {cat.mastered}/{cat.total} ({cat.percentage}%)
                                                 </span>
                                             </div>
-                                            <div className="h-2 w-full rounded-full bg-black/35">
+                                            <div className="h-1.5 w-full rounded-full bg-surface-3">
                                                 <div
-                                                    className="bg-neon-cyan h-2 rounded-full transition-all"
+                                                    className="h-1.5 rounded-full bg-signal transition-all"
                                                     style={{ width: `${cat.percentage}%` }}
                                                 />
                                             </div>
@@ -172,28 +170,27 @@ export default function AnalyticsDashboard() {
                                 </div>
                             </div>
 
-                            {/* Recent Activity */}
                             <div>
-                                <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                                    <Clock size={20} className="text-electric-green" />
-                                    Recent Activity
+                                <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-semibold text-foreground">
+                                    <Clock size={20} className="text-progress" />
+                                    Recent activity
                                 </h3>
                                 <div ref={activityListRef} className="space-y-2">
                                     {recentActivity.length > 0 ? (
                                         recentActivity.map(node => (
                                             <div key={node.id} className="panel-base flex items-center justify-between p-3">
                                                 <div className="flex items-center gap-3">
-                                                    <Award size={16} className="text-plasma-pink" />
-                                                    <span className="text-sm text-gray-300">{node.data.title}</span>
+                                                    <Award size={16} className="text-mastery" />
+                                                    <span className="text-sm text-foreground/90">{node.data.title}</span>
                                                 </div>
-                                                <span className="text-xs text-gray-500">
+                                                <span className="font-mono text-xs text-text-muted">
                                                     {node.data.lastPracticedAt && formatDate(node.data.lastPracticedAt)}
                                                 </span>
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="text-center text-gray-500 py-8">
-                                            No activity yet. Start learning to see your progress!
+                                        <div className="py-8 text-center text-text-muted">
+                                            No activity yet. Start learning to see your progress.
                                         </div>
                                     )}
                                 </div>
@@ -222,9 +219,9 @@ function MetricCard({
     return (
         <div className="metric-card p-4">
             <div className={`${color} mb-2`}>{icon}</div>
-            <div className="text-2xl font-bold text-white mb-1">{value}</div>
-            <div className="text-xs text-gray-400">{label}</div>
-            {subtitle && <div className="text-xs text-gray-400 mt-1">{subtitle}</div>}
+            <div className="font-display mb-1 text-2xl font-bold text-foreground">{value}</div>
+            <div className="font-mono text-xs text-text-muted">{label}</div>
+            {subtitle && <div className="mt-1 font-mono text-xs text-text-muted">{subtitle}</div>}
         </div>
     );
 }

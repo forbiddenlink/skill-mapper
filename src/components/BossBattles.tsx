@@ -249,7 +249,7 @@ export function BossBattles() {
                     aria-labelledby="boss-battle-title"
                     aria-describedby="boss-battle-description"
                     tabIndex={-1}
-                    className="modal-shell w-full max-w-2xl border-warning-amber/45 p-5 md:p-8"
+                    className="modal-shell w-full max-w-2xl border-reward/40 p-5 md:p-8"
                 >
                     <h2 id="boss-battle-title" className="sr-only">
                         {battle.title}
@@ -269,20 +269,20 @@ export function BossBattles() {
                         <>
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-3">
-                                    <Skull className="text-red-400" size={32} />
+                                    <Skull className="text-decay" size={32} />
                                     <div>
-                                        <h2 className="text-2xl font-semibold text-white">{battle.title}</h2>
-                                        <p className="text-sm text-text-muted">Question {currentQuestion + 1} of {battle.questions.length}</p>
+                                        <h2 className="font-display text-2xl font-semibold text-foreground">{battle.title}</h2>
+                                        <p className="font-mono text-sm text-text-muted">Question {currentQuestion + 1} of {battle.questions.length}</p>
                                     </div>
                                 </div>
                                 <div className="text-right">
                                     <p className="text-sm text-text-muted">Score</p>
-                                    <p className="text-2xl font-bold text-warning-amber">{score}/{battle.questions.length}</p>
+                                    <p className="font-display text-2xl font-bold text-reward">{score}/{battle.questions.length}</p>
                                 </div>
                             </div>
 
                             <div className="panel-base mb-6 p-6">
-                                <p className="text-xl text-white mb-6">{question.question}</p>
+                                <p className="mb-6 text-xl text-foreground">{question.question}</p>
                                 <div className="space-y-3">
                                     {question.options.map((option: string, idx: number) => (
                                         <button
@@ -290,23 +290,23 @@ export function BossBattles() {
                                             key={idx}
                                             onClick={() => !showResult && setSelectedAnswer(idx)}
                                             disabled={showResult}
-                                            className={`w-full rounded-[12px] border p-4 text-left transition-all ${
+                                            className={`w-full rounded-[10px] border p-4 text-left font-semibold text-foreground transition-all ${
                                                 selectedAnswer === idx
                                                     ? showResult
                                                         ? idx === question.correctIndex
-                                                            ? 'border-electric-green/60 bg-electric-green/20'
-                                                            : 'border-alert-red/60 bg-alert-red/20'
-                                                        : 'border-neon-cyan/55 bg-neon-cyan/15'
-                                                    : 'border-white/20 bg-black/20 hover:border-neon-cyan/45 hover:bg-white/5'
-                                            } font-semibold text-white`}
+                                                            ? 'border-mastery/60 bg-mastery/20'
+                                                            : 'border-decay/60 bg-decay/20'
+                                                        : 'border-signal/55 bg-signal/15'
+                                                    : 'border-white/12 bg-surface-1 hover:border-signal/40 hover:bg-surface-3/40'
+                                            }`}
                                         >
                                             <div className="flex items-center justify-between">
                                                 <span>{option}</span>
                                                 {showResult && idx === question.correctIndex && (
-                                                    <CheckCircle2 className="text-green-300" size={24} />
+                                                    <CheckCircle2 className="text-mastery" size={24} />
                                                 )}
                                                 {showResult && selectedAnswer === idx && idx !== question.correctIndex && (
-                                                    <XCircle className="text-red-300" size={24} />
+                                                    <XCircle className="text-decay" size={24} />
                                                 )}
                                             </div>
                                         </button>
@@ -334,30 +334,30 @@ export function BossBattles() {
                         >
                             {score >= Math.ceil(battle.questions.length * 0.7) ? (
                                 <>
-                                    <Crown className="mx-auto mb-4 text-yellow-400" size={64} />
-                                    <h2 className="mb-4 text-4xl font-semibold text-white">Victory</h2>
-                                    <p className="mb-2 text-xl text-gray-200">You defeated the {battle.title}.</p>
-                                    <p className="mb-6 text-lg text-warning-amber">+{battle.xpReward} XP earned.</p>
-                                    <div className="flex items-center justify-center gap-4 text-2xl font-bold text-white">
-                                        <span>Final Score:</span>
-                                        <span className="text-warning-amber">{score}/{battle.questions.length}</span>
+                                    <Crown className="mx-auto mb-4 text-reward" size={64} />
+                                    <h2 className="font-display mb-4 text-4xl font-semibold text-foreground">Victory</h2>
+                                    <p className="mb-2 text-xl text-foreground/90">You defeated the {battle.title}.</p>
+                                    <p className="mb-6 text-lg text-reward">+{battle.xpReward} XP earned.</p>
+                                    <div className="flex items-center justify-center gap-4 font-display text-2xl font-bold text-foreground">
+                                        <span>Final score</span>
+                                        <span className="text-reward">{score}/{battle.questions.length}</span>
                                     </div>
                                 </>
                             ) : (
                                 <>
-                                    <Shield className="mx-auto mb-4 text-gray-400" size={64} />
-                                    <h2 className="text-4xl font-bold text-white mb-4">Defeated</h2>
-                                    <p className="text-xl text-gray-200 mb-2">You need {Math.ceil(battle.questions.length * 0.7)} correct answers to win</p>
-                                    <p className="text-lg text-red-300 mb-6">Your score: {score}/{battle.questions.length}</p>
-                                    <p className="text-gray-300">Review the skills and try again!</p>
+                                    <Shield className="mx-auto mb-4 text-text-muted" size={64} />
+                                    <h2 className="font-display mb-4 text-4xl font-bold text-foreground">Defeated</h2>
+                                    <p className="mb-2 text-xl text-foreground/90">You need {Math.ceil(battle.questions.length * 0.7)} correct answers to win</p>
+                                    <p className="mb-6 text-lg text-decay">Your score: {score}/{battle.questions.length}</p>
+                                    <p className="text-text-muted">Review the skills and try again.</p>
                                 </>
                             )}
                             <button
                                 type="button"
                                 onClick={closeBattle}
-                                className="btn-ghost mt-6 font-semibold text-white"
+                                className="btn-ghost mt-6 font-semibold"
                             >
-                                Return to Battles
+                                Return to battles
                             </button>
                         </motion.div>
                     )}
@@ -368,8 +368,8 @@ export function BossBattles() {
 
     return (
         <div className="space-y-6">
-            <div className="text-center mb-8">
-                <h2 className="mb-2 text-3xl font-semibold text-white">Boss Battles</h2>
+            <div className="mb-8 text-center">
+                <h2 className="font-display mb-2 text-3xl font-semibold text-foreground">Boss Battles</h2>
                 <p className="text-text-muted">Master all skills in a tier to unlock the ultimate challenge.</p>
             </div>
 
@@ -380,7 +380,7 @@ export function BossBattles() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
-                        className={`panel-base p-6 ${battle.isUnlocked ? 'cursor-pointer border-warning-amber/55 hover:-translate-y-0.5' : 'opacity-65'} transition-all`}
+                        className={`panel-base p-6 transition-all ${battle.isUnlocked ? 'cursor-pointer border-reward/50 hover:-translate-y-0.5' : 'opacity-65'}`}
                         onClick={() => battle.isUnlocked && handleStartBattle(battle.id)}
                         onKeyDown={(event) => {
                             if (!battle.isUnlocked) return;
@@ -393,29 +393,29 @@ export function BossBattles() {
                         tabIndex={battle.isUnlocked ? 0 : -1}
                         aria-disabled={!battle.isUnlocked}
                     >
-                        <div className="flex items-start justify-between mb-4">
-                            <Skull className={battle.isUnlocked ? 'text-red-400' : 'text-gray-500'} size={32} />
+                        <div className="mb-4 flex items-start justify-between">
+                            <Skull className={battle.isUnlocked ? 'text-decay' : 'text-text-muted'} size={32} />
                             {battle.completed && (
-                                <Crown className="text-yellow-400" size={28} />
+                                <Crown className="text-reward" size={28} />
                             )}
                         </div>
 
-                        <h3 className="mb-2 text-xl font-semibold text-white">{battle.title}</h3>
-                        <p className="mb-4 text-sm text-gray-200">{battle.description}</p>
+                        <h3 className="font-display mb-2 text-xl font-semibold text-foreground">{battle.title}</h3>
+                        <p className="mb-4 text-sm text-foreground/85">{battle.description}</p>
 
-                        <div className="space-y-2 mb-4">
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="text-text-muted">Questions:</span>
-                                <span className="text-white font-semibold">{battle.questions.length}</span>
+                        <div className="mb-4 space-y-2 font-mono text-sm">
+                            <div className="flex items-center justify-between">
+                                <span className="text-text-muted">Questions</span>
+                                <span className="font-semibold text-foreground">{battle.questions.length}</span>
                             </div>
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="text-text-muted">XP Reward:</span>
-                                <span className="font-semibold text-warning-amber">+{battle.xpReward}</span>
+                            <div className="flex items-center justify-between">
+                                <span className="text-text-muted">XP reward</span>
+                                <span className="font-semibold text-reward">+{battle.xpReward}</span>
                             </div>
                             {battle.attempts > 0 && (
-                                <div className="flex items-center justify-between text-sm">
-                                    <span className="text-text-muted">Best Score:</span>
-                                    <span className="font-semibold text-electric-green">{battle.bestScore}/{battle.questions.length}</span>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-text-muted">Best score</span>
+                                    <span className="font-semibold text-mastery">{battle.bestScore}/{battle.questions.length}</span>
                                 </div>
                             )}
                         </div>
@@ -423,19 +423,19 @@ export function BossBattles() {
                         <button
                             type="button"
                             disabled={!battle.isUnlocked}
-                            className={`w-full rounded-[12px] py-3 font-semibold ${
+                            className={`w-full rounded-[10px] py-3 font-semibold ${
                                 battle.isUnlocked
                                     ? battle.completed
-                                        ? 'border border-electric-green/45 bg-electric-green/20 text-white'
-                                        : 'border border-neon-cyan/45 bg-neon-cyan text-[#041019] hover:brightness-105'
-                                    : 'cursor-not-allowed border border-white/20 bg-black/20 text-text-muted'
+                                        ? 'border border-mastery/45 bg-mastery/20 text-foreground'
+                                        : 'btn-primary'
+                                    : 'cursor-not-allowed border border-white/12 bg-surface-1 text-text-muted'
                             }`}
                         >
                             {battle.isUnlocked 
                                 ? battle.completed 
-                                    ? 'Completed - Retry'
-                                    : 'Enter Battle'
-                                : 'Master All Skills to Unlock'
+                                    ? 'Completed — retry'
+                                    : 'Enter battle'
+                                : 'Master all skills to unlock'
                             }
                         </button>
                     </motion.div>

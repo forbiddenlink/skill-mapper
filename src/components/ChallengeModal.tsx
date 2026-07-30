@@ -65,19 +65,19 @@ export default function ChallengeModal({
                     tabIndex={-1}
                     className="modal-shell relative w-full max-w-lg overflow-hidden p-5 md:p-6"
                 >
-                    <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-transparent via-neon-cyan to-transparent" />
+                    <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-transparent via-signal to-transparent" />
 
-                    <div className="flex justify-between items-center mb-6">
+                    <div className="mb-6 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="grid h-10 w-10 place-items-center rounded-[12px] border border-neon-cyan/35 bg-neon-cyan/10 text-neon-cyan">
+                            <div className="grid h-10 w-10 place-items-center rounded-[10px] border border-signal/35 bg-signal/10 text-signal">
                                 <Cpu size={24} />
                             </div>
                             <div>
-                                <h3 id="challenge-title" className="font-semibold tracking-wide text-white">
-                                    SKILL CHALLENGE
+                                <h3 id="challenge-title" className="font-display font-semibold tracking-wide text-foreground">
+                                    Skill challenge
                                 </h3>
-                                <p id="challenge-description" className="text-xs text-neon-cyan font-mono uppercase">
-                                    {skill.data.title} :: Protocol v.1
+                                <p id="challenge-description" className="font-mono text-xs uppercase text-signal">
+                                    {skill.data.title}
                                 </p>
                             </div>
                         </div>

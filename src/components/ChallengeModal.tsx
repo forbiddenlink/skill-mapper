@@ -97,7 +97,7 @@ export default function ChallengeModal({
                                     <div className="mb-2 font-mono text-xs text-text-muted">
                                         Query {currentQuestionIdx + 1} / {quiz.length}
                                     </div>
-                                <h4 className="text-lg text-white font-medium mb-6">
+                                <h4 className="mb-6 text-lg font-medium text-foreground">
                                     {currentQ.question}
                                 </h4>
                                 <div className="space-y-3">
@@ -106,10 +106,10 @@ export default function ChallengeModal({
                                             type="button"
                                             key={idx}
                                             onClick={() => handleAnswer(idx)}
-                                            className="panel-base group relative w-full overflow-hidden rounded-[12px] border border-white/15 p-4 text-left text-sm font-medium text-gray-200 transition-all hover:border-neon-cyan/55 hover:bg-neon-cyan/10 hover:text-white"
+                                            className="panel-base group relative w-full overflow-hidden rounded-[10px] border border-white/12 p-4 text-left text-sm font-medium text-foreground/90 transition-all hover:border-signal/50 hover:bg-signal/10 hover:text-foreground"
                                         >
                                             <span className="relative z-10 flex items-center gap-3">
-                                                <span className="flex h-5 w-5 items-center justify-center rounded-full border border-white/25 text-xs group-hover:border-neon-cyan group-hover:bg-neon-cyan group-hover:text-black">
+                                                <span className="flex h-5 w-5 items-center justify-center rounded-full border border-white/20 font-mono text-xs group-hover:border-signal group-hover:bg-signal group-hover:text-[oklch(0.16_0.03_185)]">
                                                     {String.fromCharCode(65 + idx)}
                                                 </span>
                                                 {opt}
@@ -125,12 +125,12 @@ export default function ChallengeModal({
                                 <motion.div
                                     initial={{ scale: 0 }}
                                     animate={{ scale: 1 }}
-                                    className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500 text-green-500"
+                                    className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border border-mastery bg-mastery/20 text-mastery"
                                 >
                                     <Trophy size={40} />
                                 </motion.div>
-                                <h3 className="text-2xl font-bold text-white font-display mb-2">ACCESS GRANTED</h3>
-                                <p className="text-gray-400">Skill mastery verified. Uploading XP...</p>
+                                <h3 className="font-display mb-2 text-2xl font-bold text-foreground">Mastery verified</h3>
+                                <p className="text-text-muted">Skill cleared. Awarding XP…</p>
                             </div>
                         )}
 

@@ -15,6 +15,11 @@ import {
 import { checkForNewBadges } from './badge-helpers';
 import type { SkillsSlice } from './skills-store';
 import type { UndoRedoSlice } from './undo-redo-store';
+import type { UISlice } from './ui-store';
+
+function todayUtc(): string {
+    return new Date().toISOString().slice(0, 10);
+}
 
 export interface UserSlice {
     userXP: number;
@@ -28,17 +33,21 @@ export interface UserSlice {
     achievements: string[];
     latestAchievementId: string | null;
     lastActivityDate: string | null;
+    activityCalendar: Record<string, number>;
+    completedDailyChallenges: string[];
 
     getLevelInfo: () => LevelInfo;
     dismissBadge: () => void;
     dismissAchievement: () => void;
     checkStreak: () => void;
+    recordActivity: (xpEarned: number) => void;
+    completeDailyChallenge: (challengeId: string, xpBonus: number) => boolean;
     completeSkill: (id: string) => void;
     unlockBatch: (ids: string[]) => void;
     resetProgress: () => void;
 }
 
-type UserHost = UserSlice & SkillsSlice & UndoRedoSlice;
+type UserHost = UserSlice & SkillsSlice & UndoRedoSlice & UISlice;
 
 export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, get) => ({
     userXP: 0,
@@ -52,6 +61,8 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
     achievements: [],
     latestAchievementId: null,
     lastActivityDate: null,
+    activityCalendar: {},
+    completedDailyChallenges: [],
 
     getLevelInfo: () => getLevelInfo(get().userXP),
 
@@ -82,6 +93,36 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
         });
     },
 
+    recordActivity: (xpEarned) => {
+        const day = todayUtc();
+        set((state) => ({
+            activityCalendar: {
+                ...state.activityCalendar,
+                [day]: (state.activityCalendar[day] ?? 0) + Math.max(0, xpEarned),
+            },
+        }));
+        get().checkStreak();
+    },
+
+    completeDailyChallenge: (challengeId, xpBonus) => {
+        const { completedDailyChallenges, userXP, openSharePrompt } = get();
+        if (completedDailyChallenges.includes(challengeId)) return false;
+
+        const nextXP = userXP + xpBonus;
+        const nextLevel = calculateLevel(nextXP);
+
+        set({
+            userXP: nextXP,
+            userLevel: nextLevel,
+            completedDailyChallenges: [...completedDailyChallenges, challengeId],
+        });
+
+        get().recordActivity(xpBonus);
+        confetti({ particleCount: 120, spread: 90, origin: { y: 0.65 } });
+        openSharePrompt('daily-challenge');
+        return true;
+    },
+
     completeSkill: (id) => {
         const { nodes, unlockedBadges, streak, userXP, userLevel, pushHistory } = get();
         const targetNode = nodes.find((n) => n.id === id);
@@ -90,6 +131,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
         pushHistory({ nodes, userXP, userLevel }, `complete:${id}`);
 
         const xpGain = calculateSkillXp(targetNode, nodes, streak);
+        const xpBefore = userXP;
 
         set((state) => {
             const newXP = state.userXP + xpGain;
@@ -164,6 +206,11 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
                     newAchievements.length > 0 ? newAchievements[0] : state.latestAchievementId,
             };
         });
+
+        get().recordActivity(Math.max(0, get().userXP - xpBefore));
+        if (get().userLevel > userLevel) {
+            get().openSharePrompt('level-up');
+        }
     },
 
     unlockBatch: (ids) => {
@@ -223,6 +270,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
         });
         const finalXP = newXP + achievementXpBonus;
         const finalLevel = calculateLevel(finalXP);
+        const xpDelta = finalXP - state.userXP;
 
         if (newEarnedBadges.length > 0 || newAchievements.length > 0) {
             confetti({
@@ -241,6 +289,8 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
             achievements: [...state.achievements, ...newAchievements],
             latestAchievementId: newAchievements.length > 0 ? newAchievements[0] : null,
         });
+
+        get().recordActivity(xpDelta);
     },
 
     resetProgress: () => {
@@ -257,6 +307,8 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
             achievements: [],
             latestAchievementId: null,
             lastActivityDate: null,
+            activityCalendar: {},
+            completedDailyChallenges: [],
             history: [],
             historyIndex: -1,
         });

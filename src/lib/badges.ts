@@ -1,4 +1,4 @@
-import { LucideIcon, Shield, Atom, Bot, Layers, Trophy } from 'lucide-react';
+import { LucideIcon, Shield, Atom, Bot, Layers, Trophy, Accessibility } from 'lucide-react';
 
 export interface Badge {
     id: string;
@@ -25,6 +25,14 @@ export const BADGES: Badge[] = [
         icon: Atom,
         color: 'text-signal',
         requirements: ['react-core', 'tailwind', 'typescript', 'state-machines']
+    },
+    {
+        id: 'a11y-advocate',
+        label: 'A11y Advocate',
+        description: 'Ships inclusive interfaces with real accessibility craft.',
+        icon: Accessibility,
+        color: 'text-signal',
+        requirements: ['accessibility', 'web-standards', 'react-core']
     },
     {
         id: 'backend-master',

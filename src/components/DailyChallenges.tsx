@@ -2,20 +2,20 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Clock, Zap, CheckCircle2, XCircle } from 'lucide-react';
+import { Trophy, Clock, Zap, CheckCircle2, XCircle, Share2 } from 'lucide-react';
 import { DailyChallenge } from '@/types';
 import { useGameStore } from '@/lib/store';
 import { getInitialSkills } from '@/lib/skill-data';
 
-// Pure function to generate daily challenge from a given date string
+function todayUtc(): string {
+    return new Date().toISOString().slice(0, 10);
+}
+
 function generateDailyChallenge(todayStr: string): DailyChallenge | null {
     if (!todayStr) return null;
     const skills = getInitialSkills();
-
-    // Use date as seed for deterministic challenge selection
     const seed = todayStr.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
-    const availableSkills = skills.filter(s => s.data.quiz && s.data.quiz.length > 0);
-
+    const availableSkills = skills.filter((s) => s.data.quiz && s.data.quiz.length > 0);
     if (availableSkills.length === 0) return null;
 
     const challengeSkill = availableSkills[seed % availableSkills.length];
@@ -24,7 +24,15 @@ function generateDailyChallenge(todayStr: string): DailyChallenge | null {
     const question = quiz[seed % quiz.length];
     if (!question) return null;
 
-    const expiresAt = new Date(todayStr).setHours(23, 59, 59, 999);
+    const expiresAt = Date.UTC(
+        Number(todayStr.slice(0, 4)),
+        Number(todayStr.slice(5, 7)) - 1,
+        Number(todayStr.slice(8, 10)),
+        23,
+        59,
+        59,
+        999
+    );
 
     return {
         id: `daily-${todayStr}`,
@@ -38,7 +46,6 @@ function generateDailyChallenge(todayStr: string): DailyChallenge | null {
     };
 }
 
-// Pure function to calculate time remaining from a given timestamp
 function calculateTimeRemaining(expiresAt: number, now: number): string {
     const diff = expiresAt - now;
     if (diff <= 0) return 'Expired';
@@ -48,53 +55,45 @@ function calculateTimeRemaining(expiresAt: number, now: number): string {
 }
 
 export function DailyChallenges() {
-    const { nodes, userXP } = useGameStore();
+    const nodes = useGameStore((s) => s.nodes);
+    const completedDailyChallenges = useGameStore((s) => s.completedDailyChallenges);
+    const completeDailyChallenge = useGameStore((s) => s.completeDailyChallenge);
+    const openSharePrompt = useGameStore((s) => s.openSharePrompt);
+
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [showResult, setShowResult] = useState(false);
-    const [challengeCompleted, setChallengeCompleted] = useState(false);
-
-    // Use lazy initializer to capture mount time (runs only once)
-    const [mountState] = useState(() => {
-        const now = Date.now();
-        const todayStr = new Date(now).toISOString().split('T')[0] ?? '';
-        const challenge = generateDailyChallenge(todayStr);
-        const initialTimeRemaining = challenge ? calculateTimeRemaining(challenge.expiresAt, now) : '';
-        return { todayStr, challenge, initialTimeRemaining };
-    });
-
-    const { todayStr, challenge: dailyChallenge } = mountState;
-
-    // Time remaining state with lazy initializer
-    const [timeRemaining, setTimeRemaining] = useState(mountState.initialTimeRemaining);
-
-    // Ref to track if effect has run (to avoid double-calling setState)
+    const [mounted, setMounted] = useState(false);
+    const [todayStr, setTodayStr] = useState('');
+    const [dailyChallenge, setDailyChallenge] = useState<DailyChallenge | null>(null);
+    const [timeRemaining, setTimeRemaining] = useState('');
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     useEffect(() => {
+        const day = todayUtc();
+        const challenge = generateDailyChallenge(day);
+        setTodayStr(day);
+        setDailyChallenge(challenge);
+        setTimeRemaining(challenge ? calculateTimeRemaining(challenge.expiresAt, Date.now()) : '');
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
         if (!dailyChallenge) return;
-
-        // Clear any existing interval
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-        }
-
-        // Update time remaining every minute (setState in interval callback is fine)
         intervalRef.current = setInterval(() => {
             setTimeRemaining(calculateTimeRemaining(dailyChallenge.expiresAt, Date.now()));
         }, 60000);
-
         return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
+            if (intervalRef.current) clearInterval(intervalRef.current);
         };
     }, [dailyChallenge]);
+
+    const challengeCompleted =
+        Boolean(dailyChallenge && completedDailyChallenges.includes(dailyChallenge.id));
 
     const handleAnswerSubmit = () => {
         if (selectedAnswer === null || !dailyChallenge) return;
 
-        // Find the skill and its quiz
-        const skill = nodes.find(n => n.id === dailyChallenge.skillId);
+        const skill = nodes.find((n) => n.id === dailyChallenge.skillId);
         if (!skill?.data.quiz) return;
 
         const seed = todayStr.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
@@ -103,13 +102,18 @@ export function DailyChallenges() {
 
         const isCorrect = selectedAnswer === question.correctIndex;
         setShowResult(true);
-
         if (isCorrect) {
-            // Award bonus XP
-            useGameStore.setState({ userXP: userXP + dailyChallenge.xpBonus });
-            setChallengeCompleted(true);
+            completeDailyChallenge(dailyChallenge.id, dailyChallenge.xpBonus);
         }
     };
+
+    if (!mounted) {
+        return (
+            <div className="panel-base p-4">
+                <p className="text-center text-text-muted">Loading today’s challenge…</p>
+            </div>
+        );
+    }
 
     if (!dailyChallenge) {
         return (
@@ -119,7 +123,7 @@ export function DailyChallenges() {
         );
     }
 
-    const skill = nodes.find(n => n.id === dailyChallenge.skillId);
+    const skill = nodes.find((n) => n.id === dailyChallenge.skillId);
     if (!skill?.data.quiz) return null;
 
     const seed = todayStr.split('-').reduce((acc, val) => acc + Number.parseInt(val, 10), 0);
@@ -164,9 +168,7 @@ export function DailyChallenges() {
                                         key={idx}
                                         type="button"
                                         onClick={() => {
-                                            if (!showResult) {
-                                                setSelectedAnswer(idx);
-                                            }
+                                            if (!showResult) setSelectedAnswer(idx);
                                         }}
                                         disabled={showResult}
                                         className={`w-full rounded-[10px] border p-3 text-left transition-all ${
@@ -184,9 +186,11 @@ export function DailyChallenges() {
                                             {showResult && idx === question.correctIndex && (
                                                 <CheckCircle2 className="text-mastery" size={20} />
                                             )}
-                                            {showResult && selectedAnswer === idx && idx !== question.correctIndex && (
-                                                <XCircle className="text-decay" size={20} />
-                                            )}
+                                            {showResult &&
+                                                selectedAnswer === idx &&
+                                                idx !== question.correctIndex && (
+                                                    <XCircle className="text-decay" size={20} />
+                                                )}
                                         </div>
                                     </button>
                                 ))}
@@ -195,6 +199,7 @@ export function DailyChallenges() {
 
                         {!showResult && (
                             <button
+                                type="button"
                                 onClick={handleAnswerSubmit}
                                 disabled={selectedAnswer === null}
                                 className="btn-primary flex w-full items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -220,7 +225,15 @@ export function DailyChallenges() {
                         <CheckCircle2 className="mx-auto mb-3 text-mastery" size={48} />
                         <h4 className="font-display mb-2 text-2xl font-semibold text-foreground">Challenge complete</h4>
                         <p className="text-foreground/90">You earned +{dailyChallenge.xpBonus} bonus XP.</p>
-                        <p className="mt-2 text-sm text-text-muted">Come back tomorrow for a new challenge.</p>
+                        <p className="mt-2 text-sm text-text-muted">Streak updated. Share the win.</p>
+                        <button
+                            type="button"
+                            className="btn-primary mt-4 inline-flex items-center gap-2"
+                            onClick={() => openSharePrompt('daily-challenge')}
+                        >
+                            <Share2 size={16} />
+                            Share progress
+                        </button>
                     </motion.div>
                 )}
             </AnimatePresence>

@@ -1,87 +1,38 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Flame, Calendar, TrendingUp, Award, Shield } from 'lucide-react';
-import { StreakData } from '@/types';
 import { useGameStore } from '@/lib/store';
+import { useShallow } from 'zustand/react/shallow';
 
 function StreakShieldRow() {
     const streakShields = useGameStore((s) => s.streakShields);
     return (
         <div className="flex items-center justify-end gap-2 text-signal" title="Shields protect one missed day">
             <Shield size={16} />
-            <span className="font-semibold">{streakShields} shield{streakShields === 1 ? '' : 's'}</span>
+            <span className="font-semibold">
+                {streakShields} shield{streakShields === 1 ? '' : 's'}
+            </span>
         </div>
     );
 }
-// Pure function to read and calculate streak data from localStorage using given timestamp
-function getStreakDataFromStorage(now: number): StreakData {
-    const today = new Date(now).toISOString().split('T')[0] ?? '';
-    const yesterday = new Date(now - 86400000).toISOString().split('T')[0] ?? '';
 
-    if (!today) {
-        return {
-            currentStreak: 0,
-            longestStreak: 0,
-            lastActivityDate: '',
-            activityCalendar: {}
-        };
-    }
-
-    // Get stored streak data from localStorage
-    const stored = typeof window !== 'undefined' ? localStorage.getItem('streakData') : null;
-    const data: StreakData = stored ? JSON.parse(stored) : {
-        currentStreak: 0,
-        longestStreak: 0,
-        lastActivityDate: '',
-        activityCalendar: {}
-    };
-
-    // Check if user was active today
-    const todayActivity = data.activityCalendar[today] || 0;
-
-    // Calculate current streak
-    let currentStreak = data.currentStreak;
-    let longestStreak = data.longestStreak;
-
-    if (todayActivity > 0) {
-        if (data.lastActivityDate === yesterday) {
-            currentStreak = data.currentStreak + 1;
-        } else if (data.lastActivityDate !== today) {
-            currentStreak = 1;
-        }
-        longestStreak = Math.max(longestStreak, currentStreak);
-    } else {
-        // Check if streak is broken
-        if (data.lastActivityDate !== today && data.lastActivityDate !== yesterday) {
-            currentStreak = 0;
-        }
-    }
-
-    return {
-        currentStreak,
-        longestStreak,
-        lastActivityDate: todayActivity > 0 ? today : data.lastActivityDate,
-        activityCalendar: data.activityCalendar
-    };
-}
-
-// Pure function to generate calendar days from given timestamp and activity calendar
-function generateCalendarDays(now: number, activityCalendar: Record<string, number>): { date: string; xp: number; dayOfWeek: number }[] {
+function generateCalendarDays(
+    now: number,
+    activityCalendar: Record<string, number>
+): { date: string; xp: number; dayOfWeek: number }[] {
     const days: { date: string; xp: number; dayOfWeek: number }[] = [];
     const today = new Date(now);
 
     for (let i = 29; i >= 0; i--) {
         const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        const dateStr = date.toISOString().split('T')[0] ?? '';
-        const xp = activityCalendar[dateStr] || 0;
-
+        date.setUTCDate(date.getUTCDate() - i);
+        const dateStr = date.toISOString().slice(0, 10);
         days.push({
             date: dateStr,
-            xp,
-            dayOfWeek: date.getDay()
+            xp: activityCalendar[dateStr] || 0,
+            dayOfWeek: date.getUTCDay(),
         });
     }
 
@@ -89,49 +40,32 @@ function generateCalendarDays(now: number, activityCalendar: Record<string, numb
 }
 
 export function StreakTracker() {
-    const userXP = useGameStore((state) => state.userXP);
+    const { streak, longestStreak, activityCalendar } = useGameStore(
+        useShallow((s) => ({
+            streak: s.streak,
+            longestStreak: s.longestStreak,
+            activityCalendar: s.activityCalendar,
+        }))
+    );
 
-    // Capture mount time once using lazy initializer
-    const [mountTime] = useState(() => Date.now());
+    const [mounted, setMounted] = useState(false);
+    const [mountTime, setMountTime] = useState(0);
 
-    // Track previous XP to detect changes for localStorage writes
-    const prevXPRef = useRef(userXP);
-
-    // Write to localStorage when XP changes (effect for external sync only)
     useEffect(() => {
-        if (prevXPRef.current === userXP) return;
-        prevXPRef.current = userXP;
+        setMountTime(Date.now());
+        setMounted(true);
+    }, []);
 
-        const today = new Date().toISOString().split('T')[0] ?? '';
-        if (!today) return;
+    if (!mounted) {
+        return (
+            <div className="panel-strong p-4 md:p-6">
+                <p className="text-text-muted">Loading streak calendar…</p>
+            </div>
+        );
+    }
 
-        const stored = localStorage.getItem('streakData');
-        const data: StreakData = stored ? JSON.parse(stored) : {
-            currentStreak: 0,
-            longestStreak: 0,
-            lastActivityDate: '',
-            activityCalendar: {}
-        };
-
-        // Add today's XP and update lastActivityDate
-        data.activityCalendar[today] = userXP;
-        data.lastActivityDate = today;
-
-        // Update streak
-        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0] ?? '';
-        if (data.currentStreak === 0 || data.lastActivityDate === yesterday) {
-            data.currentStreak = data.currentStreak + 1;
-        } else if (!data.activityCalendar[yesterday]) {
-            data.currentStreak = 1;
-        }
-        data.longestStreak = Math.max(data.longestStreak, data.currentStreak);
-
-        localStorage.setItem('streakData', JSON.stringify(data));
-    }, [userXP]);
-
-    // Derived state - compute from localStorage on each render (pure, uses captured mountTime)
-    const streakData = getStreakDataFromStorage(mountTime);
-    const calendarDays = generateCalendarDays(mountTime, streakData.activityCalendar);
+    const calendarDays = generateCalendarDays(mountTime, activityCalendar);
+    const firstCalendarDay = calendarDays[0];
 
     const getActivityColor = (xp: number) => {
         if (xp === 0) return 'bg-surface-3';
@@ -140,8 +74,6 @@ export function StreakTracker() {
         if (xp < 1000) return 'bg-mastery/70';
         return 'bg-mastery';
     };
-
-    const firstCalendarDay = calendarDays[0];
 
     return (
         <motion.div
@@ -155,14 +87,16 @@ export function StreakTracker() {
                         <Flame className="text-reward" size={20} />
                     </div>
                     <div>
-                        <h3 className="font-display text-2xl font-semibold text-foreground">{streakData.currentStreak} day streak</h3>
+                        <h3 className="font-display text-2xl font-semibold text-foreground">
+                            {streak} day streak
+                        </h3>
                         <p className="text-sm text-text-muted">Keep the momentum going.</p>
                     </div>
                 </div>
                 <div className="space-y-1 text-right font-mono text-sm">
                     <div className="flex items-center justify-end gap-2 text-reward">
                         <Award size={18} />
-                        <span className="font-semibold">Best {streakData.longestStreak}</span>
+                        <span className="font-semibold">Best {longestStreak}</span>
                     </div>
                     <StreakShieldRow />
                 </div>
@@ -183,9 +117,10 @@ export function StreakTracker() {
                 </div>
 
                 <div className="grid grid-cols-7 gap-1">
-                    {firstCalendarDay && Array.from({ length: firstCalendarDay.dayOfWeek }).map((_, idx) => (
-                        <div key={`empty-${idx}`} className="aspect-square"></div>
-                    ))}
+                    {firstCalendarDay &&
+                        Array.from({ length: firstCalendarDay.dayOfWeek }).map((_, idx) => (
+                            <div key={`empty-${idx}`} className="aspect-square" />
+                        ))}
 
                     {calendarDays.map((day, idx) => (
                         <motion.div
@@ -202,11 +137,11 @@ export function StreakTracker() {
                 <div className="mt-4 flex items-center gap-2 text-xs text-text-muted">
                     <span>Less</span>
                     <div className="flex gap-1">
-                        <div className="h-3 w-3 rounded-[3px] bg-surface-3"></div>
-                        <div className="h-3 w-3 rounded-[3px] bg-mastery/25"></div>
-                        <div className="h-3 w-3 rounded-[3px] bg-mastery/45"></div>
-                        <div className="h-3 w-3 rounded-[3px] bg-mastery/70"></div>
-                        <div className="h-3 w-3 rounded-[3px] bg-mastery"></div>
+                        <div className="h-3 w-3 rounded-[3px] bg-surface-3" />
+                        <div className="h-3 w-3 rounded-[3px] bg-mastery/25" />
+                        <div className="h-3 w-3 rounded-[3px] bg-mastery/45" />
+                        <div className="h-3 w-3 rounded-[3px] bg-mastery/70" />
+                        <div className="h-3 w-3 rounded-[3px] bg-mastery" />
                     </div>
                     <span>More</span>
                 </div>
@@ -216,13 +151,13 @@ export function StreakTracker() {
                 <div className="flex items-center gap-2 text-foreground/90">
                     <TrendingUp size={18} className="text-reward" />
                     <p className="text-sm font-medium">
-                        {streakData.currentStreak === 0
-                            ? "Start your streak today — complete any skill to begin."
-                            : streakData.currentStreak < 7
-                            ? `Great start. ${7 - streakData.currentStreak} more days to a one-week streak.`
-                            : streakData.currentStreak < 30
-                            ? `${streakData.currentStreak} days strong. Keep going.`
-                            : "Legendary consistency. Protect this streak."}
+                        {streak === 0
+                            ? 'Start your streak today — complete any skill to begin.'
+                            : streak < 7
+                              ? `Great start. ${7 - streak} more days to a one-week streak.`
+                              : streak < 30
+                                ? `${streak} days strong. Keep going.`
+                                : 'Legendary consistency. Protect this streak.'}
                     </p>
                 </div>
             </div>

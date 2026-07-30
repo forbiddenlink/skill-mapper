@@ -161,13 +161,51 @@ test.describe('Accessibility Tests', () => {
   });
 });
 
+test.describe('Product loop', () => {
+  test('utility FAB rail opens stats and features hub opens daily challenge', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForSelector('.react-flow', { timeout: 10000 });
+
+    try {
+      const skipButton = page.locator('button:has-text("Skip and start from scratch")').first();
+      await skipButton.waitFor({ state: 'visible', timeout: 2000 });
+      await skipButton.click();
+    } catch {
+      // onboarding already dismissed
+    }
+
+    await page.getByRole('button', { name: /view statistics|statistics/i }).click();
+    await expect(page.getByRole('dialog', { name: /learning statistics/i })).toBeVisible();
+    await page.keyboard.press('Escape');
+
+    await page.getByRole('button', { name: /daily challenge/i }).click();
+    await expect(page.getByText(/Daily Challenge:/i)).toBeVisible();
+  });
+
+  test('share progress can be opened from HUD', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForSelector('.react-flow', { timeout: 10000 });
+
+    try {
+      const skipButton = page.locator('button:has-text("Skip and start from scratch")').first();
+      await skipButton.waitFor({ state: 'visible', timeout: 2000 });
+      await skipButton.click();
+    } catch {
+      // ignore
+    }
+
+    await page.getByRole('button', { name: /share progress/i }).click();
+    await expect(page.getByRole('dialog', { name: /share your progress/i })).toBeVisible();
+  });
+});
+
 test.describe('PWA Functionality', () => {
   test('should have manifest', async ({ page }) => {
     await page.goto('/');
-    
+
     const manifestLink = page.locator('link[rel="manifest"]');
     await expect(manifestLink).toHaveCount(1);
-    
+
     const href = await manifestLink.getAttribute('href');
     expect(href).toBe('/manifest.json');
   });
@@ -176,15 +214,12 @@ test.describe('PWA Functionality', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // Check if service worker API is available
     const swSupported = await page.evaluate(() => {
       return 'serviceWorker' in navigator;
     });
 
-    // Service Worker API must be supported in modern browsers
     expect(swSupported).toBeTruthy();
 
-    // Check that sw.js file is accessible (exists in public/)
     const swResponse = await page.request.get('/sw.js');
     expect(swResponse.ok()).toBeTruthy();
   });

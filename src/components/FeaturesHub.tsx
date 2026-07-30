@@ -46,7 +46,7 @@ export function FeaturesHub() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: idx * 0.08 }}
                             onClick={() => handleViewChange(feature.id)}
-                            className="icon-btn group relative grid place-items-center overflow-visible"
+                            className="icon-btn group relative grid h-10 w-10 place-items-center overflow-visible sm:h-11 sm:w-11"
                             title={feature.label}
                             aria-label={feature.label}
                         >

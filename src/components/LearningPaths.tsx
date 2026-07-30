@@ -11,9 +11,9 @@ const LEARNING_PATHS: LearningPath[] = [
         title: 'Frontend Developer',
         description: 'Master modern web development with React, TypeScript, and Next.js',
         icon: Layout,
-        skills: ['web-standards', 'es-next', 'react-core', 'tailwind', 'typescript', 'testing-quality', 'zustand', 'framer-motion', 'web-vitals', 'nextjs-app'],
+        skills: ['web-standards', 'es-next', 'react-core', 'tailwind', 'typescript', 'accessibility', 'testing-quality', 'zustand', 'state-machines', 'framer-motion', 'web-vitals', 'nextjs-app'],
         targetRole: 'Frontend Engineer',
-        estimatedWeeks: 16,
+        estimatedWeeks: 18,
         color: 'border-signal/50'
     },
     {
@@ -21,9 +21,9 @@ const LEARNING_PATHS: LearningPath[] = [
         title: 'Full-Stack Developer',
         description: 'Build complete web applications from frontend to backend',
         icon: Layers,
-        skills: ['web-standards', 'es-next', 'react-core', 'typescript', 'node-runtime', 'postgresql', 'rest-api', 'authentication', 'docker', 'nextjs-app', 'cloud-platforms'],
+        skills: ['web-standards', 'es-next', 'react-core', 'typescript', 'node-runtime', 'postgresql', 'drizzle-orm', 'redis-caching', 'rest-api', 'authentication', 'docker', 'nextjs-app', 'cloud-platforms'],
         targetRole: 'Full-Stack Engineer',
-        estimatedWeeks: 24,
+        estimatedWeeks: 26,
         color: 'border-mastery/50'
     },
     {
@@ -41,9 +41,9 @@ const LEARNING_PATHS: LearningPath[] = [
         title: 'DevOps & SRE',
         description: 'Deploy, scale, and monitor production systems',
         icon: Rocket,
-        skills: ['git-ops', 'node-runtime', 'docker', 'kubernetes', 'cicd', 'cloud-platforms', 'security', 'observability', 'microservices'],
+        skills: ['git-ops', 'node-runtime', 'docker', 'kubernetes', 'cicd', 'cloud-platforms', 'terraform-iac', 'security', 'observability', 'microservices', 'system-design'],
         targetRole: 'DevOps Engineer / SRE',
-        estimatedWeeks: 18,
+        estimatedWeeks: 20,
         color: 'border-reward/50'
     },
     {
@@ -65,6 +65,16 @@ const LEARNING_PATHS: LearningPath[] = [
         targetRole: 'Security Engineer',
         estimatedWeeks: 16,
         color: 'border-decay/50'
+    },
+    {
+        id: 'platform-engineer',
+        title: 'Platform Engineer',
+        description: 'Own the internal developer platform — caching, IaC, and scalable design',
+        icon: Rocket,
+        skills: ['node-runtime', 'docker', 'redis-caching', 'cloud-platforms', 'terraform-iac', 'system-design', 'observability', 'cicd'],
+        targetRole: 'Platform Engineer',
+        estimatedWeeks: 18,
+        color: 'border-signal/40'
     }
 ];
 

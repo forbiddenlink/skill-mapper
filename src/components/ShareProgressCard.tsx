@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Share2, Download, X, Copy, Check } from 'lucide-react';
 import { useGameStore } from '@/lib/store';
@@ -8,14 +8,26 @@ import { useShallow } from 'zustand/react/shallow';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';
 import { calculateSkillStats } from '@/lib/gamification';
 
+function formatXp(xp: number) {
+  return new Intl.NumberFormat('en-US').format(xp);
+}
+
 export default function ShareProgressCard() {
-  const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const close = () => setOpen(false);
-  const dialogRef = useDialogA11y<HTMLDivElement>(open, close);
 
-  const { nodes, userXP, userLevel, streak, unlockedBadges, getLevelInfo } = useGameStore(
+  const {
+    nodes,
+    userXP,
+    userLevel,
+    streak,
+    unlockedBadges,
+    getLevelInfo,
+    sharePromptOpen,
+    sharePromptReason,
+    openSharePrompt,
+    closeSharePrompt,
+  } = useGameStore(
     useShallow((s) => ({
       nodes: s.nodes,
       userXP: s.userXP,
@@ -23,15 +35,20 @@ export default function ShareProgressCard() {
       streak: s.streak,
       unlockedBadges: s.unlockedBadges,
       getLevelInfo: s.getLevelInfo,
+      sharePromptOpen: s.sharePromptOpen,
+      sharePromptReason: s.sharePromptReason,
+      openSharePrompt: s.openSharePrompt,
+      closeSharePrompt: s.closeSharePrompt,
     }))
   );
 
+  const dialogRef = useDialogA11y<HTMLDivElement>(sharePromptOpen, closeSharePrompt);
   const stats = calculateSkillStats(nodes);
   const levelInfo = getLevelInfo();
 
   const summaryText = [
     `Skill Mapper — Level ${userLevel} (${levelInfo.title})`,
-    `${stats.mastered}/${stats.totalSkills} skills mastered · ${userXP.toLocaleString()} XP`,
+    `${stats.mastered}/${stats.totalSkills} skills mastered · ${formatXp(userXP)} XP`,
     `${streak}-day streak · ${unlockedBadges.length} badges`,
   ].join('\n');
 
@@ -46,18 +63,15 @@ export default function ShareProgressCard() {
     canvas.width = w;
     canvas.height = h;
 
-    // Background
     ctx.fillStyle = '#121820';
     ctx.fillRect(0, 0, w, h);
 
-    // Soft signal glow
     const grad = ctx.createRadialGradient(200, 80, 40, 200, 80, 420);
     grad.addColorStop(0, 'rgba(90, 200, 190, 0.22)');
     grad.addColorStop(1, 'transparent');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // Grid
     ctx.strokeStyle = 'rgba(148, 163, 184, 0.08)';
     ctx.lineWidth = 1;
     for (let x = 0; x < w; x += 56) {
@@ -73,7 +87,6 @@ export default function ShareProgressCard() {
       ctx.stroke();
     }
 
-    // Brand
     ctx.fillStyle = '#e8eef5';
     ctx.font = '600 28px system-ui, sans-serif';
     ctx.fillText('Skill Mapper', 72, 96);
@@ -82,7 +95,6 @@ export default function ShareProgressCard() {
     ctx.font = '500 18px ui-monospace, monospace';
     ctx.fillText('SIGNAL ATLAS', 72, 128);
 
-    // Level
     ctx.fillStyle = '#f4f7fb';
     ctx.font = '700 72px system-ui, sans-serif';
     ctx.fillText(`Level ${userLevel}`, 72, 250);
@@ -91,10 +103,9 @@ export default function ShareProgressCard() {
     ctx.font = '500 28px system-ui, sans-serif';
     ctx.fillText(levelInfo.title, 72, 298);
 
-    // Stats row
     const metrics = [
       { label: 'MASTERED', value: `${stats.mastered}/${stats.totalSkills}` },
-      { label: 'XP', value: userXP.toLocaleString() },
+      { label: 'XP', value: formatXp(userXP) },
       { label: 'STREAK', value: `${streak}d` },
       { label: 'BADGES', value: String(unlockedBadges.length) },
     ];
@@ -120,6 +131,13 @@ export default function ShareProgressCard() {
     return canvas;
   };
 
+  useEffect(() => {
+    if (sharePromptOpen) {
+      requestAnimationFrame(() => drawCard());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- redraw when prompt opens / stats change
+  }, [sharePromptOpen, userXP, userLevel, streak, stats.mastered]);
+
   const handleDownload = () => {
     const canvas = drawCard();
     if (!canvas) return;
@@ -139,13 +157,19 @@ export default function ShareProgressCard() {
     }
   };
 
+  const reasonCopy =
+    sharePromptReason === 'daily-challenge'
+      ? 'Daily challenge cleared — share the streak.'
+      : sharePromptReason === 'level-up'
+        ? 'Level up — show the atlas.'
+        : null;
+
   return (
     <>
       <button
         type="button"
         onClick={() => {
-          setOpen(true);
-          requestAnimationFrame(() => drawCard());
+          openSharePrompt('manual');
         }}
         className="icon-btn pointer-events-auto grid h-8 w-8 place-items-center"
         title="Share progress"
@@ -155,7 +179,7 @@ export default function ShareProgressCard() {
       </button>
 
       <AnimatePresence>
-        {open && (
+        {sharePromptOpen && (
           <div className="pointer-events-auto fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
@@ -169,10 +193,18 @@ export default function ShareProgressCard() {
               className="modal-shell w-full max-w-2xl p-5"
             >
               <div className="mb-4 flex items-center justify-between">
-                <h2 id="share-progress-title" className="font-display text-xl font-semibold text-foreground">
-                  Share your progress
-                </h2>
-                <button type="button" className="icon-btn grid place-items-center" onClick={close} aria-label="Close">
+                <div>
+                  <h2 id="share-progress-title" className="font-display text-xl font-semibold text-foreground">
+                    Share your progress
+                  </h2>
+                  {reasonCopy && <p className="mt-1 text-sm text-text-muted">{reasonCopy}</p>}
+                </div>
+                <button
+                  type="button"
+                  className="icon-btn grid place-items-center"
+                  onClick={closeSharePrompt}
+                  aria-label="Close"
+                >
                   <X size={18} />
                 </button>
               </div>

@@ -194,8 +194,8 @@ export default function HUD() {
                     />
                 </div>
                 <div className="mt-1.5 flex justify-between font-mono text-[10px] uppercase tracking-wider text-text-muted">
-                    <span>XP {xp.toLocaleString()}</span>
-                    <span>Next {levelInfo.xpForNextLevel.toLocaleString()}</span>
+                    <span>XP {xp.toLocaleString('en-US')}</span>
+                    <span>Next {levelInfo.xpForNextLevel.toLocaleString('en-US')}</span>
                 </div>
             </section>
 

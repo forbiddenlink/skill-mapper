@@ -1204,6 +1204,236 @@ const RAW_SKILLS: Omit<SkillNode, 'position'>[] = [
             ]
         },
     },
+    {
+        id: 'state-machines',
+        type: 'skill',
+        data: {
+            id: 'state-machines',
+            title: 'State Machines',
+            description: 'Model complex UI and workflow logic with finite state machines (XState).',
+            tier: 'frontend-2',
+            category: 'frontend',
+            status: 'locked',
+            prerequisites: ['zustand', 'typescript'],
+            xpReward: 250,
+            resources: [
+                { label: 'XState Docs', url: 'https://stately.ai/docs/xstate', type: 'article' },
+                { label: 'State Machines in React', url: 'https://kentcdodds.com/blog/implementing-a-simple-state-machine-library-in-javascript', type: 'article' },
+            ],
+            quiz: [
+                {
+                    question: 'What problem do state machines solve best?',
+                    options: [
+                        'CSS layout bugs',
+                        'Ambiguous UI/workflow states and transitions',
+                        'Database indexing',
+                        'CDN caching',
+                    ],
+                    correctIndex: 1,
+                },
+                {
+                    question: 'In a finite state machine, events typically cause…',
+                    options: ['Random renders', 'Transitions between defined states', 'SQL queries', 'DNS lookups'],
+                    correctIndex: 1,
+                },
+            ],
+        },
+    },
+    {
+        id: 'drizzle-orm',
+        type: 'skill',
+        data: {
+            id: 'drizzle-orm',
+            title: 'Drizzle ORM',
+            description: 'Type-safe SQL with schema-first modeling for PostgreSQL and beyond.',
+            tier: 'backend-data',
+            category: 'backend',
+            status: 'locked',
+            prerequisites: ['postgresql', 'node-runtime', 'typescript'],
+            xpReward: 300,
+            resources: [
+                { label: 'Drizzle Docs', url: 'https://orm.drizzle.team/docs/overview', type: 'article' },
+                { label: 'Drizzle with Neon', url: 'https://orm.drizzle.team/docs/get-started-postgresql', type: 'lab' },
+            ],
+            quiz: [
+                {
+                    question: 'What is a primary benefit of Drizzle ORM?',
+                    options: [
+                        'NoSQL only',
+                        'Type-safe SQL close to the metal',
+                        'Replaces React',
+                        'Automatic UI generation',
+                    ],
+                    correctIndex: 1,
+                },
+                {
+                    question: 'Drizzle schemas are typically defined as…',
+                    options: ['CSS classes', 'TypeScript table definitions', 'YAML Kubernetes manifests', 'GraphQL scalars'],
+                    correctIndex: 1,
+                },
+            ],
+        },
+    },
+    {
+        id: 'accessibility',
+        type: 'skill',
+        data: {
+            id: 'accessibility',
+            title: 'Web Accessibility',
+            description: 'WCAG fundamentals, keyboard nav, ARIA patterns, and inclusive UI craft.',
+            tier: 'frontend-2',
+            category: 'frontend',
+            status: 'locked',
+            prerequisites: ['web-standards', 'react-core'],
+            xpReward: 220,
+            resources: [
+                { label: 'WCAG Overview', url: 'https://www.w3.org/WAI/standards-guidelines/wcag/', type: 'article' },
+                { label: 'A11y Project Checklist', url: 'https://www.a11yproject.com/checklist/', type: 'lab' },
+            ],
+            quiz: [
+                {
+                    question: 'What does WCAG stand for?',
+                    options: [
+                        'Web Content Accessibility Guidelines',
+                        'Wide Component API Guide',
+                        'Webpack Config Automation Group',
+                        'Writable CSS Attribute Grammar',
+                    ],
+                    correctIndex: 0,
+                },
+                {
+                    question: 'Which practice helps keyboard users most?',
+                    options: [
+                        'Removing focus outlines',
+                        'Visible focus states and logical tab order',
+                        'Auto-playing video',
+                        'Hover-only menus with no focus path',
+                    ],
+                    correctIndex: 1,
+                },
+            ],
+        },
+    },
+    {
+        id: 'redis-caching',
+        type: 'skill',
+        data: {
+            id: 'redis-caching',
+            title: 'Redis & Caching',
+            description: 'In-memory caching, rate limits, sessions, and cache invalidation strategies.',
+            tier: 'backend-data',
+            category: 'backend',
+            status: 'locked',
+            prerequisites: ['node-runtime', 'rest-api'],
+            xpReward: 280,
+            resources: [
+                { label: 'Redis University', url: 'https://university.redis.io/', type: 'course' },
+                { label: 'Caching Patterns', url: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/Strategies.html', type: 'article' },
+            ],
+            quiz: [
+                {
+                    question: 'Redis is best described as…',
+                    options: [
+                        'An in-memory data store often used for caching',
+                        'A CSS preprocessor',
+                        'A React renderer',
+                        'A Kubernetes scheduler',
+                    ],
+                    correctIndex: 0,
+                },
+                {
+                    question: 'What is cache stampede?',
+                    options: [
+                        'Too many CDN regions',
+                        'Many clients rebuilding the same expired cache at once',
+                        'SSL handshake failure',
+                        'Git merge conflict',
+                    ],
+                    correctIndex: 1,
+                },
+            ],
+        },
+    },
+    {
+        id: 'system-design',
+        type: 'skill',
+        data: {
+            id: 'system-design',
+            title: 'System Design',
+            description: 'Capacity planning, trade-offs, and designing reliable distributed applications.',
+            tier: 'systems',
+            category: 'cs',
+            status: 'locked',
+            prerequisites: ['rest-api', 'docker', 'postgresql'],
+            xpReward: 450,
+            resources: [
+                { label: 'System Design Primer', url: 'https://github.com/donnemartin/system-design-primer', type: 'article' },
+                { label: 'ByteByteGo', url: 'https://bytebytego.com/', type: 'course' },
+            ],
+            quiz: [
+                {
+                    question: 'Horizontal scaling primarily means…',
+                    options: [
+                        'Adding more machines/instances',
+                        'Buying a faster single CPU',
+                        'Compressing images',
+                        'Deleting indexes',
+                    ],
+                    correctIndex: 0,
+                },
+                {
+                    question: 'CAP theorem forces a trade-off between…',
+                    options: [
+                        'CSS, API, and Python',
+                        'Consistency, Availability, and Partition tolerance',
+                        'Cache, Auth, and Proxies',
+                        'CPU, RAM, and Disk',
+                    ],
+                    correctIndex: 1,
+                },
+            ],
+        },
+    },
+    {
+        id: 'terraform-iac',
+        type: 'skill',
+        data: {
+            id: 'terraform-iac',
+            title: 'Terraform / IaC',
+            description: 'Infrastructure as code: declarative cloud resources, state, and modules.',
+            tier: 'systems',
+            category: 'devops',
+            status: 'locked',
+            prerequisites: ['cloud-platforms', 'docker'],
+            xpReward: 400,
+            resources: [
+                { label: 'Terraform Tutorials', url: 'https://developer.hashicorp.com/terraform/tutorials', type: 'course' },
+                { label: 'IaC Best Practices', url: 'https://www.hashicorp.com/resources/what-is-infrastructure-as-code', type: 'article' },
+            ],
+            quiz: [
+                {
+                    question: 'Terraform state primarily tracks…',
+                    options: [
+                        'React component props',
+                        'Real-world infrastructure mapped to config',
+                        'Browser cookies',
+                        'NPM lockfiles',
+                    ],
+                    correctIndex: 1,
+                },
+                {
+                    question: 'What does `terraform plan` do?',
+                    options: [
+                        'Destroys all resources',
+                        'Shows the execution plan without applying',
+                        'Commits git changes',
+                        'Builds a Docker image',
+                    ],
+                    correctIndex: 1,
+                },
+            ],
+        },
+    },
 ];
 
 

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
 import { PostHogProvider } from "@/lib/posthog";
+import { env } from "@/env";
 import "./globals.css";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -30,10 +31,10 @@ export const metadata: Metadata = {
   applicationName: "Skill Mapper",
   keywords: ["learning", "skills", "gamification", "education", "progress tracking", "skill tree", "interactive learning", "XP system", "achievements"],
   authors: [{ name: "Skill Mapper Team" }],
-  metadataBase: new URL("https://skill-mapper.vercel.app"),
+  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL ?? "https://skill-mapper.vercel.app"),
   manifest: "/manifest.json",
   alternates: {
-    canonical: "https://skill-mapper.vercel.app",
+    canonical: env.NEXT_PUBLIC_APP_URL ?? "https://skill-mapper.vercel.app",
   },
   icons: {
     icon: [

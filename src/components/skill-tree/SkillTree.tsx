@@ -32,6 +32,8 @@ const edgeTypes: EdgeTypes = {
     particle: ParticleEdge,
 };
 
+const proOptions = { hideAttribution: true } as const;
+
 /**
  * Get all descendant node IDs for a given skill
  */
@@ -274,14 +276,14 @@ function SkillTreeInner() {
                         className="bg-transparent"
                         // Performance optimization: Only render nodes/edges in viewport
                         onlyRenderVisibleElements
-                        proOptions={{ hideAttribution: true }}
+                        proOptions={proOptions}
                         minZoom={0.1}
                         maxZoom={2}
                         defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
                     >
                         <Background gap={56} color="rgba(148,163,184,0.12)" className="opacity-40" />
                         <Controls
-                            className="!rounded-[10px] !border !border-white/12 !bg-surface-2 !fill-slate-200"
+                            className="!bottom-20 !left-3 !rounded-[10px] !border !border-white/12 !bg-surface-2 !fill-slate-200 sm:!bottom-4 sm:!left-4"
                             aria-label="Skill tree navigation controls"
                             showZoom={true}
                             showFitView={true}
@@ -298,7 +300,7 @@ function SkillTreeInner() {
                                 }
                             }}
                             maskColor="rgba(18, 24, 32, 0.72)"
-                            className="!rounded-[10px] !border !border-white/12 !bg-surface-1"
+                            className="!hidden !rounded-[10px] !border !border-white/12 !bg-surface-1 md:!block"
                             ariaLabel="Skill tree minimap overview"
                         />
                     </ReactFlow>
@@ -311,7 +313,7 @@ function SkillTreeInner() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute bottom-20 left-1/2 -translate-x-1/2 rounded-[10px] border border-white/12 bg-surface-2 px-4 py-2 text-sm text-foreground/85"
+                    className="pointer-events-none absolute bottom-28 left-1/2 z-20 hidden max-w-[min(90vw,28rem)] -translate-x-1/2 rounded-[10px] border border-white/12 bg-surface-2 px-4 py-2 text-center text-sm text-foreground/85 sm:bottom-20 md:block"
                 >
                     Double-click or press Enter to {collapsed[selectedSkillId] ? 'expand' : 'collapse'} branch
                 </motion.div>

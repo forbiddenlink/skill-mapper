@@ -24,7 +24,7 @@ export const useGameStore = create<GameState>()(
         }),
         {
             name: config.storage.key,
-            version: 2,
+            version: 3,
             storage: createJSONStorage(() => idbStateStorage),
             partialize: (state) => ({
                 nodes: state.nodes,
@@ -38,18 +38,25 @@ export const useGameStore = create<GameState>()(
                 streakShields: state.streakShields,
                 achievements: state.achievements,
                 lastActivityDate: state.lastActivityDate,
+                activityCalendar: state.activityCalendar,
+                completedDailyChallenges: state.completedDailyChallenges,
                 soundEnabled: state.soundEnabled,
                 musicEnabled: state.musicEnabled,
             }),
             migrate: (persistedState: unknown, version: number) => {
                 const state = persistedState as Partial<GameState>;
+                let next = { ...state } as Partial<GameState>;
                 if (version < 2) {
-                    return {
-                        ...state,
-                        streakShields: state.streakShields ?? 0,
-                    } as GameState;
+                    next = { ...next, streakShields: next.streakShields ?? 0 };
                 }
-                return state as GameState;
+                if (version < 3) {
+                    next = {
+                        ...next,
+                        activityCalendar: next.activityCalendar ?? {},
+                        completedDailyChallenges: next.completedDailyChallenges ?? [],
+                    };
+                }
+                return next as GameState;
             },
         }
     )

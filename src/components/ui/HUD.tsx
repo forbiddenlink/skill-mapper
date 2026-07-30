@@ -109,6 +109,7 @@ export default function HUD() {
                             alt="Operator Avatar"
                             width={40}
                             height={40}
+                            priority
                             className="object-cover"
                         />
                     </div>

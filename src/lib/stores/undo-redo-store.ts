@@ -1,9 +1,10 @@
 import { StateCreator } from 'zustand';
-import { SkillsSlice } from './skills-store';
-import { SkillNode } from '@/types';
+import type { SkillNode } from '../skill-data';
 
 interface HistoryEntry {
     nodes: SkillNode[];
+    userXP: number;
+    userLevel: number;
     timestamp: number;
     action: string;
 }
@@ -13,8 +14,7 @@ export interface UndoRedoSlice {
     historyIndex: number;
     maxHistory: number;
 
-    // Actions
-    pushHistory: (nodes: SkillNode[], action: string) => void;
+    pushHistory: (snapshot: { nodes: SkillNode[]; userXP: number; userLevel: number }, action: string) => void;
     undo: () => boolean;
     redo: () => boolean;
     canUndo: () => boolean;
@@ -22,8 +22,14 @@ export interface UndoRedoSlice {
     clearHistory: () => void;
 }
 
+type UndoRedoHost = UndoRedoSlice & {
+    nodes: SkillNode[];
+    userXP: number;
+    userLevel: number;
+};
+
 export const createUndoRedoSlice: StateCreator<
-    UndoRedoSlice & SkillsSlice,
+    UndoRedoHost,
     [],
     [],
     UndoRedoSlice
@@ -32,22 +38,20 @@ export const createUndoRedoSlice: StateCreator<
     historyIndex: -1,
     maxHistory: 50,
 
-    pushHistory: (nodes, action) => {
+    pushHistory: (snapshot, action) => {
         const { history, historyIndex, maxHistory } = get();
-        
-        // Remove any redo history when new action is performed
         const newHistory = history.slice(0, historyIndex + 1);
-        
-        // Add new entry
+
         newHistory.push({
-            nodes: structuredClone(nodes), // Deep clone
+            nodes: structuredClone(snapshot.nodes),
+            userXP: snapshot.userXP,
+            userLevel: snapshot.userLevel,
             timestamp: Date.now(),
             action,
         });
-        
-        // Limit history size
+
         const trimmedHistory = newHistory.slice(-maxHistory);
-        
+
         set({
             history: trimmedHistory,
             historyIndex: trimmedHistory.length - 1,
@@ -56,40 +60,39 @@ export const createUndoRedoSlice: StateCreator<
 
     undo: () => {
         const { history, historyIndex } = get();
-        
-        if (historyIndex <= 0) return false;
-        
-        const prevEntry = history[historyIndex - 1];
-        if (!prevEntry) return false;
-        
+        if (historyIndex < 0) return false;
+
+        const entry = history[historyIndex];
+        if (!entry) return false;
+
         set({
-            nodes: prevEntry.nodes,
+            nodes: structuredClone(entry.nodes),
+            userXP: entry.userXP,
+            userLevel: entry.userLevel,
             historyIndex: historyIndex - 1,
         });
-        
+
         return true;
     },
 
     redo: () => {
         const { history, historyIndex } = get();
-        
         if (historyIndex >= history.length - 1) return false;
-        
+
         const nextEntry = history[historyIndex + 1];
         if (!nextEntry) return false;
-        
+
         set({
-            nodes: nextEntry.nodes,
+            nodes: structuredClone(nextEntry.nodes),
+            userXP: nextEntry.userXP,
+            userLevel: nextEntry.userLevel,
             historyIndex: historyIndex + 1,
         });
-        
+
         return true;
     },
 
-    canUndo: () => {
-        const { historyIndex } = get();
-        return historyIndex > 0;
-    },
+    canUndo: () => get().historyIndex >= 0,
 
     canRedo: () => {
         const { history, historyIndex } = get();

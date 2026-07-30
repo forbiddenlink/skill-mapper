@@ -234,6 +234,86 @@ export function getStreakBonus(streak: number): number {
   return 500;
 }
 
+/**
+ * Apply streak update with optional shield protection.
+ * If the streak would break and shields > 0, consume one shield and keep the streak.
+ */
+export function updateStreakWithShield(
+  currentStreak: number,
+  longestStreak: number,
+  lastActivityDate: string | null,
+  streakShields: number
+): {
+  streak: number;
+  longestStreak: number;
+  lastActivityDate: string;
+  streakShields: number;
+  shieldUsed: boolean;
+} {
+  const today = getTodayDate();
+
+  if (!lastActivityDate) {
+    return {
+      streak: 1,
+      longestStreak: Math.max(1, longestStreak),
+      lastActivityDate: today,
+      streakShields,
+      shieldUsed: false,
+    };
+  }
+
+  if (isSameDay(lastActivityDate, today)) {
+    return {
+      streak: currentStreak,
+      longestStreak,
+      lastActivityDate,
+      streakShields,
+      shieldUsed: false,
+    };
+  }
+
+  if (isConsecutiveDay(lastActivityDate, today)) {
+    const newStreak = currentStreak + 1;
+    return {
+      streak: newStreak,
+      longestStreak: Math.max(newStreak, longestStreak),
+      lastActivityDate: today,
+      streakShields,
+      shieldUsed: false,
+    };
+  }
+
+  // Gap detected — try shield before resetting
+  if (streakShields > 0 && currentStreak > 0) {
+    return {
+      streak: currentStreak,
+      longestStreak,
+      lastActivityDate: today,
+      streakShields: streakShields - 1,
+      shieldUsed: true,
+    };
+  }
+
+  return {
+    streak: 1,
+    longestStreak,
+    lastActivityDate: today,
+    streakShields,
+    shieldUsed: false,
+  };
+}
+
+/**
+ * Earn streak shields from milestones (max 3 held).
+ */
+export function shieldsEarnedForStreak(streak: number): number {
+  if (streak >= 30) return 1;
+  if (streak >= 14) return 1;
+  if (streak >= 7) return 1;
+  return 0;
+}
+
+
 // ============================================================================
 // Achievements
 // ============================================================================

@@ -19,7 +19,7 @@ export const config = {
     },
     storage: {
         key: 'skill-mapper-storage',
-        version: 1,
+        version: 2,
     },
 } as const;
 

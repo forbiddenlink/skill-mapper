@@ -7,6 +7,7 @@ import { LearningPaths } from './LearningPaths';
 import { BossBattles } from './BossBattles';
 import { DailyChallenges } from './DailyChallenges';
 import { StreakTracker } from './StreakTracker';
+import EmptyStateCoach from './EmptyStateCoach';
 
 import { useGameStore } from '@/lib/store';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';
@@ -98,8 +99,13 @@ export function FeaturesHub() {
                             </button>
 
                             {/* Content */}
-                            <div className="modal-shell p-4 md:p-8">
-                                {activeView === 'challenges' && <DailyChallenges />}
+                            <div className="modal-shell space-y-4 p-4 md:p-8">
+                                {activeView === 'challenges' && (
+                                    <>
+                                        <EmptyStateCoach compact />
+                                        <DailyChallenges />
+                                    </>
+                                )}
                                 {activeView === 'streaks' && <StreakTracker />}
                                 {activeView === 'paths' && <LearningPaths />}
                                 {activeView === 'bosses' && <BossBattles />}

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useGameStore, RecommendationReason } from '@/lib/store';
 import { Sparkles, TrendingUp, Target, Zap, Award, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import EmptyStateCoach from './EmptyStateCoach';
 
 const reasonIcons: Record<RecommendationReason, typeof Sparkles> = {
   'next-step': Target,
@@ -48,7 +49,11 @@ export default function RecommendedSkills() {
   }, [nodes.filter(n => n.data.status === 'mastered').length]);
   
   if (recommendations.length === 0) {
-    return null;
+    return (
+      <div className="fixed bottom-6 right-[5.5rem] z-30 w-72 max-w-sm md:bottom-8 md:right-[6rem]">
+        <EmptyStateCoach compact />
+      </div>
+    );
   }
   
   const handleSkillClick = (skillId: string) => {
@@ -156,7 +161,7 @@ export default function RecommendedSkills() {
                   </div>
                   
                   {/* Priority indicator */}
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-500 to-purple-500" 
+                  <div className="absolute bottom-0 left-0 top-0 w-1 bg-signal"
                        style={{ opacity: rec.priority / 100 }} 
                   />
                 </motion.div>

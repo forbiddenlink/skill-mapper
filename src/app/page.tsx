@@ -13,6 +13,8 @@ import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import MilestoneCelebrations from "@/components/MilestoneCelebrations";
 import RecommendedSkills from "@/components/RecommendedSkills";
 import { FeaturesHub } from "@/components/FeaturesHub";
+import EmptyStateCoach from "@/components/EmptyStateCoach";
+import UndoRedoShortcuts from "@/components/UndoRedoShortcuts";
 import MusicManager from "@/components/MusicManager";
 
 export default function Home() {
@@ -28,6 +30,7 @@ export default function Home() {
           <LiveRegions />
           <MilestoneCelebrations />
           <ToastContainer />
+          <UndoRedoShortcuts />
           <KeyboardShortcutsModal />
           <StatsPanel />
           <AnalyticsDashboard />
@@ -39,6 +42,11 @@ export default function Home() {
           <HUD />
           <MusicManager />
           <SkillDetailsPanel />
+          <div className="pointer-events-none fixed bottom-28 left-6 z-20 hidden w-72 md:block">
+            <div className="pointer-events-auto">
+              <EmptyStateCoach compact />
+            </div>
+          </div>
         </div>
       </main>
     </ErrorBoundary>

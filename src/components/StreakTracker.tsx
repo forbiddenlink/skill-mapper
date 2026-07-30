@@ -2,10 +2,19 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Calendar, TrendingUp, Award } from 'lucide-react';
+import { Flame, Calendar, TrendingUp, Award, Shield } from 'lucide-react';
 import { StreakData } from '@/types';
 import { useGameStore } from '@/lib/store';
 
+function StreakShieldRow() {
+    const streakShields = useGameStore((s) => s.streakShields);
+    return (
+        <div className="flex items-center justify-end gap-2 text-signal" title="Shields protect one missed day">
+            <Shield size={16} />
+            <span className="font-semibold">{streakShields} shield{streakShields === 1 ? '' : 's'}</span>
+        </div>
+    );
+}
 // Pure function to read and calculate streak data from localStorage using given timestamp
 function getStreakDataFromStorage(now: number): StreakData {
     const today = new Date(now).toISOString().split('T')[0] ?? '';
@@ -150,9 +159,12 @@ export function StreakTracker() {
                         <p className="text-sm text-text-muted">Keep the momentum going.</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-2 font-mono text-sm text-reward">
-                    <Award size={18} />
-                    <span className="font-semibold">Best {streakData.longestStreak}</span>
+                <div className="space-y-1 text-right font-mono text-sm">
+                    <div className="flex items-center justify-end gap-2 text-reward">
+                        <Award size={18} />
+                        <span className="font-semibold">Best {streakData.longestStreak}</span>
+                    </div>
+                    <StreakShieldRow />
                 </div>
             </div>
 

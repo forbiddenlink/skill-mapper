@@ -39,6 +39,19 @@ const SHORTCUTS: KeyboardShortcut[] = [
         action: () => {},
     },
     {
+        key: 'z',
+        metaKey: true,
+        description: 'Undo last skill change',
+        action: () => {},
+    },
+    {
+        key: 'z',
+        metaKey: true,
+        shiftKey: true,
+        description: 'Redo skill change',
+        action: () => {},
+    },
+    {
         key: '?',
         shiftKey: true,
         description: 'Show this help menu',

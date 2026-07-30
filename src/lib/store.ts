@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import {
     SkillNode,
     getInitialSkills,
@@ -16,12 +16,16 @@ import {
     calculateSkillXp,
     calculateLevel,
     getLevelInfo,
-    updateStreak,
+    updateStreakWithShield,
+    shieldsEarnedForStreak,
     checkAchievements,
     getAchievement,
     GamificationState,
     LevelInfo,
 } from './gamification';
+import { createUISlice, type UISlice } from './stores/ui-store';
+import { createUndoRedoSlice, type UndoRedoSlice } from './stores/undo-redo-store';
+import { idbStateStorage } from './stores/idb-storage';
 
 /**
  * Recommended skill with reasoning and priority score
@@ -47,7 +51,7 @@ export type RecommendationReason =
  * Main game state interface
  * Manages all skill tree data, user progress, and gamification features
  */
-interface GameState {
+interface GameState extends UISlice, UndoRedoSlice {
     // Skill Tree Data
     nodes: SkillNode[];
     edges: Edge[];
@@ -63,19 +67,16 @@ interface GameState {
     lastVisit: number;
     streak: number;
     longestStreak: number;
+    streakShields: number;
     achievements: string[]; // Gamification achievement IDs
     latestAchievementId: string | null; // Triggers achievement popup
     lastActivityDate: string | null; // YYYY-MM-DD for streak tracking
-    soundEnabled: boolean;
-    musicEnabled: boolean; // background category music (off until user opts in)
 
     // AI Recommendations
     recommendations: RecommendedSkill[];
     lastCalculated: number;
 
     // UI Actions
-    toggleSound: () => void;
-    toggleMusic: () => void;
     selectSkill: (id: string | null) => void;
     dismissBadge: () => void;
     dismissAchievement: () => void;
@@ -131,8 +132,13 @@ const checkForNewBadges = (nodes: SkillNode[], currentBadges: string[]): string[
 
 export const useGameStore = create<GameState>()(
     persist(
-        (set, get)  => ({
-            nodes: getInitialSkills(), // Note: Positions need to be set properly elsewhere
+        (...args) => {
+            const [set, get] = args;
+            return {
+            ...createUISlice(...args),
+            ...createUndoRedoSlice(...args),
+
+            nodes: getInitialSkills(),
             edges: INITIAL_EDGES,
             userXP: 0,
             userLevel: 1,
@@ -142,11 +148,10 @@ export const useGameStore = create<GameState>()(
             lastVisit: 0,
             streak: 0,
             longestStreak: 0,
+            streakShields: 0,
             achievements: [],
             latestAchievementId: null,
             lastActivityDate: null,
-            soundEnabled: true,
-            musicEnabled: false,
             recommendations: [],
             lastCalculated: 0,
 
@@ -157,13 +162,25 @@ export const useGameStore = create<GameState>()(
             dismissAchievement: () => set({ latestAchievementId: null }),
 
             checkStreak: () => {
-                const { streak, longestStreak, lastActivityDate } = get();
-                const streakResult = updateStreak(streak, longestStreak, lastActivityDate);
+                const { streak, longestStreak, lastActivityDate, streakShields } = get();
+                const result = updateStreakWithShield(
+                    streak,
+                    longestStreak,
+                    lastActivityDate,
+                    streakShields
+                );
+
+                let nextShields = result.streakShields;
+                // Milestone grants (cap at 3)
+                if (result.streak > streak && shieldsEarnedForStreak(result.streak) > 0) {
+                    nextShields = Math.min(3, nextShields + shieldsEarnedForStreak(result.streak));
+                }
 
                 set({
-                    streak: streakResult.streak,
-                    longestStreak: streakResult.longestStreak,
-                    lastActivityDate: streakResult.lastActivityDate,
+                    streak: result.streak,
+                    longestStreak: result.longestStreak,
+                    lastActivityDate: result.lastActivityDate,
+                    streakShields: nextShields,
                     lastVisit: Date.now(),
                 });
             },
@@ -213,9 +230,11 @@ export const useGameStore = create<GameState>()(
             },
 
             completeSkill: (id) => {
-                const { nodes, unlockedBadges, streak } = get();
+                const { nodes, unlockedBadges, streak, userXP, userLevel, pushHistory } = get();
                 const targetNode = nodes.find(n => n.id === id);
                 if (!targetNode || targetNode.data.status === 'mastered') return;
+
+                pushHistory({ nodes, userXP, userLevel }, `complete:${id}`);
 
                 // Calculate XP with streak bonus and tier multiplier
                 const xpGain = calculateSkillXp(targetNode, nodes, streak);
@@ -324,15 +343,19 @@ export const useGameStore = create<GameState>()(
                     lastVisit: Date.now(),
                     streak: 1,
                     longestStreak: 0,
+                    streakShields: 0,
                     achievements: [],
                     latestAchievementId: null,
                     lastActivityDate: null,
+                    history: [],
+                    historyIndex: -1,
                 });
             },
 
             unlockBatch: (ids) => {
                 const state = get();
-                const { nodes, unlockedBadges, streak } = state;
+                const { nodes, unlockedBadges, streak, userXP, userLevel, pushHistory } = state;
+                pushHistory({ nodes, userXP, userLevel }, `unlock-batch:${ids.length}`);
 
                 // 1. Mark target nodes as mastered with gamification XP calculation
                 let newXP = state.userXP;
@@ -528,25 +551,41 @@ export const useGameStore = create<GameState>()(
             },
 
             dismissBadge: () => set({ latestBadgeId: null }),
-            toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
-            toggleMusic: () => set((state) => ({ musicEnabled: !state.musicEnabled })),
 
             applyElkLayout: async () => {
                 const layoutedNodes = await getElkLayoutedSkills();
                 set({ nodes: layoutedNodes });
             },
-        }),
+        };
+        },
         {
             name: config.storage.key,
-            version: config.storage.version,
+            version: 2,
+            storage: createJSONStorage(() => idbStateStorage),
+            partialize: (state) => ({
+                nodes: state.nodes,
+                edges: state.edges,
+                userXP: state.userXP,
+                userLevel: state.userLevel,
+                unlockedBadges: state.unlockedBadges,
+                lastVisit: state.lastVisit,
+                streak: state.streak,
+                longestStreak: state.longestStreak,
+                streakShields: state.streakShields,
+                achievements: state.achievements,
+                lastActivityDate: state.lastActivityDate,
+                soundEnabled: state.soundEnabled,
+                musicEnabled: state.musicEnabled,
+            }),
             migrate: (persistedState: unknown, version: number) => {
-                if (version === 0) {
-                    // Migration from version 0 to 1
-                    // For now, we just return the persisted state as is, 
-                    // but this structure allows future transformations
-                    return persistedState as GameState;
+                const state = persistedState as Partial<GameState>;
+                if (version < 2) {
+                    return {
+                        ...state,
+                        streakShields: state.streakShields ?? 0,
+                    } as GameState;
                 }
-                return persistedState as GameState;
+                return state as GameState;
             },
         }
     )

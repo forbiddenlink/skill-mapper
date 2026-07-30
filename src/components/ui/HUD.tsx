@@ -1,19 +1,21 @@
 'use client';
 
 import { useGameStore } from "@/lib/store";
-import { Trophy, Flame, Volume2, VolumeX, Music, Save, Upload, Star } from "lucide-react";
+import { Trophy, Flame, Volume2, VolumeX, Music, Save, Upload, Star, Shield } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useToast } from "./Toast";
 import { useShallow } from "zustand/react/shallow";
 import Image from "next/image";
+import ShareProgressCard from "@/components/ShareProgressCard";
 
 export default function HUD() {
-    const { xp, level, unlockedBadges, streak, soundEnabled, achievements } = useGameStore(
+    const { xp, level, unlockedBadges, streak, streakShields, soundEnabled, achievements } = useGameStore(
         useShallow((state) => ({
             xp: state.userXP,
             level: state.userLevel,
             unlockedBadges: state.unlockedBadges,
             streak: state.streak,
+            streakShields: state.streakShields,
             soundEnabled: state.soundEnabled,
             achievements: state.achievements
         }))
@@ -118,6 +120,7 @@ export default function HUD() {
                     </div>
 
                     <div className="ml-auto flex shrink-0 gap-1">
+                        <ShareProgressCard />
                         <button
                             type="button"
                             onClick={handleSave}
@@ -211,6 +214,11 @@ export default function HUD() {
                     <Flame className="h-3 w-3 text-reward" aria-hidden="true" />
                     <span className="text-foreground">{streak}</span>
                     <span>Day streak</span>
+                </div>
+                <div className="flex items-center gap-1.5" title="Streak shields protect one missed day">
+                    <Shield className="h-3 w-3 text-signal" aria-hidden="true" />
+                    <span className="text-foreground">{streakShields}</span>
+                    <span>Shields</span>
                 </div>
             </section>
         </aside>

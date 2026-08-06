@@ -5,8 +5,15 @@ import clsx from 'clsx';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { SkillData } from '@/lib/skill-data';
 
-const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
-    const { status, title, tier } = data;
+type ConstellationNodeData = SkillData & {
+    /** Pushed to the background because another node's path is focused. */
+    dimmed?: boolean;
+    /** This node is the hovered one, or a direct neighbor of it. */
+    focused?: boolean;
+};
+
+const CustomNode = ({ data, selected }: NodeProps<ConstellationNodeData>) => {
+    const { status, title, tier, dimmed = false, focused = false } = data;
     const ref = useRef<HTMLDivElement>(null);
 
     const isLocked = status === 'locked';
@@ -42,6 +49,12 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
             ref={ref}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            animate={{
+                opacity: dimmed ? 0.28 : 1,
+                scale: focused && !selected ? 1.04 : 1,
+                filter: dimmed ? "saturate(0.55)" : "saturate(1)",
+            }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             style={{
                 rotateX: isLocked ? 0 : rotateX,
                 rotateY: isLocked ? 0 : rotateY,
@@ -54,9 +67,17 @@ const CustomNode = ({ data, selected }: NodeProps<SkillData>) => {
                 isInProgress && "cursor-pointer border-progress/55 bg-progress/10 text-foreground",
                 isMastered && "border-mastery/55 bg-mastery/10 text-foreground shadow-[0_6px_16px_rgba(0,0,0,0.28)]",
                 isDecayed && "border-decay/65 bg-decay/10 text-foreground/80 shadow-[0_6px_16px_rgba(0,0,0,0.28)]",
+                focused && !selected && "border-signal/80 shadow-[0_0_22px_-2px_color-mix(in_oklab,var(--signal)_60%,transparent)]",
                 selected && "ring-2 ring-signal ring-offset-2 ring-offset-canvas"
             )}
         >
+            {/* Constellation halo — a soft pulse marking an unlocked, ready-to-learn skill */}
+            {isAvailable && !dimmed && (
+                <span
+                    aria-hidden
+                    className="constellation-halo pointer-events-none absolute inset-0 -z-10 rounded-[10px]"
+                />
+            )}
             {isDecayed && (
                 <div
                     className="pointer-events-none absolute inset-0 z-0 rounded-[10px] opacity-25"
@@ -127,6 +148,8 @@ export default memo(CustomNode, (prevProps, nextProps) => {
         prevProps.data.status === nextProps.data.status &&
         prevProps.data.title === nextProps.data.title &&
         prevProps.data.tier === nextProps.data.tier &&
+        prevProps.data.dimmed === nextProps.data.dimmed &&
+        prevProps.data.focused === nextProps.data.focused &&
         prevProps.selected === nextProps.selected
     );
 });

@@ -20,9 +20,20 @@ import { useGameStore } from '@/lib/store';
 import { useGameSounds } from '@/hooks/use-game-sounds';
 import CustomNode from './CustomNode';
 import ParticleEdge from './ParticleEdge';
-import type { SkillNode } from '@/lib/skill-data';
+import ConstellationLegend from './ConstellationLegend';
+import type { SkillNode, SkillCategory, SkillStatus } from '@/lib/skill-data';
 import { useShallow } from 'zustand/react/shallow';
 import { buildChildrenMap, type CollapsedBranches } from '@/types/skill';
+
+/** Resolve a constellation link colour from its endpoint statuses. */
+function resolveEdgeColor(sourceStatus?: SkillStatus, targetStatus?: SkillStatus): string {
+    if (sourceStatus === 'mastered' && targetStatus === 'mastered') return 'var(--mastery)';
+    if (sourceStatus === 'mastered' && (targetStatus === 'available' || targetStatus === 'in-progress')) {
+        return 'var(--signal)';
+    }
+    if (targetStatus === 'decayed') return 'var(--decay)';
+    return 'var(--slate-700)';
+}
 
 const nodeTypes: NodeTypes = {
     skill: CustomNode,
@@ -98,6 +109,8 @@ function SkillTreeInner() {
     const hasAppliedLayout = useRef(false);
     const [collapsed, setCollapsed] = useState<CollapsedBranches>({});
     const [isAnimating, setIsAnimating] = useState(false);
+    const [hoveredId, setHoveredId] = useState<string | null>(null);
+    const [activeCategories, setActiveCategories] = useState<Set<SkillCategory>>(new Set());
 
     // Optimized selectors with useShallow for stable references
     const { nodes, edges, selectedSkillId } = useGameStore(
@@ -127,6 +140,44 @@ function SkillTreeInner() {
         filterByCollapsed(nodes, edges, collapsed),
         [nodes, edges, collapsed]
     );
+
+    // Per-node status/category lookup for edge + focus styling
+    const statusMap = useMemo(() => {
+        const m = new Map<string, SkillStatus>();
+        for (const n of filteredNodes) m.set(n.id, n.data.status);
+        return m;
+    }, [filteredNodes]);
+
+    // Undirected adjacency (prerequisites + dependents) for neighbor highlight
+    const adjacency = useMemo(() => {
+        const m = new Map<string, Set<string>>();
+        for (const e of filteredEdges) {
+            if (!m.has(e.source)) m.set(e.source, new Set());
+            if (!m.has(e.target)) m.set(e.target, new Set());
+            m.get(e.source)!.add(e.target);
+            m.get(e.target)!.add(e.source);
+        }
+        return m;
+    }, [filteredEdges]);
+
+    // The hovered node plus its direct neighbors
+    const focusSet = useMemo(() => {
+        if (!hoveredId) return null;
+        const s = new Set<string>([hoveredId]);
+        for (const id of adjacency.get(hoveredId) ?? []) s.add(id);
+        return s;
+    }, [hoveredId, adjacency]);
+
+    const toggleCategory = useCallback((category: SkillCategory) => {
+        setActiveCategories(prev => {
+            const next = new Set(prev);
+            if (next.has(category)) next.delete(category);
+            else next.add(category);
+            return next;
+        });
+    }, []);
+
+    const clearCategories = useCallback(() => setActiveCategories(new Set()), []);
 
     // Apply ELK layout on mount
     useEffect(() => {
@@ -239,22 +290,80 @@ function SkillTreeInner() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [filteredNodes, selectedSkillId, selectSkill, playClick, toggleCollapse]);
 
-    // Animate nodes with framer-motion wrapper
+    const hasCategoryFilter = activeCategories.size > 0;
+
+    // Animate nodes with framer-motion wrapper + focus/dim state
     const animatedNodes = useMemo(() =>
-        filteredNodes.map(node => ({
-            ...node,
-            // Add collapse indicator data
-            data: {
-                ...node.data,
-                isCollapsed: collapsed[node.id] ?? false,
-                hasChildren: (childrenMap.get(node.id) || []).length > 0
+        filteredNodes.map(node => {
+            let dimmed = false;
+            let focused = false;
+            if (focusSet) {
+                focused = focusSet.has(node.id);
+                dimmed = !focused;
+            } else if (hasCategoryFilter) {
+                dimmed = !activeCategories.has(node.data.category);
             }
-        })),
-        [filteredNodes, collapsed, childrenMap]
+            return {
+                ...node,
+                // Add collapse indicator data
+                data: {
+                    ...node.data,
+                    isCollapsed: collapsed[node.id] ?? false,
+                    hasChildren: (childrenMap.get(node.id) || []).length > 0,
+                    dimmed,
+                    focused,
+                }
+            };
+        }),
+        [filteredNodes, collapsed, childrenMap, focusSet, hasCategoryFilter, activeCategories]
     );
+
+    // Constellation links: status-tinted colour, live-flow + focus/dim state
+    const styledEdges = useMemo(() =>
+        filteredEdges.map(edge => {
+            const sourceStatus = statusMap.get(edge.source);
+            const targetStatus = statusMap.get(edge.target);
+            const active = sourceStatus === 'mastered'
+                && (targetStatus === 'available' || targetStatus === 'in-progress');
+            const touchesHover = hoveredId != null
+                && (edge.source === hoveredId || edge.target === hoveredId);
+
+            let dimmed = false;
+            if (focusSet) {
+                dimmed = !touchesHover;
+            } else if (hasCategoryFilter) {
+                const s = filteredNodes.find(n => n.id === edge.source)?.data.category;
+                const t = filteredNodes.find(n => n.id === edge.target)?.data.category;
+                dimmed = !(s && activeCategories.has(s)) || !(t && activeCategories.has(t));
+            }
+
+            return {
+                ...edge,
+                data: {
+                    ...edge.data,
+                    color: resolveEdgeColor(sourceStatus, targetStatus),
+                    active,
+                    highlighted: touchesHover,
+                    dimmed,
+                },
+            };
+        }),
+        [filteredEdges, filteredNodes, statusMap, hoveredId, focusSet, hasCategoryFilter, activeCategories]
+    );
+
+    const onNodeMouseEnter = useCallback((_e: React.MouseEvent, node: Node) => {
+        setHoveredId(node.id);
+    }, []);
+
+    const onNodeMouseLeave = useCallback(() => setHoveredId(null), []);
 
     return (
         <div className="h-full w-full bg-transparent" data-skill-tree>
+            <ConstellationLegend
+                activeCategories={activeCategories}
+                onToggleCategory={toggleCategory}
+                onClear={clearCategories}
+            />
             <AnimatePresence mode="wait">
                 <motion.div
                     key="skill-tree-container"
@@ -265,11 +374,13 @@ function SkillTreeInner() {
                 >
                     <ReactFlow
                         nodes={animatedNodes}
-                        edges={filteredEdges}
+                        edges={styledEdges}
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
                         onNodeClick={onNodeClick}
                         onNodeDoubleClick={onNodeDoubleClick}
+                        onNodeMouseEnter={onNodeMouseEnter}
+                        onNodeMouseLeave={onNodeMouseLeave}
                         nodeTypes={nodeTypes}
                         edgeTypes={edgeTypes}
                         fitView

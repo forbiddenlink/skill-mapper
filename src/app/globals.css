@@ -302,6 +302,26 @@ textarea {
   mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 75%);
 }
 
+/* ——— Constellation halo (available-skill pulse) ——— */
+
+.constellation-halo {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--signal) 45%, transparent),
+    0 0 18px -2px color-mix(in oklab, var(--signal) 55%, transparent);
+  animation: constellation-pulse 3.2s var(--ease-out) infinite;
+}
+
+@keyframes constellation-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.05);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

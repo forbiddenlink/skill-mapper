@@ -5,6 +5,51 @@ All notable changes to the Skill Mapper project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.0.0 (2026-08-16)
+
+
+### Features
+
+* add complete Skill Mapper application with gamification, skill tree, and documentation ([132c134](https://github.com/forbiddenlink/skill-mapper/commit/132c13429f2afd2f789e902ef612728fd7396aa1))
+* add massive content expansion ([3591595](https://github.com/forbiddenlink/skill-mapper/commit/35915951c08a7ec8bf86552520c0314c19a49192))
+* AI-powered recommendations + custom branding ([c427f64](https://github.com/forbiddenlink/skill-mapper/commit/c427f645697002331604f72823b7c2889b67c3d7))
+* background category music with HUD toggle ([dc884e6](https://github.com/forbiddenlink/skill-mapper/commit/dc884e6db43959fa4dc60f9a32349c56fa459745))
+* complete session loop, persist bosses, and expand CS/data content ([2c0acf5](https://github.com/forbiddenlink/skill-mapper/commit/2c0acf5e054e5357d75b192e02e73739f91ff05e))
+* **design:** introduce Signal Atlas system ([f03fb19](https://github.com/forbiddenlink/skill-mapper/commit/f03fb19fcd70e3e6906514753b3d5e03ad21d419))
+* **design:** restyle mode UIs to Signal Atlas ([8c2467f](https://github.com/forbiddenlink/skill-mapper/commit/8c2467f3a77386b83627e4a5ff1f2e22fc6747e1))
+* documentation overhaul, accessibility fixes, and test improvements ([78812b1](https://github.com/forbiddenlink/skill-mapper/commit/78812b1fd45ca3b293bbf3deb5d67e3ee0f36bbb))
+* enhance branding assets and fix UI/metadata issues ([6c9648c](https://github.com/forbiddenlink/skill-mapper/commit/6c9648c8eb3f6c12975acce45db3e3a328af6a20))
+* harden product loop, expand skills, and clean Next/proxy debt ([c4aa339](https://github.com/forbiddenlink/skill-mapper/commit/c4aa339ad6d5801c3f9dcdf8fe6ea74be8ec9850))
+* IndexedDB persist, undo/redo, shields, and share card ([8f3287e](https://github.com/forbiddenlink/skill-mapper/commit/8f3287e43859f9b75a656690c602e28028c756fa))
+* massive content expansion and engagement features ([bb55673](https://github.com/forbiddenlink/skill-mapper/commit/bb55673694d2a798dc89c062d68b25fb81bf837d))
+* play generated victory jingle on skill mastery ([5b53d65](https://github.com/forbiddenlink/skill-mapper/commit/5b53d65d76ea2e3717acfc44b0bc18b1c412eeae))
+* **sentry:** add missing runtime init files ([f89c8e3](https://github.com/forbiddenlink/skill-mapper/commit/f89c8e3ba3c3d7fe27ef4a595a82414e548f922b))
+* skill-constellation visual system ([5228f56](https://github.com/forbiddenlink/skill-mapper/commit/5228f56d8002813def64c88d5758544ccdcb496c))
+
+
+### Bug Fixes
+
+* add drizzle-kit dependency ([3d6ae89](https://github.com/forbiddenlink/skill-mapper/commit/3d6ae8939705863792deb54610bcc2cbd4fbdf17))
+* add maxDuration to TriggerConfig (resolve merge conflicts) ([07fb521](https://github.com/forbiddenlink/skill-mapper/commit/07fb5217ffd8da3c38aa45c640646a63ee82c93e))
+* add missing @vercel/analytics and @vercel/speed-insights packages ([d988dc1](https://github.com/forbiddenlink/skill-mapper/commit/d988dc13e8f9022759288aa51a436b99578e32a9))
+* cap cookie override below v2 to prevent @supabase/ssr build break ([6ebbca9](https://github.com/forbiddenlink/skill-mapper/commit/6ebbca96d210fd09382454b76d38314c6aff4847))
+* **deps:** add pnpm-workspace overrides for security patches ([138f9d2](https://github.com/forbiddenlink/skill-mapper/commit/138f9d26ebf581b063e86ae29de2baff6c982983))
+* **deps:** clear high CVEs via same-major overrides ([c0ecf37](https://github.com/forbiddenlink/skill-mapper/commit/c0ecf3717d77fb4bf7ef6ea3b9d2b9fd3eb14144))
+* env.ts import, sentry paths, MSW types, safe-action api ([b769ca8](https://github.com/forbiddenlink/skill-mapper/commit/b769ca88d557f0e01c35d0d4aca65b63a6eb05a7))
+* **lint:** scope ajv override so eslint+eslintrc keep ajv@^6 ([b229b70](https://github.com/forbiddenlink/skill-mapper/commit/b229b70c1dc9866b16932f7d207b7f18cbf02a29))
+* patch 14 security vulnerabilities ([1cb6d9b](https://github.com/forbiddenlink/skill-mapper/commit/1cb6d9beba2080844bfc48f45a5ac529dd684a61))
+* regenerate npm lockfile ([c6bfcce](https://github.com/forbiddenlink/skill-mapper/commit/c6bfcceeb43be120a6cfca914e34b342be63b9d9))
+* remove unavailable socketsecurity/socket-action from security workflow ([f444228](https://github.com/forbiddenlink/skill-mapper/commit/f444228f2471207f9b2a1ea3b06f359215b119c2))
+* resolve build errors ([4e593e1](https://github.com/forbiddenlink/skill-mapper/commit/4e593e1ce7ecfd1f7a3ca30080a6886f771f509e))
+* resolve React hooks error crashing skill completion ([97fa688](https://github.com/forbiddenlink/skill-mapper/commit/97fa68815e76d1bfb55b5d25d5f768925ba25315))
+* resolve Vercel build errors ([8ef2329](https://github.com/forbiddenlink/skill-mapper/commit/8ef23290003ca73d0a46eddac5a6572fce6a0479))
+* resolve Vercel deployment dependency conflicts ([d6f1174](https://github.com/forbiddenlink/skill-mapper/commit/d6f1174c4c476d0ff298c7301e2dbf556da8c46d))
+* resolve z-index layering bug and improve code quality (v1.0.1) ([a984379](https://github.com/forbiddenlink/skill-mapper/commit/a984379dbb3ae1d849dbec3a2a666e087bc6908a))
+* restore CI green on main ([#54](https://github.com/forbiddenlink/skill-mapper/issues/54)) ([5158c17](https://github.com/forbiddenlink/skill-mapper/commit/5158c17d44a833b779c310a4d5bdac90c013302c))
+* **security:** pin transitive deps to patched versions (Dependabot high alerts) ([3bf1b35](https://github.com/forbiddenlink/skill-mapper/commit/3bf1b353413c3346a6ba5aebdb578f00435ba354))
+* upgrade @testing-library/react to v16 for React 19 compatibility ([f9a2b61](https://github.com/forbiddenlink/skill-mapper/commit/f9a2b617da9029fc567a19390bbf5abab44c160d))
+* Vercel build fixes ([b8c161e](https://github.com/forbiddenlink/skill-mapper/commit/b8c161ea4569d52a2999b55702b94d4259d856e3))
+
 ## [1.0.1] - 2026-02-12
 
 ### 🔧 Bug Fixes & Code Quality

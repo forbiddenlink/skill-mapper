@@ -52,6 +52,7 @@ export function StreakTracker() {
     const [mountTime, setMountTime] = useState(0);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only hydration gate: mount time must be computed post-mount to avoid SSR/client mismatch
         setMountTime(Date.now());
         setMounted(true);
     }, []);

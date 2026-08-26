@@ -71,6 +71,7 @@ export function DailyChallenges() {
     useEffect(() => {
         const day = todayUtc();
         const challenge = generateDailyChallenge(day);
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only hydration gate: today's UTC date must be computed post-mount to avoid SSR/client mismatch
         setTodayStr(day);
         setDailyChallenge(challenge);
         setTimeRemaining(challenge ? calculateTimeRemaining(challenge.expiresAt, Date.now()) : '');

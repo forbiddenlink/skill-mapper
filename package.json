@@ -103,17 +103,37 @@
   "license": "MIT",
   "pnpm": {
     "overrides": {
-      "uuid": ">=11.1.1",
-      "ws@7": ">=8.21.0 <9",
-      "ws@8": ">=8.21.0 <9",
-      "postcss": ">=8.5.18 <9",
+      "@eslint/eslintrc>ajv": "^6.14.0",
+      "@opentelemetry/core": ">=2.8.0 <3",
       "@trigger.dev/core": ">=4.5.6 <5",
+      "ajv": ">=8.18.0",
       "brace-expansion": ">=1.1.18 <2",
+      "cookie": ">=0.7.0 <2.0.0",
       "dompurify": ">=3.4.13 <4",
+      "engine.io": ">=6.6.7 <7",
+      "esbuild": ">=0.28.1",
+      "eslint>ajv": "^6.14.0",
       "fast-uri": ">=2.4.4 <3",
+      "flatted": ">=3.4.2",
       "js-yaml": ">=4.3.1 <5",
+      "lodash": ">=4.18.0",
+      "minimatch": ">=10.2.3",
       "nanoid": ">=5.1.6 <6",
-      "socket.io-parser": ">=4.2.7 <5"
+      "next": ">=16.2.3",
+      "picomatch": ">=4.0.4",
+      "postcss": ">=8.5.18 <9",
+      "protobufjs": ">=7.6.5 <8",
+      "rollup": ">=4.59.0",
+      "serialize-javascript": ">=7.0.5",
+      "sharp": ">=0.35.0 <1",
+      "socket.io-parser": ">=4.2.7 <5",
+      "storybook": ">=10.2.10",
+      "systeminformation": ">=5.31.0",
+      "undici": ">=7.28.0 <8",
+      "uuid": ">=11.1.1",
+      "vite": ">=8.0.16",
+      "ws@7": ">=8.21.0 <9",
+      "ws@8": ">=8.21.0 <9"
     }
   }
 }

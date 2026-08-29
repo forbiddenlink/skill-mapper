@@ -5,6 +5,13 @@ All notable changes to the Skill Mapper project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1](https://github.com/forbiddenlink/skill-mapper/compare/v1.0.0...v1.0.1) (2026-08-29)
+
+
+### Bug Fixes
+
+* **lint:** suppress set-state-in-effect for client-only hydration gates ([#68](https://github.com/forbiddenlink/skill-mapper/issues/68)) ([a0fe3d8](https://github.com/forbiddenlink/skill-mapper/commit/a0fe3d8842783f6e94ec5312697174bc66d722a2))
+
 ## 1.0.0 (2026-08-16)
 
 

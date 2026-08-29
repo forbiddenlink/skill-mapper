@@ -176,8 +176,21 @@ jobs:
     
     steps:
       - uses: actions/checkout@v7
-      
+
+      - name: Check deployment secrets
+        id: check-secrets
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Skipping preview deploy - VERCEL_TOKEN secret not configured"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Deploy to Vercel
+        if: steps.check-secrets.outputs.skip != 'true'
         uses: amondnet/vercel-action@v42
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}

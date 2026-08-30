@@ -180,8 +180,8 @@ export default function ShowcasePage() {
         </h2>
         <div className="mt-8 grid gap-8 md:grid-cols-2">
           <p className="text-text-muted">
-            Most “learning paths” are a checklist in a doc. There's no sense of place, no
-            momentum, no reward for progress, and no signal about what's worth doing next. Motivation
+            Most “learning paths” are a checklist in a doc. There&rsquo;s no sense of place, no
+            momentum, no reward for progress, and no signal about what&rsquo;s worth doing next. Motivation
             leaks out between step 3 and step 4.
           </p>
           <p className="text-text-muted">
@@ -229,14 +229,14 @@ export default function ShowcasePage() {
           ))}
         </div>
         <p className="mt-6 font-mono text-xs text-text-faint">
-          Result: Refined Premium base + Direction A's animated energy-edges on the tree + Direction C's
+          Result: Refined Premium base + Direction A&rsquo;s animated energy-edges on the tree + Direction C&rsquo;s
           confetti &amp; squash-pop on unlocks.
         </p>
       </section>
 
       {/* features */}
       <section className="mx-auto max-w-5xl px-6 py-20">
-        <Eyebrow>What's inside</Eyebrow>
+        <Eyebrow>What&rsquo;s inside</Eyebrow>
         <h2 className="mt-4 font-display text-3xl font-medium tracking-tight md:text-5xl">
           A real product, not a demo.
         </h2>

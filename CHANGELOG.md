@@ -5,6 +5,14 @@ All notable changes to the Skill Mapper project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1](https://github.com/forbiddenlink/skill-mapper/compare/v1.1.0...v1.1.1) (2026-09-06)
+
+
+### Bug Fixes
+
+* **security:** pin browserslist off the open HIGH advisories ([#103](https://github.com/forbiddenlink/skill-mapper/issues/103)) ([07fcfe5](https://github.com/forbiddenlink/skill-mapper/commit/07fcfe542b35bfc4dc54782c238d4444a5d4064f))
+* **seo:** point robots and sitemap at the real production alias ([#101](https://github.com/forbiddenlink/skill-mapper/issues/101)) ([07dff0d](https://github.com/forbiddenlink/skill-mapper/commit/07dff0dfd99a23d62297d9cf18ebef5ffc7b353b))
+
 ## [1.1.0](https://github.com/forbiddenlink/skill-mapper/compare/v1.0.3...v1.1.0) (2026-09-01)
 
 

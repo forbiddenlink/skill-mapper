@@ -65,7 +65,17 @@ export const createUndoRedoSlice: StateCreator<
         const entry = history[historyIndex];
         if (!entry) return false;
 
+        const current = get();
+        const nextHistory = history.slice();
+        nextHistory[historyIndex] = {
+            ...entry,
+            nodes: structuredClone(current.nodes),
+            userXP: current.userXP,
+            userLevel: current.userLevel,
+        };
+
         set({
+            history: nextHistory,
             nodes: structuredClone(entry.nodes),
             userXP: entry.userXP,
             userLevel: entry.userLevel,
@@ -82,7 +92,17 @@ export const createUndoRedoSlice: StateCreator<
         const nextEntry = history[historyIndex + 1];
         if (!nextEntry) return false;
 
+        const current = get();
+        const nextHistory = history.slice();
+        nextHistory[historyIndex + 1] = {
+            ...nextEntry,
+            nodes: structuredClone(current.nodes),
+            userXP: current.userXP,
+            userLevel: current.userLevel,
+        };
+
         set({
+            history: nextHistory,
             nodes: structuredClone(nextEntry.nodes),
             userXP: nextEntry.userXP,
             userLevel: nextEntry.userLevel,

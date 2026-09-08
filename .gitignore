@@ -93,3 +93,5 @@ test_run/
 supabase/.temp/
 dist/
 .audit-report.md
+
+/test-results/

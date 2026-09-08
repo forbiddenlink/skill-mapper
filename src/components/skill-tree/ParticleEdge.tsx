@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { BaseEdge, EdgeProps, getBezierPath } from 'reactflow';
-import { useReducedMotion } from 'framer-motion';
+import { useReducedMotion } from 'motion/react';
 
 export interface ConstellationEdgeData {
     /** Link is "live": a mastered prerequisite feeding an unlocked skill. */

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { CheckCircle2, Lock, Layout, Layers, Brain, Rocket, Smartphone, Shield } from 'lucide-react';
 import { type LearningPath } from '@/types';
 import { useGameStore } from '@/lib/store';

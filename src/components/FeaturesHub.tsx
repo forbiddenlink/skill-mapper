@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Map, Trophy, Flame, Target, X } from 'lucide-react';
 import { LearningPaths } from './LearningPaths';
 import { BossBattles } from './BossBattles';

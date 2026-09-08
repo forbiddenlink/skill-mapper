@@ -2,7 +2,7 @@
 
 import { useGameStore } from '@/lib/store';
 import { BADGES } from '@/lib/badges';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 
 export default function BadgeNotification() {

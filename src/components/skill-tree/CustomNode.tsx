@@ -2,7 +2,7 @@ import { memo, useRef } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import { Lock, ShieldCheck, Zap, BookOpen, TriangleAlert } from 'lucide-react';
 import clsx from 'clsx';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { SkillData } from '@/lib/skill-data';
 
 type ConstellationNodeData = SkillData & {

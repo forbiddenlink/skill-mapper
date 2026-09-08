@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Skull, Crown, CheckCircle2, XCircle, Shield, Swords, X } from 'lucide-react';
 import { BossBattle } from '@/types';
 import { useGameStore } from '@/lib/store';

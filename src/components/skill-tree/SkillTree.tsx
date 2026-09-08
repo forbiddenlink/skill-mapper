@@ -14,7 +14,7 @@ import ReactFlow, {
     ReactFlowProvider
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 
 import { useGameStore } from '@/lib/store';
 import { useGameSounds } from '@/hooks/use-game-sounds';

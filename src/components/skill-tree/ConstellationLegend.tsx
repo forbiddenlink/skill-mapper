@@ -1,7 +1,7 @@
 'use client';
 
 import { memo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import clsx from 'clsx';
 import type { SkillCategory, SkillStatus } from '@/lib/skill-data';
 

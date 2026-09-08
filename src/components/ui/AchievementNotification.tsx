@@ -2,7 +2,7 @@
 
 import { useGameStore } from '@/lib/store';
 import { getAchievement } from '@/lib/gamification';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { X, Trophy, Flame, Star, Rocket, Medal, Award, Layers, Bot, Shield, Timer, Eye, Zap, Crown, GraduationCap, Footprints } from 'lucide-react';
 
 const ACHIEVEMENT_ICONS: Record<string, React.ReactNode> = {

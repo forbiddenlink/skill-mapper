@@ -1,6 +1,9 @@
-# https://www.robotstxt.org/robotstxt.html
+# *
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://skill-mapper.vercel.app/sitemap.xml
+# Host
+Host: https://skill-mapper-six.vercel.app
+
+# Sitemaps
+Sitemap: https://skill-mapper-six.vercel.app/sitemap.xml

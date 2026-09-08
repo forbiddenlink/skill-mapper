@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Share2, Download, X, Copy, Check } from 'lucide-react';
 import { useGameStore } from '@/lib/store';
 import { useShallow } from 'zustand/react/shallow';

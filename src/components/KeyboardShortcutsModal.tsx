@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { X, Keyboard } from 'lucide-react';
 import { useState } from 'react';
 import { useKeyboardShortcut, formatShortcut, type KeyboardShortcut } from '@/hooks/use-keyboard-shortcuts';

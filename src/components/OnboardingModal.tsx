@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { useGameStore } from '@/lib/store';
 import { Sparkles, Code, Server, Layers } from 'lucide-react';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Trophy, Clock, Zap, CheckCircle2, XCircle, Share2 } from 'lucide-react';
 import { DailyChallenge } from '@/types';
 import { useGameStore } from '@/lib/store';

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useGameStore, RecommendationReason } from '@/lib/store';
 import { Sparkles, TrendingUp, Target, Zap, Award, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 
 const reasonIcons: Record<RecommendationReason, typeof Sparkles> = {
   'next-step': Target,

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Compass, Flame, Map, Target } from 'lucide-react';
 import { useGameStore } from '@/lib/store';
 import { useShallow } from 'zustand/react/shallow';

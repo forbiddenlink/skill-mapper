@@ -5,6 +5,16 @@ All notable changes to the Skill Mapper project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1](https://github.com/forbiddenlink/skill-mapper/compare/v1.1.0...v1.1.1) (2026-09-08)
+
+
+### Bug Fixes
+
+* **deps:** replace dependency framer-motion with motion ^12.43.0 ([b989acf](https://github.com/forbiddenlink/skill-mapper/commit/b989acf2269fa0ac9d0a18160f4bcb0b23417994))
+* restore changed state when redoing skill actions ([#105](https://github.com/forbiddenlink/skill-mapper/issues/105)) ([ba7dfc6](https://github.com/forbiddenlink/skill-mapper/commit/ba7dfc68db884394d09e0a1e86bbf04aa19943c3))
+* **security:** pin browserslist off the open HIGH advisories ([#103](https://github.com/forbiddenlink/skill-mapper/issues/103)) ([07fcfe5](https://github.com/forbiddenlink/skill-mapper/commit/07fcfe542b35bfc4dc54782c238d4444a5d4064f))
+* **seo:** point robots and sitemap at the real production alias ([#101](https://github.com/forbiddenlink/skill-mapper/issues/101)) ([07dff0d](https://github.com/forbiddenlink/skill-mapper/commit/07dff0dfd99a23d62297d9cf18ebef5ffc7b353b))
+
 ## [1.1.0](https://github.com/forbiddenlink/skill-mapper/compare/v1.0.3...v1.1.0) (2026-09-01)
 
 

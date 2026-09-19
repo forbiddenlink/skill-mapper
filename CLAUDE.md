@@ -17,7 +17,8 @@ achievements, and progress tracking.
   infrastructure (see Gotchas).
 - `@t3-oss/env-nextjs` + zod for env var validation (`src/env.ts`)
 - React Flow (`@xyflow/react` + `reactflow`) for the skill tree, elkjs for
-  layout, Framer Motion for animation, xstate for state machines
+  layout, Motion (`motion/react`, the renamed Framer Motion; the `motion`
+  package, not `framer-motion`) for animation, xstate for state machines
 - Arcjet for rate limiting/bot protection, Upstash Redis, Sentry, Axiom,
   PostHog, Vercel Analytics/Speed Insights
 - Groq SDK (AI), Trigger.dev (background jobs)

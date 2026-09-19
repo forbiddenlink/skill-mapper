@@ -47,7 +47,8 @@ PWA icons are not yet generated. Follow `docs/PWA_ICONS.md` before shipping the 
 - Tailwind CSS 4
 - Zustand for state, IndexedDB for client-side persistence (see the Gotchas note in `CLAUDE.md`
   about the half-wired Drizzle scaffolding — there is no server database)
-- React Flow (`@xyflow/react`) + elkjs for the skill tree, Framer Motion for animation
+- React Flow (`@xyflow/react`) + elkjs for the skill tree, Motion (`motion/react`, the renamed
+  Framer Motion) for animation
 - Arcjet, Upstash Redis, Sentry, Axiom, PostHog for rate limiting and observability
 - Groq SDK for AI recommendations, Trigger.dev for background jobs
 - Vitest + Testing Library, Playwright (with `@axe-core/playwright`), Storybook

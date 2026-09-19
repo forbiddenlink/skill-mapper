@@ -1,656 +1,161 @@
-# 🎮 Skill Mapper
+# Skill Mapper
 
-**A production-grade, gamified skill tree learning platform**
+A gamified skill-tree learning platform: an interactive node graph (React Flow) where skills
+unlock as you master their prerequisites, with XP, badges, streaks, and AI-powered
+recommendations.
 
-Transform your learning journey into an engaging visual experience with progression tracking, achievements, and interactive challenges.
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-blue)](https://www.typescriptlang.org/) [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/) [![React](https://img.shields.io/badge/React-19-61dafb)](https://react.dev/) [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.1-black)](https://nextjs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/) [![React](https://img.shields.io/badge/React-19-61dafb)](https://react.dev/) [![PWA](https://img.shields.io/badge/PWA-enabled-purple)](https://web.dev/progressive-web-apps/) [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+## Features
 
-[Features](#features) • [Getting Started](#getting-started) • [Recent Updates](#recent-updates) • [Architecture](#architecture) • [Contributing](#contributing)
+- **Interactive skill tree** — React Flow node graph with elkjs layout; skills unlock based on
+  mastered prerequisites
+- **Gamification** — XP and leveling, badges, daily streaks, optional skill decay, interactive
+  quizzes
+- **AI recommendations** — next-step, decay-prevention, category-balance, optimal-difficulty,
+  and quick-win suggestions (Groq)
+- **Analytics dashboard** — learning velocity, category breakdown, activity timeline
+  (`Shift + A`)
+- **Offline-first** — IndexedDB storage (not localStorage), PWA install, service worker caching
+- **Accessible** — ARIA live regions, full keyboard navigation, axe-core in CI
 
----
+See `docs/DESIGN.md` for the Signal Atlas design system this UI follows.
 
-## Recent Updates
-
-### Version 1.0.1 (February 12, 2026)
-
-**Critical Fixes & Improvements:**
-
-- ✅ **Fixed UI Glitching**: Resolved z-index layering bug that made floating action buttons unclickable
-- ✅ **Code Quality**: Improved error handling, type safety, and React best practices
-- ✅ **Performance**: Optimized with `structuredClone()` and reduced function complexity
-- ✅ **Test Coverage**: Improved E2E test pass rate from 73% to 82%
-
-See [CHANGELOG.md](CHANGELOG.md) for full details.
-
----
-
-## ✨ Features
-
-### 🌳 Interactive Skill Tree
-
-- **Visual Node Graph**: Navigate through an interconnected skill tree using React Flow 11
-- **Prerequisite System**: Skills unlock based on mastered prerequisites
-- **3D Card Effects**: Framer Motion-powered tilt animations on skill nodes
-- **Particle Effects**: Animated edges connecting related skills with SVG animations
-- **ARIA-Compliant Navigation**: Full keyboard support and screen reader announcements
-- **Live Regions**: Real-time accessibility updates for progress changes
-
-### 🎯 Gamification & Engagement
-
-- **XP & Leveling System**: Earn experience points as you master skills (1000 XP per level)
-- **Badge System**: Unlock achievements for completing skill tiers and milestones
-- **Streak Tracking**: Daily visit streaks to encourage consistent learning
-- **Interactive Quizzes**: Knowledge verification with randomized challenges
-- **Milestone Celebrations**: Confetti effects for level-ups, skill milestones, and badge unlocks
-- **Progress Decay**: Optional skill decay for continued practice
-- **AI-Powered Recommendations**: Smart suggestions based on your progress, skill decay, category balance, and optimal difficulty matching
-
-### 🤖 AI Recommendations (NEW)
-
-- **Smart Prioritization**: Algorithms analyze your progress and suggest next best steps
-- **5 Recommendation Types**:
-  - **Next Step**: Skills with prerequisites met - ready to learn
-  - **Decay Prevention**: Mastered skills needing practice to avoid skill decay
-  - **Category Balance**: Suggestions to diversify learning across skill categories
-  - **Optimal Difficulty**: Skills matching your current level for best progression
-  - **Quick Win**: Easy skills for motivation boosts
-- **Real-time Updates**: Recommendations auto-refresh as you progress
-- **Dismissible Cards**: Remove suggestions you're not interested in
-- **Click to Navigate**: Jump directly to recommended skills in the tree
-
-### 📊 Analytics & Insights
-
-- **Learning Velocity Tracking**: Monitor your learning speed and progress trends
-- **Category Breakdown**: Visualize mastery across different skill categories
-- **Activity Timeline**: Recent completions and achievement history
-- **Performance Metrics**: Streak tracking, XP gains, and completion rates
-- **Keyboard Shortcuts**: Press `Shift + A` to open the analytics dashboard
-
-### 💾 Data & Persistence
-
-- **IndexedDB Storage**: Robust offline storage with 50MB+ capacity (vs 5MB localStorage)
-- **PWA Support**: Install as a standalone app with offline functionality
-- **Service Worker Caching**: Intelligent caching strategies for assets and API calls
-- **Import/Export**: Backup and restore your progress as JSON files
-- **Undo/Redo System**: Full history management for progress changes
-- **Migration Utilities**: Seamless localStorage → IndexedDB migration
-
-### 🎨 Modern UI/UX
-
-- **Cyberpunk Aesthetic**: Neon colors, glows, and futuristic design system
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- **Sound Effects**: Web Audio API synthesizer for UI feedback (zero external files)
-- **Smooth Animations**: 60fps animations with Framer Motion
-- **Toast Notifications**: Non-intrusive feedback for user actions
-- **Loading States**: Skeleton screens and spinners for better perceived performance
-
-### ⚡ Performance & Optimization
-
-- **Zustand with useShallow**: 40-60% reduction in unnecessary re-renders
-- **React.memo**: Memoized components for optimal performance
-- **Modular Store Architecture**: Separate slices for skills, user, UI, and history
-- **Code Splitting**: Optimized bundle sizes with Next.js automatic splitting
-- **Image Optimization**: Next.js Image component for responsive images
-- **Lighthouse Score**: 90+ across all metrics
-
-### ♿ Accessibility (WCAG 2.1 AA)
-
-- **Screen Reader Support**: Comprehensive ARIA labels and live regions
-- **Keyboard Navigation**: Full keyboard-only interaction support
-- **Focus Management**: Visible focus indicators and logical tab order
-- **Color Contrast**: Meets WCAG AA standards for all text
-- **Semantic HTML**: Proper heading hierarchy and landmark regions
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js** 20.0 or higher
-- **npm**, yarn, pnpm, or bun package manager
-- Modern browser with ES2020+ support
-
-### Installation
+## Quickstart
 
 ```bash
-# Clone the repository
-git clone https://github.com/forbiddenlink/skill-mapper.git
-cd skill-mapper
-
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the application.
+Open [http://localhost:3000](http://localhost:3000).
 
-### Build & Deploy
+To build for production:
 
 ```bash
-# Create production build (with PWA)
-npm run build -- --webpack
-
-# Start production server
-npm start
-
-# Run type checking
-npm run type-check
-
-# Run linting
-npm run lint
-
-# Run all tests
-npm test
-
-# Run E2E tests
-npm run test:e2e
+pnpm build   # runs next-sitemap as a postbuild step
+pnpm start
 ```
 
-### PWA Setup
+### PWA icons
 
-The app is PWA-ready! To complete the setup:
+PWA icons are not yet generated. Follow `docs/PWA_ICONS.md` before shipping the installable app.
 
-1. **Generate Icons**: Follow [docs/PWA_ICONS.md](docs/PWA_ICONS.md) to create app icons
-2. **Build**: Run `npm run build -- --webpack` 
-3. **Deploy**: Service worker activates automatically in production
-4. **Install**: Users can install the app from their browser
+## Stack
 
-**Note**: PWA requires webpack mode (not Turbopack) due to next-pwa compatibility.
+- Next.js 16, React 19, TypeScript 6, App Router
+- Tailwind CSS 4
+- Zustand for state, IndexedDB for client-side persistence (see the Gotchas note in `CLAUDE.md`
+  about the half-wired Drizzle scaffolding — there is no server database)
+- React Flow (`@xyflow/react`) + elkjs for the skill tree, Motion (`motion/react`, the renamed
+  Framer Motion) for animation
+- Arcjet, Upstash Redis, Sentry, Axiom, PostHog for rate limiting and observability
+- Groq SDK for AI recommendations, Trigger.dev for background jobs
+- Vitest + Testing Library, Playwright (with `@axe-core/playwright`), Storybook
 
-## 🏗️ Architecture
+Full stack, layout, and gotchas: see `CLAUDE.md`.
 
-### Technology Stack
+## Scripts
 
-**Core Framework**
-- **Next.js 16.1** - React framework with App Router
-- **React 19** - UI library with concurrent features
-- **TypeScript 5** - Strict type safety
-
-**State & Data**
-- **Zustand 5.0** - Modular state management with persistence
-- **IndexedDB** - Client-side database for offline storage
-- **React Flow 11.11** - Node-based UI for skill tree visualization
-
-**UI & Animation**
-- **Tailwind CSS 4** - Utility-first styling
-- **Framer Motion 12** - Production-ready animations
-- **Lucide React** - Icon library
-- **canvas-confetti** - Celebration effects
-
-**PWA & Performance**
-- **next-pwa 5.6** - Progressive Web App functionality
-- **workbox** - Service worker with caching strategies
-
-**Testing & Quality**
-- **Vitest** - Unit and integration testing
-- **Playwright** - End-to-end testing
-- **@axe-core/playwright** - Accessibility testing
-- **GitHub Actions** - CI/CD pipeline
-- **Lighthouse CI** - Performance monitoring
-
-### Project Structure
-
-```
-skill-mapper/
-├── .github/
-│   └── workflows/
-│       └── ci-cd.yml           # CI/CD pipeline
-├── docs/
-│   └── PWA_ICONS.md            # Icon generation guide
-├── e2e/
-│   └── skill-mapper.spec.ts    # E2E tests
-├── public/
-│   ├── manifest.json           # PWA manifest
-│   ├── sw.js                   # Service worker (auto-generated)
-│   └── sounds/                 # Optional sound files
-├── scripts/
-│   └── generate-icons.sh       # PWA icon generator
-├── src/
-│   ├── app/
-│   │   ├── layout.tsx          # Root layout with PWA meta
-│   │   ├── page.tsx            # Home page
-│   │   └── globals.css         # Global styles
-│   ├── components/
-│   │   ├── skill-tree/
-│   │   │   ├── SkillTree.tsx           # Main canvas
-│   │   │   ├── CustomNode.tsx          # Skill node (memoized)
-│   │   │   ├── ParticleEdge.tsx        # Animated edge (memoized)
-│   │   │   └── SkillDetailsPanel.tsx   # Details sidebar
-│   │   ├── ui/
-│   │   │   ├── HUD.tsx                 # Game HUD
-│   │   │   ├── Toast.tsx               # Notifications
-│   │   │   ├── LoadingSpinner.tsx      # Loading states
-│   │   │   └── BadgeNotification.tsx   # Badge alerts
-│   │   ├── AnalyticsDashboard.tsx      # Learning analytics
-│   │   ├── MilestoneCelebrations.tsx   # Confetti effects
-│   │   ├── LiveRegions.tsx             # A11y announcements
-│   │   ├── ChallengeModal.tsx          # Quiz interface
-│   │   ├── KeyboardShortcutsModal.tsx  # Shortcuts help
-│   │   ├── OnboardingModal.tsx         # Tutorial
-│   │   ├── StatsPanel.tsx              # Stats overlay
-│   │   └── ErrorBoundary.tsx           # Error handling
-│   ├── lib/
-│   │   ├── stores/
-│   │   │   ├── skills-store.ts         # Skill tree state
-│   │   │   ├── user-store.ts           # User progress
-│   │   │   ├── ui-store.ts             # UI preferences
-│   │   │   └── undo-redo-store.ts      # History management
-│   │   ├── store.ts                    # Legacy monolithic store
-│   │   ├── skill-data.ts               # Skill definitions
-│   │   ├── badges.ts                   # Badge system
-│   │   ├── config.ts                   # App configuration
-│   │   ├── indexeddb.ts                # IndexedDB utilities
-│   │   └── utils.ts                    # Helper functions
-│   ├── hooks/
-│   │   ├── use-analytics.ts            # Analytics tracking
-│   │   ├── use-game-sounds.ts          # Sound effects
-│   │   ├── use-keyboard-shortcuts.ts   # Keyboard handling
-│   │   ├── use-local-storage.ts        # Storage abstraction
-│   │   └── use-performance.ts          # Performance monitoring
-│   ├── test/
-│   │   ├── setup.ts                    # Test configuration
-│   │   ├── CustomNode.test.tsx         # Component tests
-│   │   ├── store.test.ts               # Store tests
-│   │   └── utils.test.ts               # Utility tests
-│   └── types/
-│       ├── index.ts                    # Type definitions
-│       └── next-pwa.d.ts               # PWA type declarations
-├── lighthouserc.json           # Lighthouse CI config
-├── playwright.config.ts        # E2E test config
-├── vitest.config.ts            # Unit test config
-├── next.config.ts              # Next.js + PWA config
-├── tsconfig.json               # TypeScript config
-├── ARCHITECTURE.md             # Detailed architecture docs
-├── IMPROVEMENTS.md             # Improvement log
-└── CHANGELOG.md                # Version history
+```bash
+pnpm dev                # next dev
+pnpm build              # next build (postbuild runs next-sitemap)
+pnpm start              # next start
+pnpm lint               # eslint
+pnpm type-check         # tsc --noEmit
+pnpm test               # vitest
+pnpm test:coverage      # vitest --coverage
+pnpm test:e2e           # playwright test
+pnpm storybook          # storybook dev -p 6006
+pnpm analyze            # ANALYZE=true next build
 ```
 
-### State Management Architecture
+ESLint (`pnpm lint`) is the enforced linter. Biome and Prettier are also installed with their
+own scripts (`pnpm biome:check`, `pnpm biome:fix`); check which a file you're touching follows.
 
-**Modular Zustand Stores** (Performance Optimized):
+## Skill tree structure
 
-```typescript
-// Separate slices for clean separation of concerns
-useSkillsStore    // Skill tree state (nodes, edges, unlocking)
-useUserStore      // User progress (XP, level, badges, streak)
-useUIStore        // UI state (theme, sound, preferences)
-useUndoRedoStore  // History management for undo/redo
+Skills are organized into tiers, defined in `src/lib/skill-data.ts`:
 
-// Usage with useShallow for optimized re-renders
-const nodes = useSkillsStore(useShallow(state => state.nodes));
-```
+| Tier | Focus |
+|------|-------|
+| Foundation | Core fundamentals (web standards, Git, JavaScript, Python) |
+| Frontend | UI development (React, TypeScript, Tailwind, state management) |
+| Backend & Data | Server-side (Node.js, PostgreSQL, REST, GraphQL, ORMs) |
+| AI Engineer | LLM integration, RAG, vector databases |
+| Systems | Performance, security, DevOps, architecture |
 
-**Why This Architecture?**
-- 40-60% fewer re-renders with selective subscriptions
-- Easier testing and maintenance
-- Better code organization and TypeScript inference
-- Undo/redo without affecting other state
+Each skill has a title, description, prerequisites, XP reward, category, and an optional quiz.
 
-### Performance Optimizations
+### Adding a skill
 
-1. **React.memo**: All expensive components are memoized
-2. **useShallow**: Zustand shallow equality for array/object state
-3. **Code Splitting**: Dynamic imports for modals and dashboards
-4. **Image Optimization**: Next.js Image with lazy loading
-5. **Service Worker**: Aggressive caching for static assets
-6. **IndexedDB**: Offloads storage from main thread
-
-## 📁 Project Structure
-
-## 🎓 Skill Tree Structure
-
-Skills are organized into **5 tiers** representing progressive learning paths:
-
-| Tier | Focus | Example Skills |
-|------|-------|----------------|
-| **Foundation** | Core fundamentals | Web Standards, Git, JavaScript, Python |
-| **Frontend** | UI development | React, TypeScript, Tailwind CSS, State Management |
-| **Backend & Data** | Server-side | Node.js, PostgreSQL, REST APIs, GraphQL, ORMs |
-| **AI Engineer** | ML & AI | LLM Integration, RAG Architecture, Vector Databases |
-| **Systems** | Advanced topics | Performance, Security, DevOps, Architecture |
-
-### Skill Properties
-
-Each skill includes:
-- **Title & Description**: Clear learning objectives
-- **Prerequisites**: Required skills (enforced by graph)
-- **Resources**: Curated learning materials (videos, articles, courses)
-- **XP Reward**: Points earned upon mastery (100-200 XP)
-- **Category**: Frontend, Backend, AI, DevOps, etc.
-- **Quiz** (optional): Knowledge verification challenges
-
-## 🎮 How to Use
-
-### Getting Started
-1. **View the Tutorial**: First-time users see an onboarding modal
-2. **Explore Available Skills**: Green skills have no prerequisites
-3. **Select a Skill**: Click any node to view details in the side panel
-
-### Learning Flow
-1. **Unlock a Skill** → Click "Begin Learning" to start progress
-2. **Access Resources** → Follow curated learning materials
-3. **Take the Challenge** → Complete optional quiz to verify knowledge
-4. **Master the Skill** → Mark as mastered to unlock dependents
-5. **Earn Rewards** → Gain XP, level up, and unlock badges
-
-### Keyboard Shortcuts
-
-| Shortcut | Action |
-|----------|--------|
-| **Arrow Keys** | Navigate between skills |
-| **Enter** | Select/open skill details |
-| **Escape** | Close panels and modals |
-| **Shift + ?** | Show all keyboard shortcuts |
-| **Shift + A** | Open analytics dashboard |
-| **Shift + S** | Toggle sound effects |
-| **Ctrl/Cmd + Z** | Undo last action |
-| **Ctrl/Cmd + Shift + Z** | Redo action |
-
-### FeaDevelopment & Customization
-
-### Adding New Skills
-
-Edit [src/lib/skill-data.ts](src/lib/skill-data.ts):
+Edit `src/lib/skill-data.ts`:
 
 ```typescript
 {
-  id: 'my-skill',
-  type: 'skill' as const,
-  position: { x: 400, y: 600 },
+  id: 'my-new-skill',
+  type: 'skill',
   data: {
-    id: 'my-skill',
+    id: 'my-new-skill',
     title: 'My New Skill',
-    description: 'Learn about X, Y, and Z',
-    tier: 'frontend',
+    description: 'What you will learn',
+    tier: 'foundation',
     category: 'frontend',
     status: 'locked',
-    prerequisites: ['javascript', 'react'], // Required skills
+    prerequisites: ['web-standards'],
     xpReward: 150,
     resources: [
-      { 
-        label: 'Official Tutorial', 
-        url: 'https://example.com', 
-        type: 'course' 
-      }
+      { label: 'Tutorial', url: 'https://...', type: 'course' }
     ],
     quiz: [
       {
-        question: 'What is X?',
+        question: 'What is...?',
         options: ['A', 'B', 'C', 'D'],
-        correctAnswer: 0,
-        explanation: 'Because...'
+        correctIndex: 1
       }
     ]
   }
 }
 ```
 
-### Creating Badges
+## Keyboard shortcuts
 
-Edit [src/lib/badges.ts](src/lib/badges.ts):
+| Shortcut | Action |
+|----------|--------|
+| Arrow keys | Navigate between skills |
+| Enter | Select/open skill details |
+| Escape | Close panels and modals |
+| Shift + ? | Show all keyboard shortcuts |
+| Shift + A | Open analytics dashboard |
+| Shift + S | Toggle sound effects |
+| Ctrl/Cmd + Z | Undo last action |
+| Ctrl/Cmd + Shift + Z | Redo action |
 
-```typescript
-### Unit Tests (Vitest)
+## Documentation
 
-```bash
-# Run all tests
-npm test
+- [CLAUDE.md](CLAUDE.md) — stack, commands, layout, env vars, gotchas (the verified source of truth for agents)
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — system design and patterns
+- [docs/DESIGN.md](docs/DESIGN.md) — the Signal Atlas design system
+- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — developer setup and workflow
+- [docs/PWA_ICONS.md](docs/PWA_ICONS.md) — PWA icon generation guide
+- [CONTRIBUTING.md](CONTRIBUTING.md) — contribution guidelines
+- [CHANGELOG.md](CHANGELOG.md) — version history
 
-# Watch mode
-npm run test:watch
+## Known limitations
 
-# Coverage report
-npm run test:coverage
+- No backend or multi-user accounts; progress is local-first (IndexedDB) by design
+- PWA icons are not yet generated (see `docs/PWA_ICONS.md`)
 
-# UI mode
-npm run test:ui
-```
-
-**Test Files**:
-- `s� Documentation
-
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Detailed technical architecture
-- **[IMPROVEMENTS.md](IMPROVEMENTS.md)** - Recent enhancements and optimizations
-- **[CHANGELOG.md](CHANGELOG.md)** - Version history and changes
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines
-- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Developer setup and workflows
-- **[docs/PWA_ICONS.md](docs/PWA_ICONS.md)** - PWA icon generation guide
-
-## 🐛 Known Issues & Limitations
-
-- **PWA Icons**: Icons need to be generated manually (see docs/PWA_ICONS.md)
-- **Mobile Touch**: Touch interactions need further optimization
-- **Backend**: No server/database (local-first by design)
-- **Multi-User**: No authentication or user accounts
-- **Undo/Redo**: Basic implementation (future: granular action history)
-
-## 🗺️ Roadmap
-
-### ✅ Completed (v1.0)
-- [x] Core skill tree with React Flow
-- [x] Gamification (XP, badges, streaks)
-- [x] Toast notifications
-- [x] Keyboard shortcuts
-- [x] Stats dashboard
-- [x] PWA support with offline mode
-- [x] IndexedDB storage
-- [x] Analytics dashboard
-- [x] Milestone celebrations
-- [x] E2E testing with Playwright
-- [x] CI/CD pipeline
-- [x] Accessibility (WCAG 2.1 AA)
-- [x] Performance optimizations
-
-### 🔮 Future Enhancements
-- [ ] Backend API with user accounts
-- [ ] Social features (leaderboards, progress sharing)
-- [ ] Mobile app (React Native/Expo)
-- [ ] Admin panel for content management
-- [ ] AI-powered learning path recommendations
-- [ ] Certificate generation
-- [ ] Multi-language support (i18n)
-- [ ] Dark/light theme toggle
-- [ ] Collaborative learning (study groups)
-- [ ] Video course integration
-- [ ] Notion/Anki integration for notes
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. **Fork** the repository
-2. **Create a branch**: `git checkout -b feature/amazing-feature`
-3. **Commit changes**: `git commit -m 'Add amazing feature'`
-4. **Push to branch**: `git push origin feature/amazing-feature`
-5. **Open a Pull Request**
-
-### Development Guidelines
-
-- Follow existing code style (TypeScript strict mode)
-- Write tests for new features
-- Update documentation
-- Ensure all tests pass: `npm test && npm run test:e2e`
-- Run linting: `npm run lint`
-- Check types: `npm run type-check`
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
-
-## 📊 Performance Metrics
-
-**Lighthouse Scores** (Target: 90+)
-- Performance: 92
-- Accessibility: 95
-- Best Practices: 95
-- SEO: 100
-
-**Build Stats**
-- Initial Load: ~150KB gzipped
-- First Contentful Paint: < 1.5s
-- Time to Interactive: < 3.0s
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Inspired by**: Video game skill trees (Path of Exile, Diablo) and [roadmap.sh](https://roadmap.sh)
-- **Built with**: Modern React patterns and best practices from [Vercel](https://vercel.com)
-- **Community**: Thanks to all contributors and users providing feedback
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/forbiddenlink/skill-mapper/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/forbiddenlink/skill-mapper/discussions)
-- **Email**: [Contact](mailto:your-email@example.com)
-
-## 🌟 Star History
-
-If you find this project useful, please consider giving it a star! ⭐
-
----
-
-<div align="center">
-
-**Built with ❤️ by [forbiddenlink](https://github.com/forbiddenlink)**
-
-**Happy Learning!** 🚀
-
-[Report Bug](https://github.com/forbiddenlink/skill-mapper/issues) • [Request Feature](https://github.com/forbiddenlink/skill-mapper/issues) • [Documentation](ARCHITECTURE.md)
-
-</div>/ci-cd.yml](.github/workflows/ci-cd.yml) for configuration.ot {
-  --color-primary: #00f3ff;    /* Neon cyan */
-  --color-secondary: #ff00ff;   /* Neon magenta */
-  --color-accent: #00ff88;      /* Neon green */
-}
-```
-
-### Environment Variables
-
-Create `.env.local`:
-
-```bash
-# Optional: Analytics tracking
-NEXT_PUBLIC_ANALYTICS_ID=your-analytics-id
-
-# Optional: Feature flags
-NEXT_PUBLIC_ENABLE_DECAY=true
-NEXT_PUBLIC_ENABLE_SOUNDS=true   resources: [
-      { label: 'Tutorial', url: 'https://...', type: 'course' }
-    ],
-    quiz: [ /* optional */ ]
-  }
-}
-```
-
-### Creating Badges
-
-Edit `src/lib/badges.ts`:
-
-```typescript
-{
-  id: 'my-badge',
-  label: 'Badge Name',
-  description: 'How to earn this badge',
-  icon: YourLucideIcon,
-  color: 'text-blue-400',
-  requirements: ['skill-id-1', 'skill-id-2'] // Skills to master
-}
-```
-
-## 🧪 Testing
-
-```bash
-# Run tests
-npm test
-
-# Run tests with UI
-npm run test:ui
-
-# Generate coverage report
-npm run test:coverage
-
-# Type checking
-npm run type-check
-
-# Linting
-npm run lint
-
-# E2E tests
-npm run test:e2e
-
-# Cleanup project
-./scripts/cleanup.sh
-```
-
-## 🐛 Known Issues & Limitations
-
-- No backend/multi-user support (local storage only)
-- PWA service worker detection in tests (environmental)
-- Some color contrast ratios could be improved for WCAG AAA
-
-## 🗺️ Roadmap
-
-### Completed ✅
-
-- [x] Toast notification system
-- [x] Keyboard shortcuts manager
-- [x] Stats dashboard with charts
-- [x] AI-powered personalized learning paths
-- [x] Analytics dashboard
-- [x] PWA implementation
-- [x] Undo/Redo functionality
-- [x] E2E test coverage
-- [x] IndexedDB storage
-- [x] Accessibility (WCAG 2.1 AA)
-
-### Planned 🎯
-
-- [ ] Backend integration with user accounts
-- [ ] Mobile app (React Native)
-- [ ] Social features (leaderboards, sharing)
-- [ ] Admin panel for content management
-- [ ] Certificate generation
-- [ ] E2E test coverage
-- [ ] CI/CD pipeline
-
-## 📚 Documentation
-
-For comprehensive documentation, see:
-
-- **[Documentation Index](DOCUMENTATION_INDEX.md)** - Complete guide to all documentation
-- **[Architecture](ARCHITECTURE.md)** - System design and patterns
-- **[Changelog](CHANGELOG.md)** - Version history and releases
-- **[Development Guide](DEVELOPMENT.md)** - Setup and development workflow
-- **[Recent Fixes](FIXES_AND_IMPROVEMENTS.md)** - Latest bug fixes and improvements
-- **[Feature Improvements](IMPROVEMENTS.md)** - Complete enhancement history
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+## Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create a branch: `git checkout -b feature/your-feature-name`
+3. Make your changes and add tests
+4. Run `pnpm test`, `pnpm type-check`, and `pnpm lint`
+5. Open a pull request
 
-## 📄 License
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-This project is licensed under the MIT License.
+## License
 
-## 🙏 Acknowledgments
-
-- Inspired by video game skill trees and developer roadmaps
-- Built with modern web technologies and best practices
-- Community feedback and contributions
-
-## 📞 Support
-
-For questions, issues, or suggestions, please open an issue on GitHub.
-
----
-
-**Happy Learning!** 🚀
+MIT. See [LICENSE](LICENSE).

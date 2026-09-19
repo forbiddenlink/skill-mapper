@@ -21,7 +21,7 @@ Welcome to the Skill Mapper development guide! This document will help you get s
 Before you begin, ensure you have the following installed:
 
 - **Node.js** 20+ ([Download](https://nodejs.org/))
-- **npm** 9+ (comes with Node.js)
+- **pnpm** (`corepack enable` or `npm install -g pnpm`)
 - **Git** ([Download](https://git-scm.com/))
 - A code editor (we recommend [VS Code](https://code.visualstudio.com/))
 
@@ -46,13 +46,13 @@ cd skill-mapper
 ### 2. Install Dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### 3. Run the Development Server
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -60,13 +60,13 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ### 4. Run Type Checking
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
 ### 5. Run Tests
 
 ```bash
-npm test
+pnpm test
 ```
 
 ---
@@ -104,9 +104,9 @@ skill-mapper/
 │       ├── utils.test.ts
 │       └── store.test.ts
 ├── public/                     # Static assets
-├── ARCHITECTURE.md             # Architecture documentation
+├── docs/ARCHITECTURE.md        # Architecture documentation
+├── docs/DEVELOPMENT.md         # This file
 ├── CONTRIBUTING.md             # Contribution guidelines
-├── DEVELOPMENT.md              # This file
 └── ...config files
 
 ```
@@ -136,9 +136,9 @@ skill-mapper/
 
 3. **Test Your Changes**
    ```bash
-   npm run type-check
-   npm test
-   npm run lint
+   pnpm run type-check
+   pnpm test
+   pnpm run lint
    ```
 
 4. **Commit Your Changes**
@@ -250,9 +250,9 @@ We use **Vitest** for unit testing.
 
 **Running Tests:**
 ```bash
-npm test              # Run tests in watch mode
-npm run test:ui       # Run tests with UI
-npm run test:coverage # Generate coverage report
+pnpm test              # Run tests in watch mode
+pnpm run test:ui       # Run tests with UI
+pnpm run test:coverage # Generate coverage report
 ```
 
 **Writing Tests:**
@@ -369,9 +369,9 @@ export default function MyComponent() {
 
 ### Common Issues
 
-**Issue: TypeScript errors after `npm install`**
+**Issue: TypeScript errors after `pnpm install`**
 ```bash
-npm run type-check
+pnpm run type-check
 # Fix any type errors shown
 ```
 
@@ -379,8 +379,8 @@ npm run type-check
 ```bash
 # Clear cache and reinstall
 rm -rf node_modules
-npm install
-npm test
+pnpm install
+pnpm test
 ```
 
 **Issue: Port 3000 already in use**
@@ -388,7 +388,7 @@ npm test
 # Kill process on port 3000
 lsof -ti:3000 | xargs kill -9
 # Or use different port
-PORT=3001 npm run dev
+PORT=3001 pnpm run dev
 ```
 
 **Issue: Hot reload not working**
@@ -403,9 +403,9 @@ PORT=3001 npm run dev
 ### Before Submitting a PR
 
 - [ ] Code follows the style guide
-- [ ] All tests pass (`npm test`)
-- [ ] Type checking passes (`npm run type-check`)
-- [ ] Linting passes (`npm run lint`)
+- [ ] All tests pass (`pnpm test`)
+- [ ] Type checking passes (`pnpm run type-check`)
+- [ ] Linting passes (`pnpm run lint`)
 - [ ] Documentation is updated
 - [ ] Commit messages follow convention
 - [ ] PR description explains changes

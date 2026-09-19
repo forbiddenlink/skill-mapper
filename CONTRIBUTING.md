@@ -8,7 +8,7 @@ Thank you for considering contributing to Skill Mapper! This document provides g
 2. Clone your fork: `git clone https://github.com/your-username/skill-mapper.git`
 3. Create a branch: `git checkout -b feature/your-feature-name`
 4. Make your changes
-5. Test your changes: `npm test`
+5. Test your changes: `pnpm test`
 6. Commit your changes: `git commit -m 'Add some feature'`
 7. Push to your branch: `git push origin feature/your-feature-name`
 8. Open a Pull Request
@@ -16,23 +16,24 @@ Thank you for considering contributing to Skill Mapper! This document provides g
 ## Development Setup
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 ## Code Style
 
-- We use Prettier for code formatting
-- Run `npm run lint` before committing
+- ESLint (`pnpm lint`), Biome, and Prettier are all installed with their own scripts; there is
+  no single enforced formatter today, so check which a file you're touching actually follows
+- Run `pnpm lint` before committing
 - Follow TypeScript best practices
 - Write meaningful commit messages
 
 ## Testing
 
 - Write tests for new features
-- Ensure all tests pass: `npm test`
-- Run tests with UI: `npm run test:ui`
-- Check code coverage: `npm run test:coverage`
+- Ensure all tests pass: `pnpm test`
+- Run tests with UI: `pnpm run test:ui`
+- Check code coverage: `pnpm run test:coverage`
 
 ## Pull Request Process
 

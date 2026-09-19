@@ -70,7 +70,7 @@ pnpm analyze            # ANALYZE=true next build
 - Design system "Signal Atlas": semantic Tailwind tokens in
   `src/app/globals.css` (`signal` / `mastery` / `progress` / `reward` /
   `decay` naming). Avoid legacy neon/glassmorphism styling. Read
-  `DESIGN.md` and `.impeccable.md` before UI work if present.
+  `docs/DESIGN.md` and `.impeccable.md` before UI work if present.
 - Prefer Server Components; add `"use client"` only when needed.
 
 ## Env vars

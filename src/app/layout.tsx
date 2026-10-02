@@ -25,16 +25,18 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const siteUrl = env.NEXT_PUBLIC_APP_URL ?? "https://skill-mapper-six.vercel.app";
+
 export const metadata: Metadata = {
   title: "Skill Mapper - Gamified Learning Platform for Interactive Skill Development",
   description: "Master new skills with Skill Mapper, an interactive gamified learning platform featuring visual skill trees, progression tracking, achievements, XP rewards, and personalized learning paths.",
   applicationName: "Skill Mapper",
   keywords: ["learning", "skills", "gamification", "education", "progress tracking", "skill tree", "interactive learning", "XP system", "achievements"],
   authors: [{ name: "Skill Mapper Team" }],
-  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL ?? "https://skill-mapper.vercel.app"),
+  metadataBase: new URL(siteUrl),
   manifest: "/manifest.json",
   alternates: {
-    canonical: env.NEXT_PUBLIC_APP_URL ?? "https://skill-mapper.vercel.app",
+    canonical: siteUrl,
   },
   icons: {
     icon: [
@@ -58,10 +60,10 @@ export const metadata: Metadata = {
     siteName: "Skill Mapper",
     title: "Skill Mapper - Gamified Learning Platform for Interactive Skill Development",
     description: "Master new skills with Skill Mapper, an interactive gamified learning platform featuring visual skill trees, progression tracking, achievements, XP rewards, and personalized learning paths.",
-    url: "https://skill-mapper.vercel.app",
+    url: siteUrl,
     images: [
       {
-        url: "https://skill-mapper.vercel.app/og-image.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Skill Mapper - Interactive skill tree visualization with gamified learning experience",
@@ -72,7 +74,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Skill Mapper - Gamified Learning Platform",
     description: "Master new skills with interactive skill trees, XP rewards, achievements, and personalized learning paths.",
-    images: ["https://skill-mapper.vercel.app/og-image.png"],
+    images: ["/og-image.png"],
   },
 };
 

@@ -127,7 +127,7 @@ export default function ShareProgressCard() {
 
     ctx.fillStyle = '#64748b';
     ctx.font = '400 16px system-ui, sans-serif';
-    ctx.fillText('skill-mapper.vercel.app', 72, 560);
+    ctx.fillText('skill-mapper-six.vercel.app', 72, 560);
 
     return canvas;
   };

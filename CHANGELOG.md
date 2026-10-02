@@ -5,6 +5,17 @@ All notable changes to the Skill Mapper project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.5](https://github.com/forbiddenlink/skill-mapper/compare/v1.1.4...v1.1.5) (2026-10-02)
+
+
+### Bug Fixes
+
+* **deps:** apply override fix plan ([#117](https://github.com/forbiddenlink/skill-mapper/issues/117)) ([acf8452](https://github.com/forbiddenlink/skill-mapper/commit/acf8452fd51c417a4f3263df52a4630972ad55b8))
+* **deps:** apply override fix plan (round 2) ([#118](https://github.com/forbiddenlink/skill-mapper/issues/118)) ([942d127](https://github.com/forbiddenlink/skill-mapper/commit/942d127d3fe7aa795ab97e47fd0759737b444165))
+* point canonical and share URLs at the domain the app is served on ([#116](https://github.com/forbiddenlink/skill-mapper/issues/116)) ([2a8e3df](https://github.com/forbiddenlink/skill-mapper/commit/2a8e3df9576a42988cb8e175833df47f2619d02e))
+* remove stock favicon.ico shadowing the real icon ([#114](https://github.com/forbiddenlink/skill-mapper/issues/114)) ([ad36088](https://github.com/forbiddenlink/skill-mapper/commit/ad3608829637f866ce953c2089075ebcdcb338b3))
+* replace JPEG icons saved as PNG with renders of the real logo ([#115](https://github.com/forbiddenlink/skill-mapper/issues/115)) ([d11a471](https://github.com/forbiddenlink/skill-mapper/commit/d11a471abbb6f6e8c655b597536fec8af8100c6b))
+
 ## [1.1.4](https://github.com/forbiddenlink/skill-mapper/compare/v1.1.3...v1.1.4) (2026-09-19)
 
 

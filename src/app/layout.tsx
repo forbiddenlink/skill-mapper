@@ -94,7 +94,6 @@ export default function RootLayout({
       <head>
         <meta charSet="utf-8" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body
         className={`${instrument.variable} ${bricolage.variable} ${plexMono.variable} antialiased bg-canvas text-foreground`}

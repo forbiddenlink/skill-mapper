@@ -15,13 +15,21 @@ const ratelimit =
         limiter: Ratelimit.slidingWindow(20, '10 s'),
         analytics: true,
         prefix: 'rl',
+        // Default 5s; a timeout resolves success:true, so keep it short and fail closed below.
+        timeout: 1500,
       })
     : null;
 
 export async function proxy(request: NextRequest) {
   if (ratelimit) {
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '127.0.0.1';
-    const { success } = await ratelimit.limit(ip);
+    const { success, reason } = await ratelimit.limit(ip);
+    if (reason === 'timeout') {
+      return NextResponse.json(
+        { error: 'Service temporarily unavailable' },
+        { status: 503, headers: { 'Retry-After': '5' } }
+      );
+    }
     if (!success) return NextResponse.json({ error: 'Too Many Requests' }, { status: 429 });
   }
   const decision = await aj.protect(request);

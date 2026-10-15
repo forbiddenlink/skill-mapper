@@ -9,6 +9,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     // Rate limit: 10 requests per minute per IP
     const rateLimit = await checkRateLimit(request);
+    if (rateLimit.unavailable) {
+      return NextResponse.json(
+        { error: 'Service temporarily unavailable. Please retry shortly.' },
+        { status: 503, headers: { 'Retry-After': '5' } }
+      );
+    }
     if (!rateLimit.success) {
       return NextResponse.json(
         { error: 'Too many requests. Please wait and try again.' },

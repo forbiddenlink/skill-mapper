@@ -16,6 +16,9 @@ const feedbackRatelimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(10, '60 s'),
   analytics: true,
   prefix: 'ratelimit:feedback',
+  // Default is 5s and a timeout resolves { success: true, reason: 'timeout' } instead of
+  // throwing. Keep it short and report 'unavailable' below.
+  timeout: 1500,
 });
 
 function getClientIp(request: Request): string {
@@ -31,9 +34,13 @@ function getClientIp(request: Request): string {
 
 export async function checkRateLimit(
   request: Request
-): Promise<{ success: boolean; resetInSeconds?: number }> {
+): Promise<{ success: boolean; resetInSeconds?: number; unavailable?: boolean }> {
   const ip = getClientIp(request);
   const result = await feedbackRatelimit.limit(ip);
+
+  if (result.reason === 'timeout') {
+    return { success: false, unavailable: true };
+  }
 
   if (!result.success) {
     return {

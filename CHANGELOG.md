@@ -5,6 +5,14 @@ All notable changes to the Skill Mapper project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.8](https://github.com/forbiddenlink/skill-mapper/compare/v1.1.7...v1.1.8) (2026-10-25)
+
+
+### Bug Fixes
+
+* **deps:** bump storybook, @sentry/nextjs, zod, vitest to patched releases ([#136](https://github.com/forbiddenlink/skill-mapper/issues/136)) ([46fdc9a](https://github.com/forbiddenlink/skill-mapper/commit/46fdc9a037e47588f6d3f1c19fd22f7ef676f3b1))
+* **deps:** upgrade next to 16.4.x for GHSA-2464-fhr4-w9xw ([#130](https://github.com/forbiddenlink/skill-mapper/issues/130)) ([af874c1](https://github.com/forbiddenlink/skill-mapper/commit/af874c1e6f6d2fd6340e6621f40a3b2a074d2671))
+
 ## [1.1.7](https://github.com/forbiddenlink/skill-mapper/compare/v1.1.6...v1.1.7) (2026-10-20)
 
 

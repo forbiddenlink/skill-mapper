@@ -29,7 +29,7 @@
     "@formkit/auto-animate": "^0.10.0",
     "@sentry/nextjs": "^10.75.2",
     "@t3-oss/env-nextjs": "0.13.11",
-    "@trigger.dev/sdk": "^4.5.16",
+    "@trigger.dev/sdk": "^4.8.1",
     "@types/canvas-confetti": "^1.9.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.3",
@@ -77,7 +77,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
-    "@trigger.dev/build": "^4.5.16",
+    "@trigger.dev/build": "^4.8.1",
     "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -105,7 +105,7 @@
     "overrides": {
       "@eslint/eslintrc>ajv": "^6.14.0",
       "@opentelemetry/core": ">=2.8.0 <3",
-      "@trigger.dev/core": ">=4.5.6 <5",
+      "@trigger.dev/core": ">=4.8.1 <5",
       "ajv": ">=8.18.0 <9.0.0",
       "brace-expansion@1": ">=1.1.18 <6.0.0",
       "brace-expansion@2": ">=2.1.4 <6.0.0",
@@ -138,7 +138,8 @@
       "vite": ">=8.0.16 <9.0.0",
       "ws@7": ">=8.21.0 <9",
       "ws@8": ">=8.21.0 <9",
-      "source-map-js@1": ">=1.2.2 <2.0.0"
+      "source-map-js@1": ">=1.2.2 <2.0.0",
+      "deepmerge-ts": ">=8.0.0 <9"
     }
   }
 }

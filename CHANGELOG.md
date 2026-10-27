@@ -5,6 +5,14 @@ All notable changes to the Skill Mapper project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.9](https://github.com/forbiddenlink/skill-mapper/compare/v1.1.8...v1.1.9) (2026-10-27)
+
+
+### Bug Fixes
+
+* **deps:** move trigger.dev to 4.8.1 so zod resolves to 4.6.7 ([#141](https://github.com/forbiddenlink/skill-mapper/issues/141)) ([01807e8](https://github.com/forbiddenlink/skill-mapper/commit/01807e893b55a3ad08a10ec65cb1079c9b2ddc62))
+* **deps:** raise undici, fast-uri, serialize-javascript override floors ([#139](https://github.com/forbiddenlink/skill-mapper/issues/139)) ([e526cb4](https://github.com/forbiddenlink/skill-mapper/commit/e526cb414cc6ebf9dc3c299bc16b3d3f2bd927a5))
+
 ## [1.1.8](https://github.com/forbiddenlink/skill-mapper/compare/v1.1.7...v1.1.8) (2026-10-25)
 
 

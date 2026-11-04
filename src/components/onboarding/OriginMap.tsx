@@ -16,11 +16,13 @@ const TIERS: { id: SkillTier; label: string }[] = [
     { id: 'systems', label: 'Systems' },
 ];
 
-const W = 1000;
+const W = 1180;
 const ROW = 25;
 const TOP = 46;
 const COL_W = W / TIERS.length;
 const NODE_X = 20;
+/** Advance width of IBM Plex Mono at 10.5px (0.6em), used for the label knockout. */
+const CHAR_W = 6.3;
 
 const SKILLS = getRawSkillNodes();
 
@@ -59,7 +61,7 @@ export function OriginMap({ unlocks }: { unlocks: string[] }) {
     return (
         <svg
             viewBox={`0 0 ${W} ${H}`}
-            className="block h-auto w-full min-w-[820px]"
+            className="block h-auto w-full min-w-[900px]"
             role="img"
             aria-label={`Skill graph of ${SKILLS.length} skills in ${TIERS.length} tiers. ${masteredCount} would start mastered.`}
         >
@@ -127,6 +129,13 @@ export function OriginMap({ unlocks }: { unlocks: string[] }) {
                             }
                             strokeWidth={isReady ? 2 : 1.5}
                             style={{ transition: 'fill 200ms, stroke 200ms' }}
+                        />
+                        <rect
+                            x={p.x + 8}
+                            y={p.y - 8}
+                            width={s.data.title.length * CHAR_W + 8}
+                            height={16}
+                            fill="var(--canvas)"
                         />
                         <text
                             x={p.x + 12}

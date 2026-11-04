@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGameStore } from '@/lib/store';
 import { Sparkles, Code, Server, Layers } from 'lucide-react';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';
+import { OriginMap, SKILL_COUNT, countMastered } from '@/components/onboarding/OriginMap';
 
 // type Role = 'beginner' | 'frontend' | 'backend' | 'fullstack'; // Removed unused type
 
@@ -46,6 +47,12 @@ const ROLES = [
 export default function OnboardingModal() {
     const { unlockBatch, nodes } = useGameStore();
     const [isOpen, setIsOpen] = useState(false);
+    const [previewId, setPreviewId] = useState('frontend');
+    // The dialog focuses its first button on open; that must not replace the resting preview.
+    const hasInteracted = useRef(false);
+    const previewRole = (id: string) => {
+        if (hasInteracted.current) setPreviewId(id);
+    };
     const closeModal = () => setIsOpen(false);
     const dialogRef = useDialogA11y<HTMLDivElement>(isOpen, closeModal);
 
@@ -73,6 +80,8 @@ export default function OnboardingModal() {
         }
     };
 
+    const preview = ROLES.find((r) => r.id === previewId) ?? ROLES[0]!;
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -80,59 +89,89 @@ export default function OnboardingModal() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+                    className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-canvas/85 p-3 backdrop-blur-sm md:p-6"
                 >
                     <motion.div
-                        initial={{ scale: 0.96, y: 12 }}
-                        animate={{ scale: 1, y: 0 }}
+                        initial={{ y: 12 }}
+                        animate={{ y: 0 }}
                         ref={dialogRef}
                         role="dialog"
                         aria-modal="true"
                         aria-labelledby="onboarding-title"
                         aria-describedby="onboarding-description"
                         tabIndex={-1}
-                        className="modal-shell relative w-full max-w-4xl overflow-hidden p-5 md:p-8"
+                        onKeyDown={() => { hasInteracted.current = true; }}
+                        className="modal-shell relative my-auto w-full max-w-6xl overflow-hidden p-5 md:p-8"
                     >
-                        {/* Signal rule */}
-                        <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-signal via-signal/30 to-mastery/80" />
-
-                        <div className="text-center mb-8">
-                            <h2 id="onboarding-title" className="font-display text-3xl font-semibold text-foreground md:text-[40px] md:leading-[44px]">
-                                Skill Mapper
-                            </h2>
-                            <p id="onboarding-description" className="mt-2 text-base text-text-muted md:text-lg">
-                                Pick a starting role. We’ll unlock matching skills so your first session has a clear next node.
+                        <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                            <div>
+                                <h2 id="onboarding-title" className="font-display text-4xl font-semibold text-foreground md:text-6xl md:leading-[1]">
+                                    Skill Mapper
+                                </h2>
+                                <p id="onboarding-description" className="mt-3 max-w-xl text-base text-text-muted md:text-lg">
+                                    Pick a starting role. We’ll unlock matching skills so your first session has a clear next node.
+                                </p>
+                            </div>
+                            <p
+                                className="font-mono text-xs uppercase tracking-[0.14em] text-text-muted md:text-right"
+                                aria-live="polite"
+                            >
+                                <span className="block text-foreground">{preview.title}</span>
+                                {countMastered(preview.unlocks)} of {SKILL_COUNT} skills start mastered
                             </p>
-                        </div>
+                        </header>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {ROLES.map((role) => (
+                        {/* DOM order keeps the first focus on a role button; the map sits above visually. */}
+                        <div className="flex flex-col">
+                        <div className="order-2 mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                            {ROLES.map((role, i) => (
                                 <button
                                     key={role.id}
                                     type="button"
                                     onClick={() => handleSelect(role.id)}
-                                    className="panel-base group relative flex items-start gap-4 p-5 text-left hover:border-signal/45"
+                                    onMouseEnter={() => { hasInteracted.current = true; setPreviewId(role.id); }}
+                                    onFocus={() => previewRole(role.id)}
+                                    className={`panel-base group relative flex flex-col gap-2 p-4 text-left hover:border-signal/60 ${
+                                        previewId === role.id ? 'border-signal/70' : ''
+                                    }`}
                                 >
-                                    <div className="grid h-11 w-11 place-items-center rounded-[10px] border border-signal/25 bg-signal/10 text-signal transition-colors group-hover:border-signal/55">
-                                        <role.icon size={22} />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-display mb-1 text-xl font-semibold text-foreground">
-                                            {role.title}
-                                        </h3>
-                                        <p className="text-sm leading-relaxed text-text-muted">
-                                            {role.description}
-                                        </p>
-                                    </div>
+                                    <span className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.14em] text-text-muted">
+                                        <span>{`0${i + 1}`}</span>
+                                        <role.icon size={18} className="text-signal" aria-hidden />
+                                    </span>
+                                    <h3 className="font-display text-xl font-semibold text-foreground">
+                                        {role.title}
+                                    </h3>
+                                    <p className="text-sm leading-relaxed text-text-muted">
+                                        {role.description}
+                                    </p>
                                 </button>
                             ))}
                         </div>
 
-                        <div className="mt-8 text-center">
+                        <div className="order-1 mt-6 rounded-[10px] border border-border-muted bg-canvas/60 px-3 pb-3 pt-2 md:px-5">
+                            <div
+                                role="region"
+                                aria-label="Skill graph preview"
+                                tabIndex={0}
+                                className="overflow-x-auto rounded-[6px]"
+                            >
+                                <OriginMap unlocks={preview.unlocks} />
+                            </div>
+                            <p className="mt-2 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[11px] uppercase tracking-[0.12em] text-text-muted">
+                                <span className="inline-flex items-center gap-2"><i aria-hidden className="inline-block h-2.5 w-2.5 rounded-full bg-mastery" />Mastered</span>
+                                <span className="inline-flex items-center gap-2"><i aria-hidden className="inline-block h-2.5 w-2.5 rounded-full border-2 border-signal" />Ready to learn</span>
+                                <span className="inline-flex items-center gap-2"><i aria-hidden className="inline-block h-2.5 w-2.5 rounded-full border border-slate-700" />Locked</span>
+                            </p>
+                        </div>
+
+                        </div>
+
+                        <div className="mt-5 text-center">
                             <button
                                 type="button"
                                 onClick={closeModal}
-                                className="text-sm text-text-muted hover:text-white"
+                                className="text-sm text-text-muted hover:text-foreground"
                             >
                                 Skip and start from scratch
                             </button>

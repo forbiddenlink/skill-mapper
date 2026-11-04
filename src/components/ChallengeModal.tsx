@@ -144,7 +144,7 @@ export default function ChallengeModal({
                                     <AlertTriangle size={40} />
                                 </motion.div>
                                 <h3 className="text-2xl font-bold text-white font-display mb-2">ACCESS DENIED</h3>
-                                <p className="text-gray-400 mb-6">Incorrect response detected.</p>
+                                <p className="text-text-muted mb-6">Incorrect response detected.</p>
                                 <button
                                     type="button"
                                     onClick={() => {

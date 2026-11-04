@@ -34,7 +34,7 @@ Legacy class aliases (`neon-cyan`, `plasma-pink`, `electric-green`) map to signa
 
 | Role | Family | Token |
 |------|--------|-------|
-| Display | Bricolage Grotesque | `--font-display` |
+| Display | Familjen Grotesk | `--font-display` |
 | UI / body | Instrument Sans | `--font-sans` |
 | Data | IBM Plex Mono | `--font-mono` |
 

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Familjen_Grotesk, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
 import { PostHogProvider } from "@/lib/posthog";
 import { env } from "@/env";
 import "./globals.css";
@@ -12,8 +12,8 @@ const instrument = Instrument_Sans({
   display: "swap",
 });
 
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+const familjen = Familjen_Grotesk({
+  variable: "--font-familjen",
   subsets: ["latin"],
   display: "swap",
 });
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1a2e38",
+  themeColor: "#1c1530",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -98,7 +98,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body
-        className={`${instrument.variable} ${bricolage.variable} ${plexMono.variable} antialiased bg-canvas text-foreground`}
+        className={`${instrument.variable} ${familjen.variable} ${plexMono.variable} antialiased bg-canvas text-foreground`}
       >
         <PostHogProvider>{children}</PostHogProvider>
         <Analytics />

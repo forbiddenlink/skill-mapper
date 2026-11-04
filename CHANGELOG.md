@@ -5,6 +5,13 @@ All notable changes to the Skill Mapper project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0](https://github.com/forbiddenlink/skill-mapper/compare/v1.1.9...v1.2.0) (2026-11-04)
+
+
+### Features
+
+* **ui:** onboarding hero as the real skill graph, violet palette ([#145](https://github.com/forbiddenlink/skill-mapper/issues/145)) ([c1bfa40](https://github.com/forbiddenlink/skill-mapper/commit/c1bfa406e7bac2029676b25e7370ef0336411597))
+
 ## [1.1.9](https://github.com/forbiddenlink/skill-mapper/compare/v1.1.8...v1.1.9) (2026-10-27)
 
 

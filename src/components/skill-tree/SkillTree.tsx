@@ -392,7 +392,7 @@ function SkillTreeInner() {
                         maxZoom={2}
                         defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
                     >
-                        <Background gap={56} color="rgba(148,163,184,0.12)" className="opacity-40" />
+                        <Background gap={56} color="rgba(176,168,208,0.12)" className="opacity-40" />
                         <Controls
                             className="!bottom-20 !left-3 !rounded-[10px] !border !border-white/12 !bg-surface-2 !fill-slate-200 sm:!bottom-4 sm:!left-4"
                             aria-label="Skill tree navigation controls"
@@ -410,7 +410,7 @@ function SkillTreeInner() {
                                     default: return 'oklch(0.38 0.03 255)';
                                 }
                             }}
-                            maskColor="rgba(18, 24, 32, 0.72)"
+                            maskColor="rgba(19, 16, 29, 0.72)"
                             className="!hidden !rounded-[10px] !border !border-white/12 !bg-surface-1 md:!block"
                             ariaLabel="Skill tree minimap overview"
                         />

@@ -140,13 +140,13 @@ export default function RecommendedSkills() {
                       </p>
                       
                       <div className="flex items-center gap-2 text-xs">
-                        <span className="text-gray-500">{skill.data.category}</span>
-                        <span className="text-gray-600">•</span>
-                        <span className="text-gray-500">{skill.data.xpReward} XP</span>
+                        <span className="text-text-muted">{skill.data.category}</span>
+                        <span className="text-text-muted">•</span>
+                        <span className="text-text-muted">{skill.data.xpReward} XP</span>
                         {isDecay && skill.data.lastPracticedAt && (
                           <>
-                            <span className="text-gray-600">•</span>
-                            <span className="text-yellow-400/60">
+                            <span className="text-text-muted">•</span>
+                            <span className="text-reward/60">
                               {/* eslint-disable-next-line react-hooks/purity -- Date.now() is intentional here: display-only relative time that re-reads on each render is correct behavior */}
                               {Math.floor((Date.now() - skill.data.lastPracticedAt) / (1000 * 60 * 60 * 24))} days ago
                             </span>

@@ -112,7 +112,7 @@ export default function DemoLoop() {
             <g key={`${e.from}-${e.to}`}>
               <line
                 x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                stroke={active ? 'url(#demo-edge)' : 'rgba(148,163,184,0.22)'}
+                stroke={active ? 'url(#demo-edge)' : 'rgba(176,168,208,0.22)'}
                 strokeWidth={active ? 0.7 : 0.4}
                 strokeLinecap="round"
                 vectorEffect="non-scaling-stroke"

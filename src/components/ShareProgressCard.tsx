@@ -64,16 +64,16 @@ export default function ShareProgressCard() {
     canvas.width = w;
     canvas.height = h;
 
-    ctx.fillStyle = '#121820';
+    ctx.fillStyle = '#151022';
     ctx.fillRect(0, 0, w, h);
 
     const grad = ctx.createRadialGradient(200, 80, 40, 200, 80, 420);
-    grad.addColorStop(0, 'rgba(90, 200, 190, 0.22)');
+    grad.addColorStop(0, 'rgba(176, 147, 240, 0.22)');
     grad.addColorStop(1, 'transparent');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    ctx.strokeStyle = 'rgba(148, 163, 184, 0.08)';
+    ctx.strokeStyle = 'rgba(176,168,208, 0.08)';
     ctx.lineWidth = 1;
     for (let x = 0; x < w; x += 56) {
       ctx.beginPath();
@@ -88,19 +88,19 @@ export default function ShareProgressCard() {
       ctx.stroke();
     }
 
-    ctx.fillStyle = '#e8eef5';
+    ctx.fillStyle = '#f1eef8';
     ctx.font = '600 28px system-ui, sans-serif';
     ctx.fillText('Skill Mapper', 72, 96);
 
-    ctx.fillStyle = '#7ad4c8';
+    ctx.fillStyle = '#b093f0';
     ctx.font = '500 18px ui-monospace, monospace';
     ctx.fillText('SIGNAL ATLAS', 72, 128);
 
-    ctx.fillStyle = '#f4f7fb';
+    ctx.fillStyle = '#f1eef8';
     ctx.font = '700 72px system-ui, sans-serif';
     ctx.fillText(`Level ${userLevel}`, 72, 250);
 
-    ctx.fillStyle = '#94a3b8';
+    ctx.fillStyle = '#b6add0';
     ctx.font = '500 28px system-ui, sans-serif';
     ctx.fillText(levelInfo.title, 72, 298);
 
@@ -115,17 +115,17 @@ export default function ShareProgressCard() {
       const x = 72 + i * 270;
       ctx.fillStyle = 'rgba(255,255,255,0.06)';
       ctx.fillRect(x, 360, 240, 120);
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.22)';
+      ctx.strokeStyle = 'rgba(176,168,208, 0.22)';
       ctx.strokeRect(x, 360, 240, 120);
-      ctx.fillStyle = '#94a3b8';
+      ctx.fillStyle = '#b6add0';
       ctx.font = '500 14px ui-monospace, monospace';
       ctx.fillText(m.label, x + 24, 400);
-      ctx.fillStyle = '#f4f7fb';
+      ctx.fillStyle = '#f1eef8';
       ctx.font = '700 36px system-ui, sans-serif';
       ctx.fillText(m.value, x + 24, 450);
     });
 
-    ctx.fillStyle = '#64748b';
+    ctx.fillStyle = '#8f86ab';
     ctx.font = '400 16px system-ui, sans-serif';
     ctx.fillText('skill-mapper-six.vercel.app', 72, 560);
 

@@ -7,41 +7,45 @@
 
 :root {
   /* ——— Primitives (oklch) ——— */
-  --slate-950: oklch(0.145 0.025 255);
-  --slate-900: oklch(0.185 0.028 255);
-  --slate-850: oklch(0.22 0.03 255);
-  --slate-800: oklch(0.265 0.032 255);
-  --slate-700: oklch(0.38 0.03 255);
-  --slate-400: oklch(0.7 0.025 255);
-  --slate-200: oklch(0.9 0.015 255);
-  --slate-100: oklch(0.95 0.01 255);
+  /* Neutrals carry a violet cast (hue 285) so panels read as one family */
+  --slate-950: oklch(0.14 0.035 285);
+  --slate-900: oklch(0.185 0.04 285);
+  --slate-850: oklch(0.225 0.045 285);
+  --slate-800: oklch(0.27 0.05 285);
+  --slate-700: oklch(0.38 0.05 285);
+  --slate-400: oklch(0.74 0.04 290);
+  --slate-200: oklch(0.9 0.02 295);
+  --slate-100: oklch(0.96 0.012 295);
 
-  --teal-400: oklch(0.76 0.11 185);
-  --teal-500: oklch(0.7 0.12 185);
-  --green-400: oklch(0.78 0.13 150);
-  --blue-400: oklch(0.72 0.1 230);
-  --amber-400: oklch(0.82 0.13 85);
-  --coral-450: oklch(0.66 0.16 28);
-  --rose-500: oklch(0.62 0.18 20);
+  --violet-400: oklch(0.74 0.155 295);
+  --violet-500: oklch(0.66 0.19 293);
+  --lilac-300: oklch(0.86 0.09 312);
+  --indigo-400: oklch(0.72 0.13 268);
+  --lilac-100: oklch(0.93 0.045 305);
+  /* Decay and danger keep a warm hue on purpose: they must not read as progress */
+  --coral-450: oklch(0.7 0.15 25);
+  --rose-500: oklch(0.64 0.18 15);
 
   /* ——— Semantic ——— */
   --canvas: var(--slate-950);
   --background: var(--canvas);
   --foreground: var(--slate-100);
   --text-muted: var(--slate-400);
+  --text-faint: oklch(0.68 0.04 290);
+  --tree-energy: var(--mastery);
 
   --surface-1: var(--slate-900);
   --surface-2: var(--slate-850);
   --surface-3: var(--slate-800);
 
   --border-muted: color-mix(in oklab, var(--slate-400) 28%, transparent);
-  --border-strong: color-mix(in oklab, var(--teal-400) 45%, transparent);
+  --border-strong: color-mix(in oklab, var(--violet-400) 50%, transparent);
 
-  --signal: var(--teal-400);
-  --signal-strong: var(--teal-500);
-  --mastery: var(--green-400);
-  --progress: var(--blue-400);
-  --reward: var(--amber-400);
+  --signal: var(--violet-400);
+  --signal-strong: var(--violet-500);
+  --mastery: var(--lilac-300);
+  --progress: var(--indigo-400);
+  --reward: var(--lilac-100);
   --decay: var(--coral-450);
   --danger: var(--rose-500);
 
@@ -97,6 +101,10 @@
   --color-surface-2: var(--surface-2);
   --color-surface-3: var(--surface-3);
   --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+  --color-border-muted: var(--border-muted);
+  --color-tree-energy: var(--mastery);
+  --color-neon-cyan-strong: var(--signal);
 
   --color-signal: var(--signal);
   --color-mastery: var(--mastery);
@@ -114,7 +122,7 @@
   --color-hologram-blue: var(--hologram-blue);
 
   --font-sans: var(--font-instrument);
-  --font-display: var(--font-bricolage);
+  --font-display: var(--font-familjen);
   --font-mono: var(--font-plex-mono);
 
   --radius-sm: var(--radius-sm);
@@ -129,6 +137,10 @@
 }
 
 body {
+  /* next/font variables live on <body>, so resolve the family tokens here, not on :root */
+  --font-display: var(--font-familjen);
+  --font-sans: var(--font-instrument);
+  --font-mono: var(--font-plex-mono);
   background: var(--canvas);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
@@ -199,7 +211,7 @@ textarea {
   border-radius: var(--radius-md);
   border: 1px solid color-mix(in oklab, var(--signal) 55%, transparent);
   background: var(--signal);
-  color: oklch(0.16 0.03 185);
+  color: oklch(0.15 0.05 295);
   font-weight: 700;
   letter-spacing: 0.02em;
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import DemoLoop from "@/components/showcase/DemoLoop";
+import { SKILL_COUNT } from "@/components/onboarding/OriginMap";
 
 export const metadata: Metadata = {
   title: "Skill Mapper: Case Study",
@@ -57,7 +58,7 @@ const DIRECTIONS = [
 const FEATURES = [
   {
     k: "Interactive skill tree",
-    d: "A directed graph of ~40 skills with ELK auto-layout, collapsible branches, keyboard navigation, and energy edges that light up along the routes you've mastered.",
+    d: "A directed graph of 50 skills with ELK auto-layout, collapsible branches, keyboard navigation, and energy edges that light up along the routes you've mastered.",
   },
   {
     k: "Full gamification loop",
@@ -97,7 +98,7 @@ export default function ShowcasePage() {
         className="pointer-events-none fixed inset-0 -z-10 opacity-[0.9]"
         style={{
           background:
-            "radial-gradient(900px 520px at 82% -6%, rgba(139,124,255,0.16), transparent 60%), radial-gradient(700px 500px at -6% 8%, rgba(52,220,255,0.08), transparent 55%)",
+            "radial-gradient(900px 520px at 82% -6%, rgba(139,124,255,0.16), transparent 60%), radial-gradient(700px 500px at -6% 8%, rgba(99,102,241,0.08), transparent 55%)",
         }}
       />
 
@@ -120,7 +121,7 @@ export default function ShowcasePage() {
       <section className="mx-auto max-w-5xl px-6 pt-20 pb-16 md:pt-28">
         <Eyebrow>Gamified learning · interactive skill tree</Eyebrow>
         <h1 className="mt-5 max-w-[16ch] font-display text-5xl font-medium leading-[1.02] tracking-tight text-balance md:text-7xl">
-          Turn learning into a <span className="text-neon-cyan-strong">skill tree</span> you actually finish.
+          Turn learning into a skill tree you actually finish.
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-text-muted md:text-xl">
           Map any domain as a branching tree of skills, then progress through it like a game: XP,
@@ -143,7 +144,7 @@ export default function ShowcasePage() {
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(120% 90% at 78% 6%, rgba(139,124,255,0.16), transparent 55%), radial-gradient(90% 80% at 8% 96%, rgba(52,220,255,0.12), transparent 55%)",
+                "radial-gradient(120% 90% at 78% 6%, rgba(139,124,255,0.16), transparent 55%), radial-gradient(90% 80% at 8% 96%, rgba(99,102,241,0.12), transparent 55%)",
             }}
           />
           <div
@@ -151,7 +152,7 @@ export default function ShowcasePage() {
             className="absolute inset-0 opacity-[0.35]"
             style={{
               backgroundImage:
-                "linear-gradient(rgba(148,163,184,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.10) 1px, transparent 1px)",
+                "linear-gradient(rgba(176,168,208,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(176,168,208,0.10) 1px, transparent 1px)",
               backgroundSize: "44px 44px",
             }}
           />
@@ -168,7 +169,7 @@ export default function ShowcasePage() {
           <Stat value="100" label="Accessibility" sub="Lighthouse, WCAG 2.2 AA" />
           <Stat value="100" label="Best-practices & SEO" sub="Lighthouse, desktop" />
           <Stat value="0" label="Layout shift (CLS)" sub="FCP under 1s" />
-          <Stat value="~40" label="Skills mapped" sub="4 tiers, auto-laid-out" />
+          <Stat value={String(SKILL_COUNT)} label="Skills mapped" sub="5 tiers, auto-laid-out" />
         </div>
       </section>
 

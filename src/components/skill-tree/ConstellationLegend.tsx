@@ -14,12 +14,12 @@ const STATUS_KEY: { status: SkillStatus; label: string; color: string }[] = [
 ];
 
 export const CATEGORY_META: Record<SkillCategory, { label: string; color: string }> = {
-    frontend: { label: 'Frontend', color: 'oklch(0.76 0.13 200)' },
-    backend: { label: 'Backend', color: 'oklch(0.72 0.14 285)' },
-    devops: { label: 'DevOps', color: 'oklch(0.78 0.14 60)' },
-    cs: { label: 'CS', color: 'oklch(0.72 0.14 330)' },
-    ml: { label: 'ML', color: 'oklch(0.75 0.15 150)' },
-    data: { label: 'Data', color: 'oklch(0.77 0.13 100)' },
+    frontend: { label: 'Frontend', color: 'oklch(0.78 0.12 250)' },
+    backend: { label: 'Backend', color: 'oklch(0.72 0.16 285)' },
+    devops: { label: 'DevOps', color: 'oklch(0.82 0.09 320)' },
+    cs: { label: 'CS', color: 'oklch(0.7 0.18 340)' },
+    ml: { label: 'ML', color: 'oklch(0.64 0.19 270)' },
+    data: { label: 'Data', color: 'oklch(0.9 0.05 300)' },
 };
 
 const CATEGORIES = Object.keys(CATEGORY_META) as SkillCategory[];

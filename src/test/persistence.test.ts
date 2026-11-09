@@ -127,3 +127,23 @@ describe('boss badges', () => {
         expect(useGameStore.getState().userXP).toBe(afterFirst);
     });
 });
+
+describe('skill decay', () => {
+    beforeEach(() => {
+        useGameStore.getState().resetProgress();
+    });
+
+    it('marks long-unpractised mastered skills for review, and refresh restores them', () => {
+        const first = must(useGameStore.getState().nodes.find((n) => n.data.status === 'available'));
+        useGameStore.getState().completeSkill(first.id);
+        useGameStore.setState((s) => ({
+            nodes: s.nodes.map((n) => (n.id === first.id ? { ...n, data: { ...n.data, lastPracticedAt: 1 } } : n)),
+        }));
+
+        useGameStore.getState().checkDecay();
+        expect(useGameStore.getState().nodes.find((n) => n.id === first.id)?.data.status).toBe('decayed');
+
+        useGameStore.getState().refreshSkill(first.id);
+        expect(useGameStore.getState().nodes.find((n) => n.id === first.id)?.data.status).toBe('mastered');
+    });
+});

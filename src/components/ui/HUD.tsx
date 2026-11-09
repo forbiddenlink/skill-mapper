@@ -22,6 +22,7 @@ export default function HUD() {
         }))
     );
     const checkStreak = useGameStore((state) => state.checkStreak);
+    const checkDecay = useGameStore((state) => state.checkDecay);
     const toggleSound = useGameStore((state) => state.toggleSound);
     const toggleMusic = useGameStore((state) => state.toggleMusic);
     const musicEnabled = useGameStore((state) => state.musicEnabled);
@@ -35,10 +36,12 @@ export default function HUD() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const progressBarRef = useRef<HTMLDivElement>(null);
 
-    // Streak math needs the saved lastActivityDate, so wait for hydration.
+    // Streak and decay checks read saved dates, so wait for hydration.
     useEffect(() => {
-        if (hydrated) checkStreak();
-    }, [hydrated, checkStreak]);
+        if (!hydrated) return;
+        checkStreak();
+        checkDecay();
+    }, [hydrated, checkStreak, checkDecay]);
 
     useEffect(() => {
         if (progressBarRef.current) {

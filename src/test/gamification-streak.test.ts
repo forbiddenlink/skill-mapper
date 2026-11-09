@@ -47,3 +47,14 @@ describe('streak shields', () => {
         expect(r).toMatchObject({ streak: 5, streakShields: 1, shieldUsed: false });
     });
 });
+
+describe('local-day consumers', () => {
+    it('Speed Learner counts skills mastered late in the local evening', async () => {
+        const { getAchievement } = await import('@/lib/gamification');
+        at('2026-11-09T23:30:00');
+        const late = new Date(2026, 10, 9, 23, 0).getTime();
+        const skills = [1, 2, 3].map((i) => ({ id: `s${i}`, data: { status: 'mastered', lastPracticedAt: late } }));
+        const achievement = getAchievement('speed_learner');
+        expect(achievement?.condition({} as never, skills as never)).toBe(true);
+    });
+});

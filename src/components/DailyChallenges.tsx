@@ -21,7 +21,8 @@ function generateDailyChallenge(todayStr: string): DailyChallenge | null {
     const question = quiz[seed % quiz.length];
     if (!question) return null;
 
-    const expiresAt = Date.UTC(
+    // End of the learner's local day, matching the local day key.
+    const expiresAt = new Date(
         Number(todayStr.slice(0, 4)),
         Number(todayStr.slice(5, 7)) - 1,
         Number(todayStr.slice(8, 10)),
@@ -29,7 +30,7 @@ function generateDailyChallenge(todayStr: string): DailyChallenge | null {
         59,
         59,
         999
-    );
+    ).getTime();
 
     return {
         id: `daily-${todayStr}`,

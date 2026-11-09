@@ -495,16 +495,14 @@ export const ACHIEVEMENTS: Achievement[] = [
     icon: 'Timer',
     category: 'special',
     condition: (_, skills) => {
+      // Compare local day keys; parsing the key as a Date would give UTC midnight.
       const today = getTodayDate();
-      const todayStart = new Date(today).getTime();
-      const todayEnd = todayStart + 24 * 60 * 60 * 1000;
       const masteredToday = skills.filter((s) => {
         const practicedAt = s.data.lastPracticedAt;
         return (
           s.data.status === 'mastered' &&
-          practicedAt &&
-          practicedAt >= todayStart &&
-          practicedAt < todayEnd
+          !!practicedAt &&
+          toDateKey(new Date(practicedAt)) === today
         );
       });
       return masteredToday.length >= 3;

@@ -10,6 +10,7 @@ import {
 import { Edge, NodeChange, EdgeChange, applyNodeChanges, applyEdgeChanges } from 'reactflow';
 import { config } from '../config';
 import type { RecommendedSkill, RecommendationReason } from './types';
+import { applyPositions } from './node-merge';
 
 export interface SkillsSlice {
     nodes: SkillNode[];
@@ -227,6 +228,7 @@ export const createSkillsSlice: StateCreator<SkillsSlice, [], [], SkillsSlice> =
 
     applyElkLayout: async () => {
         const layoutedNodes = await getElkLayoutedSkills();
-        set({ nodes: layoutedNodes });
+        // Positions only: the layout is built from the raw catalog and would reset progress.
+        set((state) => ({ nodes: applyPositions(state.nodes, layoutedNodes) }));
     },
 });

@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand';
-import confetti from 'canvas-confetti';
+import { fireConfetti } from '../confetti';
 import { getInitialSkills, type SkillStatus } from '../skill-data';
 import {
     calculateSkillXp,
@@ -43,7 +43,9 @@ export interface UserSlice {
     activityCalendar: Record<string, number>;
     completedDailyChallenges: string[];
     bossProgress: Record<string, BossProgressEntry>;
+    hasOnboarded: boolean;
 
+    completeOnboarding: () => void;
     getLevelInfo: () => LevelInfo;
     dismissBadge: () => void;
     dismissAchievement: () => void;
@@ -79,6 +81,9 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
     activityCalendar: {},
     completedDailyChallenges: [],
     bossProgress: {},
+    hasOnboarded: false,
+
+    completeOnboarding: () => set({ hasOnboarded: true }),
 
     getLevelInfo: () => getLevelInfo(get().userXP),
 
@@ -134,7 +139,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
         });
 
         get().recordActivity(xpBonus);
-        confetti({ particleCount: 120, spread: 90, origin: { y: 0.65 } });
+        fireConfetti({ particleCount: 120, spread: 90, origin: { y: 0.65 } });
         openSharePrompt('daily-challenge');
         trackSkillEvent.dailyChallengeCompleted(challengeId, xpBonus);
         return true;
@@ -170,7 +175,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
 
         if (firstClear) {
             get().recordActivity(xpReward);
-            confetti({ particleCount: 180, spread: 100, origin: { y: 0.6 } });
+            fireConfetti({ particleCount: 180, spread: 100, origin: { y: 0.6 } });
             get().openSharePrompt('boss-battle');
             trackSkillEvent.bossBattleCompleted(bossId, score, true);
         } else {
@@ -245,7 +250,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
             const finalLevel = calculateLevel(finalXP);
 
             if (newLevel > oldLevel || newEarnedBadges.length > 0 || newAchievements.length > 0) {
-                confetti({
+                fireConfetti({
                     particleCount: newLevel > oldLevel ? 200 : 150,
                     spread: 100,
                     origin: { y: 0.6 },
@@ -303,7 +308,8 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
         });
 
         const nextNodes = updatedNodes.map((node) => {
-            if (node.data.status === 'mastered') return node;
+            // Only locked skills open up; in-progress and decayed keep their state.
+            if (node.data.status !== 'locked') return node;
             const prereqsMet = node.data.prerequisites.every((reqId) => {
                 const reqNode = updatedNodes.find((n) => n.id === reqId);
                 return reqNode?.data.status === 'mastered';
@@ -339,7 +345,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
         const xpDelta = finalXP - state.userXP;
 
         if (newEarnedBadges.length > 0 || newAchievements.length > 0) {
-            confetti({
+            fireConfetti({
                 particleCount: 200,
                 spread: 100,
                 origin: { y: 0.6 },
@@ -367,7 +373,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
             unlockedBadges: [],
             latestBadgeId: null,
             lastVisit: Date.now(),
-            streak: 1,
+            streak: 0,
             longestStreak: 0,
             streakShields: 0,
             achievements: [],
@@ -376,6 +382,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
             activityCalendar: {},
             completedDailyChallenges: [],
             bossProgress: {},
+            hasOnboarded: false,
             history: [],
             historyIndex: -1,
         });

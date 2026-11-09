@@ -14,6 +14,7 @@ import {
     type LevelInfo,
 } from '../gamification';
 import { checkForNewBadges } from './badge-helpers';
+import { unlockEligibleSkills } from './node-merge';
 import type { SkillsSlice } from './skills-store';
 import type { UndoRedoSlice } from './undo-redo-store';
 import type { UISlice } from './ui-store';
@@ -210,17 +211,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
                     : n
             );
 
-            const nextNodes = updatedNodes.map((node) => {
-                if (node.data.status !== 'locked') return node;
-                const prereqsMet = node.data.prerequisites.every((reqId) => {
-                    const reqNode = updatedNodes.find((n) => n.id === reqId);
-                    return reqNode?.data.status === 'mastered';
-                });
-                if (prereqsMet) {
-                    return { ...node, data: { ...node.data, status: 'available' as SkillStatus } };
-                }
-                return node;
-            });
+            const nextNodes = unlockEligibleSkills(updatedNodes);
 
             const newEarnedBadges = checkForNewBadges(nextNodes, unlockedBadges);
             const latestBadge =
@@ -304,18 +295,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
             return node;
         });
 
-        const nextNodes = updatedNodes.map((node) => {
-            // Only locked skills open up; in-progress and decayed keep their state.
-            if (node.data.status !== 'locked') return node;
-            const prereqsMet = node.data.prerequisites.every((reqId) => {
-                const reqNode = updatedNodes.find((n) => n.id === reqId);
-                return reqNode?.data.status === 'mastered';
-            });
-            if (prereqsMet) {
-                return { ...node, data: { ...node.data, status: 'available' as SkillStatus } };
-            }
-            return node;
-        });
+        const nextNodes = unlockEligibleSkills(updatedNodes);
 
         const newEarnedBadges = checkForNewBadges(nextNodes, unlockedBadges);
 

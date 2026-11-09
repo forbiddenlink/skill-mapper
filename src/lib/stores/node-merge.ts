@@ -50,6 +50,19 @@ export function applyPositions(nodes: SkillNode[], layouted: SkillNode[]): Skill
     });
 }
 
+/**
+ * Open every locked skill whose prerequisites are all mastered. In-progress and
+ * decayed skills keep their state.
+ */
+export function unlockEligibleSkills(nodes: SkillNode[]): SkillNode[] {
+    const statusById = new Map(nodes.map((n) => [n.id, n.data.status]));
+    return nodes.map((node) => {
+        if (node.data.status !== 'locked') return node;
+        const prereqsMet = node.data.prerequisites.every((reqId) => statusById.get(reqId) === 'mastered');
+        return prereqsMet ? { ...node, data: { ...node.data, status: 'available' as SkillStatus } } : node;
+    });
+}
+
 const SKILL_STATUSES: readonly SkillStatus[] = ['locked', 'available', 'in-progress', 'mastered', 'decayed'];
 
 function isSkillStatus(value: unknown): value is SkillStatus {

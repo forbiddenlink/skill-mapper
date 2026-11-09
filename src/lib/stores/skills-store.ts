@@ -10,7 +10,7 @@ import {
 import { Edge, NodeChange, EdgeChange, applyNodeChanges, applyEdgeChanges } from 'reactflow';
 import { config } from '../config';
 import type { RecommendedSkill, RecommendationReason } from './types';
-import { applyPositions } from './node-merge';
+import { applyPositions, unlockEligibleSkills } from './node-merge';
 
 export interface SkillsSlice {
     nodes: SkillNode[];
@@ -86,8 +86,9 @@ export const createSkillsSlice: StateCreator<SkillsSlice, [], [], SkillsSlice> =
     },
 
     refreshSkill: (id) => {
+        // A repaired skill counts as mastered again, so dependents it was blocking can open.
         set((state) => ({
-            nodes: state.nodes.map((n) =>
+            nodes: unlockEligibleSkills(state.nodes.map((n) =>
                 n.id === id
                     ? {
                           ...n,
@@ -98,7 +99,7 @@ export const createSkillsSlice: StateCreator<SkillsSlice, [], [], SkillsSlice> =
                           },
                       }
                     : n
-            ),
+            )),
         }));
     },
 

@@ -177,3 +177,28 @@ describe('decay grace period for saves from before decay ran', () => {
         expect(useGameStore.getState().nodes.find((n) => n.id === first.id)?.data.status).toBe('decayed');
     });
 });
+
+describe('repairing a decayed skill', () => {
+    beforeEach(() => {
+        useGameStore.getState().resetProgress();
+    });
+
+    it('unlocks dependents whose prerequisites are now all mastered', () => {
+        const nodes = useGameStore.getState().nodes;
+        const dependent = must(nodes.find((n) => n.data.prerequisites.length >= 2));
+        const [repaired, ...others] = dependent.data.prerequisites;
+        const repairedId = must(repaired);
+        useGameStore.setState({
+            nodes: nodes.map((n) => {
+                if (n.id === repairedId) return { ...n, data: { ...n.data, status: 'decayed' as const, lastPracticedAt: 1 } };
+                if (others.includes(n.id)) return { ...n, data: { ...n.data, status: 'mastered' as const } };
+                if (n.id === dependent.id) return { ...n, data: { ...n.data, status: 'locked' as const } };
+                return n;
+            }),
+        });
+
+        useGameStore.getState().refreshSkill(repairedId);
+
+        expect(useGameStore.getState().nodes.find((n) => n.id === dependent.id)?.data.status).toBe('available');
+    });
+});

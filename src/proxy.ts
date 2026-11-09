@@ -2,6 +2,7 @@ import arcjet, { shield, detectBot } from '@arcjet/next';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import { NextRequest, NextResponse } from 'next/server';
+import { getClientIp, runLimit } from '@/lib/rate-limit';
 
 const aj = arcjet({
   key: process.env.ARCJET_KEY!,
@@ -15,16 +16,15 @@ const ratelimit =
         limiter: Ratelimit.slidingWindow(20, '10 s'),
         analytics: true,
         prefix: 'rl',
-        // Default 5s; a timeout resolves success:true, so keep it short and fail closed below.
+        // Default 5s; a timeout resolves success:true, so keep it short. runLimit fails closed.
         timeout: 1500,
       })
     : null;
 
 export async function proxy(request: NextRequest) {
   if (ratelimit) {
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '127.0.0.1';
-    const { success, reason } = await ratelimit.limit(ip);
-    if (reason === 'timeout') {
+    const { success, unavailable } = await runLimit(ratelimit, getClientIp(request), 'Proxy rate limiter');
+    if (unavailable) {
       return NextResponse.json(
         { error: 'Service temporarily unavailable' },
         { status: 503, headers: { 'Retry-After': '5' } }

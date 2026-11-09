@@ -202,3 +202,19 @@ describe('repairing a decayed skill', () => {
         expect(useGameStore.getState().nodes.find((n) => n.id === dependent.id)?.data.status).toBe('available');
     });
 });
+
+describe('decay grace period and Speed Learner', () => {
+    it('upgrading a save with old mastered skills does not satisfy Speed Learner', async () => {
+        const { getAchievement } = await import('@/lib/gamification');
+        const migrate = must(useGameStore.persist.getOptions().migrate);
+        const old = Date.now() - 90 * 24 * 60 * 60 * 1000;
+        const nodes = getInitialSkills()
+            .slice(0, 3)
+            .map((n) => ({ ...n, data: { ...n.data, status: 'mastered' as const, lastPracticedAt: old } }));
+
+        const migrated = migrate({ nodes, userXP: 500 }, 5) as { nodes: typeof nodes };
+
+        expect(migrated.nodes.map((n) => n.data.lastPracticedAt)).toEqual([old, old, old]);
+        expect(must(getAchievement('speed_learner')).condition({} as never, migrated.nodes as never)).toBe(false);
+    });
+});

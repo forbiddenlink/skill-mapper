@@ -20,7 +20,7 @@ const feedbackRatelimit = redisUrl && redisToken ? new Ratelimit({
   timeout: 1500,
 }) : null;
 
-function getClientIp(request: Request): string {
+export function getClientIp(request: Request): string {
   const forwardedFor = request.headers.get('x-forwarded-for');
   if (forwardedFor) {
     const [first] = forwardedFor.split(',');
@@ -31,18 +31,18 @@ function getClientIp(request: Request): string {
   return 'unknown';
 }
 
-export async function checkRateLimit(
-  request: Request
-): Promise<{ success: boolean; resetInSeconds?: number; unavailable?: boolean }> {
-  if (!feedbackRatelimit) return { success: false, unavailable: true };
+export type LimitOutcome = { success: boolean; resetInSeconds?: number; unavailable?: boolean };
 
-  const ip = getClientIp(request);
+/**
+ * Run one limiter check. A thrown error or a timeout means Redis is down or
+ * misconfigured: report unavailable (503) instead of letting the request through.
+ */
+export async function runLimit(limiter: Ratelimit, key: string, label: string): Promise<LimitOutcome> {
   let result: Awaited<ReturnType<Ratelimit['limit']>>;
   try {
-    result = await feedbackRatelimit.limit(ip);
+    result = await limiter.limit(key);
   } catch (error) {
-    // Redis down or misconfigured: fail closed (503), since this gates paid AI calls.
-    console.error('Rate limiter error:', error);
+    console.error(`${label} error:`, error);
     return { success: false, unavailable: true };
   }
 
@@ -58,4 +58,10 @@ export async function checkRateLimit(
   }
 
   return { success: true };
+}
+
+export async function checkRateLimit(request: Request): Promise<LimitOutcome> {
+  if (!feedbackRatelimit) return { success: false, unavailable: true };
+  // Redis down or misconfigured fails closed, since this gates paid AI calls.
+  return runLimit(feedbackRatelimit, getClientIp(request), 'Rate limiter');
 }

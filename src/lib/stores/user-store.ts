@@ -6,6 +6,7 @@ import {
     calculateLevel,
     getLevelInfo,
     updateStreakWithShield,
+    getTodayDate,
     shieldsEarnedForStreak,
     checkAchievements,
     getAchievement,
@@ -17,10 +18,6 @@ import type { SkillsSlice } from './skills-store';
 import type { UndoRedoSlice } from './undo-redo-store';
 import type { UISlice } from './ui-store';
 import { trackSkillEvent } from '../posthog';
-
-function todayUtc(): string {
-    return new Date().toISOString().slice(0, 10);
-}
 
 export type BossProgressEntry = {
     completed: boolean;
@@ -115,7 +112,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
     },
 
     recordActivity: (xpEarned) => {
-        const day = todayUtc();
+        const day = getTodayDate();
         set((state) => ({
             activityCalendar: {
                 ...state.activityCalendar,
@@ -269,7 +266,7 @@ export const createUserSlice: StateCreator<UserHost, [], [], UserSlice> = (set, 
             };
         });
 
-        const day = todayUtc();
+        const day = getTodayDate();
         const wasFirstActivityToday = !((get().activityCalendar[day] ?? 0) > 0);
         get().recordActivity(Math.max(0, get().userXP - xpBefore));
         const skill = get().nodes.find((n) => n.id === id);

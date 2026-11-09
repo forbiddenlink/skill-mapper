@@ -151,10 +151,13 @@ export function calculateTotalXp(skills: SkillNode[]): number {
 /**
  * Get today's date in YYYY-MM-DD format
  */
+/** Day key (YYYY-MM-DD) used for streaks, the activity calendar and daily challenges. */
+export function toDateKey(date: Date): string {
+  return date.toISOString().substring(0, 10);
+}
+
 export function getTodayDate(): string {
-  const now = new Date();
-  const isoString = now.toISOString();
-  return isoString.substring(0, 10);
+  return toDateKey(new Date());
 }
 
 /**

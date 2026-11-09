@@ -3,7 +3,16 @@ import { Handle, Position, NodeProps } from 'reactflow';
 import { Lock, ShieldCheck, Zap, BookOpen, TriangleAlert } from 'lucide-react';
 import clsx from 'clsx';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { SkillData } from '@/lib/skill-data';
+import type { SkillData, SkillStatus } from '@/lib/skill-data';
+
+// Status is otherwise shown only by color and icon, which screen readers cannot see.
+const STATUS_LABELS: Record<SkillStatus, string> = {
+    locked: 'locked',
+    available: 'available to start',
+    'in-progress': 'in progress',
+    mastered: 'mastered',
+    decayed: 'needs review',
+};
 
 type ConstellationNodeData = SkillData & {
     /** Pushed to the background because another node's path is focused. */
@@ -47,6 +56,8 @@ const CustomNode = ({ data, selected }: NodeProps<ConstellationNodeData>) => {
     return (
         <motion.div
             ref={ref}
+            role="group"
+            aria-label={`${title}, ${STATUS_LABELS[status]}`}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             animate={{

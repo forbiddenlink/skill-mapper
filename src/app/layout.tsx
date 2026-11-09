@@ -5,6 +5,7 @@ import { env } from "@/env";
 import "./globals.css";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import MotionProvider from "@/components/MotionProvider";
 
 const instrument = Instrument_Sans({
   variable: "--font-instrument",
@@ -100,7 +101,9 @@ export default function RootLayout({
       <body
         className={`${instrument.variable} ${familjen.variable} ${plexMono.variable} antialiased bg-canvas text-foreground`}
       >
-        <PostHogProvider>{children}</PostHogProvider>
+        <PostHogProvider>
+          <MotionProvider>{children}</MotionProvider>
+        </PostHogProvider>
         <Analytics />
         <SpeedInsights />
       </body>

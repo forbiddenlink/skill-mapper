@@ -24,6 +24,7 @@ import ConstellationLegend from './ConstellationLegend';
 import type { SkillNode, SkillCategory, SkillStatus } from '@/lib/skill-data';
 import { useShallow } from 'zustand/react/shallow';
 import { buildChildrenMap, type CollapsedBranches } from '@/types/skill';
+import { isOwnedByControl } from '@/lib/keyboard-target';
 
 /** Resolve a constellation link colour from its endpoint statuses. */
 function resolveEdgeColor(sourceStatus?: SkillStatus, targetStatus?: SkillStatus): string {
@@ -220,6 +221,8 @@ function SkillTreeInner() {
     // Keyboard Navigation Logic
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
+            // Keys aimed at a button, field or open dialog belong to that control.
+            if (isOwnedByControl(e.target)) return;
             // Provide escape to deselect
             if (e.key === 'Escape') {
                 selectSkill(null);

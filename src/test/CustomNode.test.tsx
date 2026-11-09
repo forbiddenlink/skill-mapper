@@ -85,4 +85,22 @@ describe('CustomNode', () => {
     const node = container.firstChild as HTMLElement;
     expect(node).toHaveClass('ring-2', 'ring-signal');
   });
+  it('names the skill and its status for screen readers', () => {
+    render(
+      <TestWrapper>
+        <CustomNode
+          id="test-1"
+          data={{ ...mockSkillData, status: 'mastered' }}
+          selected={false}
+          type="skill"
+          xPos={0}
+          yPos={0}
+          zIndex={1}
+          isConnectable={true}
+          dragging={false}
+        />
+      </TestWrapper>
+    );
+    expect(screen.getByRole('group', { name: 'Test Skill, mastered' })).toBeInTheDocument();
+  });
 });

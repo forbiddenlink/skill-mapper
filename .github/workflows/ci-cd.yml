@@ -7,6 +7,9 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+permissions:
+  contents: read
+
 jobs:
   lint-and-type-check:
     name: Lint and Type Check
@@ -22,7 +25,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
       
       - name: Install dependencies
@@ -48,16 +51,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
       
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       
-      - name: Run unit tests
-        run: pnpm run test
-      
-      - name: Generate coverage report
+      # One run: the coverage run executes the full suite, so a separate test run only doubled the time.
+      - name: Run unit tests with coverage
         run: pnpm run test:coverage
       
       - name: Upload coverage to Codecov
@@ -83,7 +84,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
       
       - name: Install dependencies
@@ -133,7 +134,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
       
       - name: Install dependencies
@@ -165,7 +166,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
       
       - name: Install dependencies

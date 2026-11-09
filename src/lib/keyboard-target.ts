@@ -7,5 +7,7 @@ export function isOwnedByControl(target: EventTarget | null): boolean {
     if (!(target instanceof Element)) return false;
     if (target.closest('[role="dialog"], [role="alertdialog"]')) return true;
     if (target instanceof HTMLElement && target.isContentEditable) return true;
-    return !!target.closest('button, a[href], input, textarea, select, [role="button"], [role="menuitem"], [role="tab"]');
+    const owner = target.closest('button, a[href], input, textarea, select, [role="button"], [role="menuitem"], [role="tab"]');
+    // React Flow gives focusable graph nodes role="button"; keys on a node belong to the graph.
+    return !!owner && !owner.classList.contains('react-flow__node');
 }

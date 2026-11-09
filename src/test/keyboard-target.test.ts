@@ -13,3 +13,17 @@ describe('isOwnedByControl', () => {
         expect(isOwnedByControl(null)).toBe(false);
     });
 });
+
+describe('isOwnedByControl with React Flow nodes', () => {
+    it('leaves keys on a focused graph node to the graph', () => {
+        const node = document.createElement('div');
+        node.className = 'react-flow__node';
+        node.setAttribute('role', 'button');
+        document.body.appendChild(node);
+        expect(isOwnedByControl(node)).toBe(false);
+        const inner = document.createElement('button');
+        node.appendChild(inner);
+        expect(isOwnedByControl(inner)).toBe(true);
+        node.remove();
+    });
+});

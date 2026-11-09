@@ -151,9 +151,21 @@ export function calculateTotalXp(skills: SkillNode[]): number {
 /**
  * Get today's date in YYYY-MM-DD format
  */
-/** Day key (YYYY-MM-DD) used for streaks, the activity calendar and daily challenges. */
+/**
+ * Day key (YYYY-MM-DD) in the learner's local time zone, used for streaks, the
+ * activity calendar and daily challenges. UTC keys rolled the day over in the
+ * afternoon or evening for anyone west of UTC, breaking streaks mid-day.
+ */
 export function toDateKey(date: Date): string {
-  return date.toISOString().substring(0, 10);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/** Whole calendar days from one day key to another (both parsed as UTC midnight). */
+export function daysBetween(from: string, to: string): number {
+  return Math.round((Date.parse(to) - Date.parse(from)) / 86_400_000);
 }
 
 export function getTodayDate(): string {
@@ -164,11 +176,7 @@ export function getTodayDate(): string {
  * Check if two dates are consecutive days
  */
 export function isConsecutiveDay(date1: string, date2: string): boolean {
-  const d1 = new Date(date1);
-  const d2 = new Date(date2);
-  const diffTime = Math.abs(d2.getTime() - d1.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays === 1;
+  return Math.abs(daysBetween(date1, date2)) === 1;
 }
 
 /**
@@ -286,8 +294,8 @@ export function updateStreakWithShield(
     };
   }
 
-  // Gap detected — try shield before resetting
-  if (streakShields > 0 && currentStreak > 0) {
+  // A shield covers exactly one missed day. Longer gaps reset the streak.
+  if (streakShields > 0 && currentStreak > 0 && daysBetween(lastActivityDate, today) === 2) {
     return {
       streak: currentStreak,
       longestStreak,
@@ -310,9 +318,10 @@ export function updateStreakWithShield(
  * Earn streak shields from milestones (max 3 held).
  */
 export function shieldsEarnedForStreak(streak: number): number {
-  if (streak >= 30) return 1;
-  if (streak >= 14) return 1;
-  if (streak >= 7) return 1;
+  // One shield on reaching day 7, 14 and 30, then every 30 days. Returning 1 for
+  // every day past 7 refilled shields daily, so they were never really spent.
+  if (streak === 7 || streak === 14) return 1;
+  if (streak >= 30 && streak % 30 === 0) return 1;
   return 0;
 }
 

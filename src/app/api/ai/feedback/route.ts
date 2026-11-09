@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSkillFeedback, type SkillFeedbackRequest } from '@/lib/groq';
+import { getSkillFeedback, skillFeedbackRequestSchema } from '@/lib/groq';
 import { checkRateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
@@ -34,27 +34,28 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const body = (await request.json()) as SkillFeedbackRequest;
-    const { skillName, skillCategory, userAnswer, challengeType } = body;
+    let raw: unknown;
+    try {
+      raw = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Request body must be JSON.' }, { status: 400 });
+    }
 
-    if (!skillName || !skillCategory || !userAnswer || !challengeType) {
+    const parsed = skillFeedbackRequestSchema.safeParse(raw);
+    if (!parsed.success) {
       return NextResponse.json(
         {
-          error:
-            'Missing required fields: skillName, skillCategory, userAnswer, challengeType',
+          error: 'Invalid request.',
+          issues: parsed.error.issues.map((issue) => ({
+            path: issue.path.join('.'),
+            message: issue.message,
+          })),
         },
         { status: 400 }
       );
     }
 
-    if (userAnswer.length > 5000) {
-      return NextResponse.json(
-        { error: 'Answer too long. Maximum 5,000 characters.' },
-        { status: 400 }
-      );
-    }
-
-    const feedback = await getSkillFeedback(body);
+    const feedback = await getSkillFeedback(parsed.data);
 
     return NextResponse.json(feedback);
   } catch (error) {

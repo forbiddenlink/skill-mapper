@@ -3,6 +3,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useGameStore } from '@/lib/store';
 import { useShallow } from 'zustand/react/shallow';
+import { useHasHydrated } from '@/hooks/use-has-hydrated';
 
 /**
  * LiveRegions Component
@@ -12,9 +13,13 @@ import { useShallow } from 'zustand/react/shallow';
 export default function LiveRegions() {
     const politeRef = useRef<HTMLDivElement>(null);
     const assertiveRef = useRef<HTMLDivElement>(null);
-    const prevXP = useRef(0);
-    const prevLevel = useRef(1);
-    const prevBadges = useRef<string[]>([]);
+    const hydrated = useHasHydrated();
+    // null = not seeded yet. The first hydrated values seed these silently, so a
+    // reload does not announce the saved level, badges or XP as if they were new.
+    const prevXP = useRef<number | null>(null);
+    const prevLevel = useRef<number | null>(null);
+    const prevBadges = useRef<string[] | null>(null);
+    const prevAvailable = useRef<number | null>(null);
 
     const { userXP, userLevel, unlockedBadges, nodes } = useGameStore(
         useShallow((state) => ({
@@ -39,41 +44,47 @@ export default function LiveRegions() {
 
     // Announce XP gains
     useEffect(() => {
-        if (prevXP.current > 0 && userXP > prevXP.current) {
+        if (!hydrated) return;
+        if (prevXP.current !== null && userXP > prevXP.current) {
             const gain = userXP - prevXP.current;
             announce(`Gained ${gain} experience points`, 'polite');
         }
         prevXP.current = userXP;
-    }, [userXP, announce]);
+    }, [hydrated, userXP, announce]);
 
     // Announce level ups
     useEffect(() => {
-        if (prevLevel.current > 0 && userLevel > prevLevel.current) {
-            announce(`Congratulations! You reached level ${userLevel}!`, 'assertive');
+        if (!hydrated) return;
+        if (prevLevel.current !== null && userLevel > prevLevel.current) {
+            announce(`You reached level ${userLevel}.`, 'assertive');
         }
         prevLevel.current = userLevel;
-    }, [userLevel, announce]);
+    }, [hydrated, userLevel, announce]);
 
     // Announce new badges
     useEffect(() => {
-        const newBadges = unlockedBadges.filter(badge => !prevBadges.current.includes(badge));
-        if (newBadges.length > 0) {
-            announce(`Achievement unlocked! You earned ${newBadges.length} new badge${newBadges.length > 1 ? 's' : ''}!`, 'assertive');
-        }
+        if (!hydrated) return;
+        const previous = prevBadges.current;
         prevBadges.current = [...unlockedBadges];
-    }, [unlockedBadges, announce]);
-
-    // Announce skill completions
-    useEffect(() => {
-        const masteredCount = nodes.filter(n => n.data.status === 'mastered').length;
-        // Only announce if not initial load
-        if (masteredCount > 0) {
-            const availableCount = nodes.filter(n => n.data.status === 'available').length;
-            if (availableCount > 0) {
-                announce(`${availableCount} new skill${availableCount > 1 ? 's' : ''} available to learn`, 'polite');
-            }
+        if (previous === null) return;
+        const newBadges = unlockedBadges.filter(badge => !previous.includes(badge));
+        if (newBadges.length > 0) {
+            announce(`You earned ${newBadges.length} new badge${newBadges.length > 1 ? 's' : ''}.`, 'assertive');
         }
-    }, [nodes, announce]);
+    }, [hydrated, unlockedBadges, announce]);
+
+    // Announce newly available skills. `nodes` also changes on drag and layout,
+    // so only an increase in the available count is worth announcing.
+    useEffect(() => {
+        if (!hydrated) return;
+        const availableCount = nodes.filter(n => n.data.status === 'available').length;
+        const previous = prevAvailable.current;
+        prevAvailable.current = availableCount;
+        if (previous !== null && availableCount > previous) {
+            const gained = availableCount - previous;
+            announce(`${gained} new skill${gained > 1 ? 's' : ''} available to learn`, 'polite');
+        }
+    }, [hydrated, nodes, announce]);
 
     return (
         <>

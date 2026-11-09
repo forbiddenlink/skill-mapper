@@ -1,4 +1,4 @@
-import { LucideIcon, Shield, Atom, Bot, Layers, Trophy, Accessibility } from 'lucide-react';
+import { LucideIcon, Shield, Atom, Bot, Layers, Trophy, Accessibility, Swords, Crown } from 'lucide-react';
 
 export interface Badge {
     id: string;
@@ -6,8 +6,21 @@ export interface Badge {
     description: string;
     icon: LucideIcon;
     color: string;
-    requirements: string[]; // List of skill IDs required
+    requirements: string[]; // Skill IDs required. Empty = awarded by a boss battle, never by mastery.
 }
+
+/**
+ * Badges awarded for a first boss clear (see BossBattles `unlocksBadge`). They
+ * were granted before but had no catalog entry, so the badge toast had nothing
+ * to show and the badge never rendered.
+ */
+const BOSS_BADGES: Badge[] = [
+    { id: 'foundation-boss', label: 'Foundation Champion', description: 'Cleared the Foundation Master Challenge.', icon: Swords, color: 'text-progress', requirements: [] },
+    { id: 'frontend-boss', label: 'Frontend Champion', description: 'Cleared the Frontend Engineering Battle.', icon: Swords, color: 'text-signal', requirements: [] },
+    { id: 'backend-boss', label: 'Backend Champion', description: 'Cleared the Backend and Data Boss Fight.', icon: Swords, color: 'text-mastery', requirements: [] },
+    { id: 'ai-boss', label: 'AI Champion', description: 'Cleared the AI Engineering Ultimate Challenge.', icon: Swords, color: 'text-reward', requirements: [] },
+    { id: 'master-boss', label: 'Systems Grandmaster', description: 'Cleared the Systems and Architecture Final Boss.', icon: Crown, color: 'text-reward', requirements: [] },
+];
 
 export const BADGES: Badge[] = [
     {
@@ -61,5 +74,6 @@ export const BADGES: Badge[] = [
             'react-core', 'tailwind', 'typescript',
             'node-runtime', 'postgresql', 'drizzle-orm'
         ]
-    }
+    },
+    ...BOSS_BADGES,
 ];

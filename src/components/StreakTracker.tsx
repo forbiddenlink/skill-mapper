@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { Flame, Calendar, TrendingUp, Award, Shield } from 'lucide-react';
 import { useGameStore } from '@/lib/store';
 import { useShallow } from 'zustand/react/shallow';
+import { toDateKey } from '@/lib/gamification';
 
 function StreakShieldRow() {
     const streakShields = useGameStore((s) => s.streakShields);
@@ -27,12 +28,12 @@ function generateCalendarDays(
 
     for (let i = 29; i >= 0; i--) {
         const date = new Date(today);
-        date.setUTCDate(date.getUTCDate() - i);
-        const dateStr = date.toISOString().slice(0, 10);
+        date.setDate(date.getDate() - i);
+        const dateStr = toDateKey(date);
         days.push({
             date: dateStr,
             xp: activityCalendar[dateStr] || 0,
-            dayOfWeek: date.getUTCDay(),
+            dayOfWeek: date.getDay(),
         });
     }
 

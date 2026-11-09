@@ -10,6 +10,7 @@ import {
 import { Edge, NodeChange, EdgeChange, applyNodeChanges, applyEdgeChanges } from 'reactflow';
 import { config } from '../config';
 import type { RecommendedSkill, RecommendationReason } from './types';
+import { applyPositions, unlockEligibleSkills } from './node-merge';
 
 export interface SkillsSlice {
     nodes: SkillNode[];
@@ -17,6 +18,11 @@ export interface SkillsSlice {
     selectedSkillId: string | null;
     recommendations: RecommendedSkill[];
     lastCalculated: number;
+    /**
+     * Decay counts from the later of a skill's last practice and this time. Saves that
+     * predate decay get the upgrade time, so old mastery is not all flagged at once.
+     */
+    decayClockStartedAt: number;
 
     onNodesChange: (changes: NodeChange[]) => void;
     onEdgesChange: (changes: EdgeChange[]) => void;
@@ -35,6 +41,7 @@ export const createSkillsSlice: StateCreator<SkillsSlice, [], [], SkillsSlice> =
     selectedSkillId: null,
     recommendations: [],
     lastCalculated: 0,
+    decayClockStartedAt: 0,
 
     onNodesChange: (changes) => {
         set({
@@ -79,8 +86,9 @@ export const createSkillsSlice: StateCreator<SkillsSlice, [], [], SkillsSlice> =
     },
 
     refreshSkill: (id) => {
+        // A repaired skill counts as mastered again, so dependents it was blocking can open.
         set((state) => ({
-            nodes: state.nodes.map((n) =>
+            nodes: unlockEligibleSkills(state.nodes.map((n) =>
                 n.id === id
                     ? {
                           ...n,
@@ -91,7 +99,7 @@ export const createSkillsSlice: StateCreator<SkillsSlice, [], [], SkillsSlice> =
                           },
                       }
                     : n
-            ),
+            )),
         }));
     },
 
@@ -102,7 +110,8 @@ export const createSkillsSlice: StateCreator<SkillsSlice, [], [], SkillsSlice> =
         set((state) => ({
             nodes: state.nodes.map((n) => {
                 if (n.data.status === 'mastered' && n.data.lastPracticedAt) {
-                    if (Date.now() - n.data.lastPracticedAt > THRESHOLD) {
+                    const clockStart = Math.max(n.data.lastPracticedAt, state.decayClockStartedAt);
+                    if (Date.now() - clockStart > THRESHOLD) {
                         return { ...n, data: { ...n.data, status: 'decayed' as SkillStatus } };
                     }
                 }
@@ -227,6 +236,7 @@ export const createSkillsSlice: StateCreator<SkillsSlice, [], [], SkillsSlice> =
 
     applyElkLayout: async () => {
         const layoutedNodes = await getElkLayoutedSkills();
-        set({ nodes: layoutedNodes });
+        // Positions only: the layout is built from the raw catalog and would reset progress.
+        set((state) => ({ nodes: applyPositions(state.nodes, layoutedNodes) }));
     },
 });

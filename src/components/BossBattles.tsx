@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Skull, Crown, CheckCircle2, XCircle, Shield, Swords, X } from 'lucide-react';
 import { BossBattle } from '@/types';
@@ -150,7 +150,19 @@ export function BossBattles() {
     const [showResult, setShowResult] = useState(false);
     const [score, setScore] = useState(0);
     const [battleCompleted, setBattleCompleted] = useState(false);
-    const closeBattle = () => setActiveBattle(null);
+    // True only when this run was the first clear, which is when XP is granted.
+    const [earnedXP, setEarnedXP] = useState(false);
+    const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const clearAdvanceTimer = () => {
+        if (advanceTimer.current) clearTimeout(advanceTimer.current);
+        advanceTimer.current = null;
+    };
+    useEffect(() => clearAdvanceTimer, []);
+    const closeBattle = () => {
+        // A pending advance would otherwise record a result after the dialog closed.
+        clearAdvanceTimer();
+        setActiveBattle(null);
+    };
     const dialogRef = useDialogA11y<HTMLDivElement>(Boolean(activeBattle), closeBattle);
 
     const battles = useMemo(() => {
@@ -174,6 +186,7 @@ export function BossBattles() {
         setCurrentQuestion(0);
         setScore(0);
         setBattleCompleted(false);
+        setEarnedXP(false);
         setShowResult(false);
         setSelectedAnswer(null);
     };
@@ -188,20 +201,24 @@ export function BossBattles() {
             setScore(score + 1);
         }
 
-        setTimeout(() => {
+        clearAdvanceTimer();
+        advanceTimer.current = setTimeout(() => {
+            advanceTimer.current = null;
             if (currentQuestion < battle.questions.length - 1) {
                 setCurrentQuestion(currentQuestion + 1);
                 setSelectedAnswer(null);
                 setShowResult(false);
             } else {
                 const finalScore = correct ? score + 1 : score;
-                recordBossResult({
+                const alreadyCleared = battle.completed;
+                const passed = recordBossResult({
                     bossId: battle.id,
                     score: finalScore,
                     questionCount: battle.questions.length,
                     xpReward: battle.xpReward,
                     badgeId: battle.unlocksBadge,
                 });
+                setEarnedXP(passed && !alreadyCleared);
                 setBattleCompleted(true);
             }
         }, 2000);
@@ -317,7 +334,9 @@ export function BossBattles() {
                                     <Crown className="mx-auto mb-4 text-reward" size={64} />
                                     <h2 className="font-display mb-4 text-4xl font-semibold text-foreground">Victory</h2>
                                     <p className="mb-2 text-xl text-foreground/90">You defeated the {battle.title}.</p>
-                                    <p className="mb-6 text-lg text-reward">+{battle.xpReward} XP earned.</p>
+                                    <p className="mb-6 text-lg text-reward">
+                                        {earnedXP ? `+${battle.xpReward} XP earned.` : 'Already cleared. XP is awarded on the first win only.'}
+                                    </p>
                                     <div className="flex items-center justify-center gap-4 font-display text-2xl font-bold text-foreground">
                                         <span>Final score</span>
                                         <span className="text-reward">{score}/{battle.questions.length}</span>

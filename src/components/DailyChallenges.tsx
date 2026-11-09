@@ -6,10 +6,7 @@ import { Trophy, Clock, Zap, CheckCircle2, XCircle, Share2 } from 'lucide-react'
 import { DailyChallenge } from '@/types';
 import { useGameStore } from '@/lib/store';
 import { getInitialSkills } from '@/lib/skill-data';
-
-function todayUtc(): string {
-    return new Date().toISOString().slice(0, 10);
-}
+import { getTodayDate } from '@/lib/gamification';
 
 function generateDailyChallenge(todayStr: string): DailyChallenge | null {
     if (!todayStr) return null;
@@ -24,7 +21,8 @@ function generateDailyChallenge(todayStr: string): DailyChallenge | null {
     const question = quiz[seed % quiz.length];
     if (!question) return null;
 
-    const expiresAt = Date.UTC(
+    // End of the learner's local day, matching the local day key.
+    const expiresAt = new Date(
         Number(todayStr.slice(0, 4)),
         Number(todayStr.slice(5, 7)) - 1,
         Number(todayStr.slice(8, 10)),
@@ -32,7 +30,7 @@ function generateDailyChallenge(todayStr: string): DailyChallenge | null {
         59,
         59,
         999
-    );
+    ).getTime();
 
     return {
         id: `daily-${todayStr}`,
@@ -69,7 +67,7 @@ export function DailyChallenges() {
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     useEffect(() => {
-        const day = todayUtc();
+        const day = getTodayDate();
         const challenge = generateDailyChallenge(day);
         // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only hydration gate: today's UTC date must be computed post-mount to avoid SSR/client mismatch
         setTodayStr(day);

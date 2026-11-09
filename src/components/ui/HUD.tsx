@@ -7,6 +7,7 @@ import { useToast } from "./Toast";
 import { useShallow } from "zustand/react/shallow";
 import Image from "next/image";
 import ShareProgressCard from "@/components/ShareProgressCard";
+import { useHasHydrated } from "@/hooks/use-has-hydrated";
 
 export default function HUD() {
     const { xp, level, unlockedBadges, streak, streakShields, soundEnabled, achievements } = useGameStore(
@@ -21,11 +22,13 @@ export default function HUD() {
         }))
     );
     const checkStreak = useGameStore((state) => state.checkStreak);
+    const checkDecay = useGameStore((state) => state.checkDecay);
     const toggleSound = useGameStore((state) => state.toggleSound);
     const toggleMusic = useGameStore((state) => state.toggleMusic);
     const musicEnabled = useGameStore((state) => state.musicEnabled);
     const getLevelInfo = useGameStore((state) => state.getLevelInfo);
     const { toast } = useToast();
+    const hydrated = useHasHydrated();
 
     const levelInfo = getLevelInfo();
     const progress = levelInfo.progressPercent;
@@ -33,9 +36,12 @@ export default function HUD() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const progressBarRef = useRef<HTMLDivElement>(null);
 
+    // Streak and decay checks read saved dates, so wait for hydration.
     useEffect(() => {
+        if (!hydrated) return;
         checkStreak();
-    }, [checkStreak]);
+        checkDecay();
+    }, [hydrated, checkStreak, checkDecay]);
 
     useEffect(() => {
         if (progressBarRef.current) {

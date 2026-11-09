@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGameStore } from '@/lib/store';
 import { Sparkles, Code, Server, Layers } from 'lucide-react';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';
+import { useHasHydrated } from '@/hooks/use-has-hydrated';
 import { OriginMap, SKILL_COUNT, countMastered } from '@/components/onboarding/OriginMap';
 
 // type Role = 'beginner' | 'frontend' | 'backend' | 'fullstack'; // Removed unused type
@@ -45,7 +46,10 @@ const ROLES = [
 ];
 
 export default function OnboardingModal() {
-    const { unlockBatch, nodes } = useGameStore();
+    const unlockBatch = useGameStore((s) => s.unlockBatch);
+    const hasOnboarded = useGameStore((s) => s.hasOnboarded);
+    const completeOnboarding = useGameStore((s) => s.completeOnboarding);
+    const hydrated = useHasHydrated();
     const [isOpen, setIsOpen] = useState(false);
     const [previewId, setPreviewId] = useState('frontend');
     // The dialog focuses its first button on open; that must not replace the resting preview.
@@ -53,22 +57,20 @@ export default function OnboardingModal() {
     const previewRole = (id: string) => {
         if (hasInteracted.current) setPreviewId(id);
     };
-    const closeModal = () => setIsOpen(false);
+    // Closing by any route (role pick, Escape, close button) counts as onboarded,
+    // so the picker does not come back on the next visit.
+    const closeModal = useCallback(() => {
+        setIsOpen(false);
+        completeOnboarding();
+    }, [completeOnboarding]);
     const dialogRef = useDialogA11y<HTMLDivElement>(isOpen, closeModal);
 
+    // Wait for the saved state: before hydration every visitor looks brand new.
     useEffect(() => {
-        // Run only once on mount -> check if we are "new"
-        // We defer to the store state. If 0 progress, show modal.
-        // We use a timeout to avoid immediate flash or strict mode double-invoke issues
-        const timer = setTimeout(() => {
-            const masteredCount = nodes.filter(n => n.data.status === 'mastered').length;
-            if (masteredCount === 0) {
-                setIsOpen(true);
-            }
-        }, 100);
+        if (!hydrated || hasOnboarded) return;
+        const timer = setTimeout(() => setIsOpen(true), 100);
         return () => clearTimeout(timer);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Run ONCE on mount using empty dependency array
+    }, [hydrated, hasOnboarded]);
 
     const handleSelect = (roleId: string) => {
         const role = ROLES.find(r => r.id === roleId);

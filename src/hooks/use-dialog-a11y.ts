@@ -9,6 +9,8 @@ const FOCUSABLE_SELECTOR = [
     '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
 
+const openDialogs: HTMLElement[] = [];
+
 /**
  * Adds dialog-level keyboard and focus behavior:
  * - focus initial interactive control
@@ -21,6 +23,13 @@ export function useDialogA11y<T extends HTMLElement>(
     onClose?: () => void
 ) {
     const containerRef = useRef<T | null>(null);
+    // Callers often pass an inline onClose. Reading it through a ref keeps the
+    // effect from re-running each render, which re-focused the first control
+    // and re-saved document.activeElement mid-interaction.
+    const onCloseRef = useRef(onClose);
+    useEffect(() => {
+        onCloseRef.current = onClose;
+    }, [onClose]);
 
     useEffect(() => {
         if (!isOpen || !containerRef.current) return;
@@ -39,9 +48,12 @@ export function useDialogA11y<T extends HTMLElement>(
         document.body.style.overflow = 'hidden';
 
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape' && onClose) {
+            // Only the most recently opened dialog handles keys, so Escape closes one layer.
+            if (openDialogs[openDialogs.length - 1] !== root) return;
+
+            if (event.key === 'Escape' && onCloseRef.current) {
                 event.preventDefault();
-                onClose();
+                onCloseRef.current();
                 return;
             }
 
@@ -71,14 +83,17 @@ export function useDialogA11y<T extends HTMLElement>(
             }
         };
 
+        openDialogs.push(root);
         document.addEventListener('keydown', handleKeyDown);
 
         return () => {
+            const index = openDialogs.lastIndexOf(root);
+            if (index !== -1) openDialogs.splice(index, 1);
             document.removeEventListener('keydown', handleKeyDown);
             document.body.style.overflow = previousOverflow;
             previousFocused?.focus?.();
         };
-    }, [isOpen, onClose]);
+    }, [isOpen]);
 
     return containerRef;
 }

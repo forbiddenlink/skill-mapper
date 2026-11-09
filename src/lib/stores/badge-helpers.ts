@@ -11,7 +11,8 @@ export function checkForNewBadges(nodes: SkillNode[], currentBadges: string[]): 
     const newBadges: string[] = [];
 
     BADGES.forEach((badge) => {
-        if (!currentBadges.includes(badge.id)) {
+        // Boss badges have no skill requirements; [].every() would award them on load.
+        if (badge.requirements.length > 0 && !currentBadges.includes(badge.id)) {
             const hasAllReqs = badge.requirements.every((reqId) => masteredIds.has(reqId));
             if (hasAllReqs) {
                 newBadges.push(badge.id);

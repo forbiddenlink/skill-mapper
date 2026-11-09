@@ -147,3 +147,33 @@ describe('skill decay', () => {
         expect(useGameStore.getState().nodes.find((n) => n.id === first.id)?.data.status).toBe('mastered');
     });
 });
+
+describe('decay grace period for saves from before decay ran', () => {
+    beforeEach(() => {
+        useGameStore.getState().resetProgress();
+        useGameStore.setState({ decayClockStartedAt: 0 });
+    });
+
+    it('v5 migration starts the decay clock at upgrade time', () => {
+        const migrate = must(useGameStore.persist.getOptions().migrate);
+        const before = Date.now();
+        const migrated = migrate({ nodes: [], userXP: 10 }, 5) as { decayClockStartedAt?: number };
+        expect(migrated.decayClockStartedAt).toBeGreaterThanOrEqual(before);
+    });
+
+    it('old mastery inside the grace window stays mastered, and decays once the window passes', () => {
+        const first = must(useGameStore.getState().nodes.find((n) => n.data.status === 'available'));
+        useGameStore.getState().completeSkill(first.id);
+        useGameStore.setState((s) => ({
+            decayClockStartedAt: Date.now(),
+            nodes: s.nodes.map((n) => (n.id === first.id ? { ...n, data: { ...n.data, lastPracticedAt: 1 } } : n)),
+        }));
+
+        useGameStore.getState().checkDecay();
+        expect(useGameStore.getState().nodes.find((n) => n.id === first.id)?.data.status).toBe('mastered');
+
+        useGameStore.setState({ decayClockStartedAt: 1 });
+        useGameStore.getState().checkDecay();
+        expect(useGameStore.getState().nodes.find((n) => n.id === first.id)?.data.status).toBe('decayed');
+    });
+});

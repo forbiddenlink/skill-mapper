@@ -26,7 +26,7 @@ export const useGameStore = create<GameState>()(
         }),
         {
             name: config.storage.key,
-            version: 5,
+            version: 6,
             storage: createJSONStorage(() => idbStateStorage),
             partialize: (state) => ({
                 nodes: state.nodes,
@@ -45,6 +45,7 @@ export const useGameStore = create<GameState>()(
                 soundEnabled: state.soundEnabled,
                 musicEnabled: state.musicEnabled,
                 hasOnboarded: state.hasOnboarded,
+                decayClockStartedAt: state.decayClockStartedAt,
             }),
             migrate: (persistedState: unknown, version: number) => {
                 const state = persistedState as Partial<GameState>;
@@ -72,6 +73,11 @@ export const useGameStore = create<GameState>()(
                         (next.userXP ?? 0) > 0 ||
                         nodes.some((n) => n?.data?.status === 'mastered');
                     next = { ...next, hasOnboarded: next.hasOnboarded ?? hasProgress };
+                }
+                if (version < 6) {
+                    // Decay never ran before v6. Start its clock at the upgrade so existing
+                    // mastery gets a full window instead of flipping to "needs review" at once.
+                    next = { ...next, decayClockStartedAt: Date.now() };
                 }
                 return next as GameState;
             },

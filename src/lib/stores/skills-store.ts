@@ -18,6 +18,11 @@ export interface SkillsSlice {
     selectedSkillId: string | null;
     recommendations: RecommendedSkill[];
     lastCalculated: number;
+    /**
+     * Decay counts from the later of a skill's last practice and this time. Saves that
+     * predate decay get the upgrade time, so old mastery is not all flagged at once.
+     */
+    decayClockStartedAt: number;
 
     onNodesChange: (changes: NodeChange[]) => void;
     onEdgesChange: (changes: EdgeChange[]) => void;
@@ -36,6 +41,7 @@ export const createSkillsSlice: StateCreator<SkillsSlice, [], [], SkillsSlice> =
     selectedSkillId: null,
     recommendations: [],
     lastCalculated: 0,
+    decayClockStartedAt: 0,
 
     onNodesChange: (changes) => {
         set({
@@ -103,7 +109,8 @@ export const createSkillsSlice: StateCreator<SkillsSlice, [], [], SkillsSlice> =
         set((state) => ({
             nodes: state.nodes.map((n) => {
                 if (n.data.status === 'mastered' && n.data.lastPracticedAt) {
-                    if (Date.now() - n.data.lastPracticedAt > THRESHOLD) {
+                    const clockStart = Math.max(n.data.lastPracticedAt, state.decayClockStartedAt);
+                    if (Date.now() - clockStart > THRESHOLD) {
                         return { ...n, data: { ...n.data, status: 'decayed' as SkillStatus } };
                     }
                 }

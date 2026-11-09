@@ -99,3 +99,31 @@ describe('crossedMilestone', () => {
         expect(crossedMilestone(11, 10, everyFifth)).toBe(false);
     });
 });
+
+describe('boss badges', () => {
+    beforeEach(() => {
+        useGameStore.getState().resetProgress();
+    });
+
+    it('every boss badge id has a catalog entry', async () => {
+        const { BADGES } = await import('@/lib/badges');
+        const ids = new Set(BADGES.map((b) => b.id));
+        for (const id of ['foundation-boss', 'frontend-boss', 'backend-boss', 'ai-boss', 'master-boss']) {
+            expect(ids.has(id)).toBe(true);
+        }
+    });
+
+    it('mastery checks never award a boss badge', async () => {
+        const { checkForNewBadges } = await import('@/lib/stores/badge-helpers');
+        const earned = checkForNewBadges(useGameStore.getState().nodes, []);
+        expect(earned.some((id) => id.endsWith('-boss'))).toBe(false);
+    });
+
+    it('a repeat clear grants no XP', () => {
+        const input = { bossId: 'boss-x', score: 5, questionCount: 5, xpReward: 500, badgeId: 'foundation-boss' };
+        expect(useGameStore.getState().recordBossResult(input)).toBe(true);
+        const afterFirst = useGameStore.getState().userXP;
+        expect(useGameStore.getState().recordBossResult(input)).toBe(true);
+        expect(useGameStore.getState().userXP).toBe(afterFirst);
+    });
+});

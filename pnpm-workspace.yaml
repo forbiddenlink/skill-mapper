@@ -6,7 +6,6 @@ allowBuilds:
   protobufjs: true
   sharp: true
   unrs-resolver: true
-
 overrides:
   "@eslint/eslintrc>ajv": "^6.14.0"
   "@opentelemetry/core": ">=2.8.0 <3"
@@ -28,7 +27,7 @@ overrides:
   "lodash": ">=4.18.0 <5.0.0"
   "minimatch": ">=10.2.3 <11.0.0"
   "nanoid": ">=5.1.6 <6"
-  "next": ">=16.4.1 <17"
+  "next": ">=16.4.5 <17"
   "picomatch": ">=4.0.4 <5.0.0"
   "postcss": ">=8.5.18 <9"
   "protobufjs": ">=7.6.5 <8"

@@ -8,10 +8,12 @@ import { Redis } from '@upstash/redis';
 const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 
+const redis = redisUrl && redisToken ? new Redis({ url: redisUrl, token: redisToken }) : null;
+
 // Rate limiter for AI feedback - 10 requests per minute. Null when Redis is not
 // configured: the route then reports unavailable instead of running unmetered.
 const feedbackRatelimit = redisUrl && redisToken ? new Ratelimit({
-  redis: new Redis({ url: redisUrl, token: redisToken }),
+  redis: redis as Redis,
   limiter: Ratelimit.slidingWindow(10, '60 s'),
   analytics: true,
   prefix: 'ratelimit:feedback',
@@ -64,4 +66,45 @@ export async function checkRateLimit(request: Request): Promise<LimitOutcome> {
   if (!feedbackRatelimit) return { success: false, unavailable: true };
   // Redis down or misconfigured fails closed, since this gates paid AI calls.
   return runLimit(feedbackRatelimit, getClientIp(request), 'Rate limiter');
+}
+
+const DEFAULT_GLOBAL_DAILY_CAP = 1000;
+const GLOBAL_CAP_TIMEOUT_MS = 1500;
+
+function globalDailyCap(): number {
+  const n = Number.parseInt(process.env.AI_GLOBAL_DAILY_CAP ?? '', 10);
+  return Number.isFinite(n) && n > 0 ? n : DEFAULT_GLOBAL_DAILY_CAP;
+}
+
+/**
+ * Global (all callers) daily ceiling on paid AI calls, so a distributed abuser cannot
+ * outrun the per-IP limit. Key is prefixed with the repo name because the Upstash DB
+ * is shared. Fails closed: Redis missing, erroring or slow all report unavailable.
+ */
+export async function checkGlobalDailyCap(now: Date = new Date()): Promise<LimitOutcome> {
+  if (!redis) return { success: false, unavailable: true };
+  const day = now.toISOString().slice(0, 10);
+  const key = `skill-mapper:ai:daily:${day}:global`;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error('global cap timeout')), GLOBAL_CAP_TIMEOUT_MS);
+    });
+    const results = await Promise.race([
+      redis.pipeline().incr(key).expire(key, 60 * 60 * 48).exec<[number, number]>(),
+      timeout,
+    ]);
+    const count = Number(results[0]);
+    if (!Number.isFinite(count)) return { success: false, unavailable: true };
+    if (count > globalDailyCap()) {
+      const nextUtcMidnight = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
+      return { success: false, resetInSeconds: Math.max(1, Math.ceil((nextUtcMidnight - now.getTime()) / 1000)) };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error('Global daily cap error:', error);
+    return { success: false, unavailable: true };
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }

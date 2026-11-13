@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSkillFeedback, skillFeedbackRequestSchema } from '@/lib/groq';
-import { checkRateLimit } from '@/lib/rate-limit';
+import { checkGlobalDailyCap, checkRateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -52,6 +52,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           })),
         },
         { status: 400 }
+      );
+    }
+
+    // Global daily ceiling on paid calls; fails closed if Redis is unavailable.
+    const globalCap = await checkGlobalDailyCap();
+    if (globalCap.unavailable) {
+      return NextResponse.json(
+        { error: 'Service temporarily unavailable. Please retry shortly.' },
+        { status: 503, headers: { 'Retry-After': '5' } }
+      );
+    }
+    if (!globalCap.success) {
+      return NextResponse.json(
+        { error: 'Daily AI feedback capacity reached. Please try again tomorrow.' },
+        { status: 429, headers: { 'Retry-After': String(globalCap.resetInSeconds) } }
       );
     }
 

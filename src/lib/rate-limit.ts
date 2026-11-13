@@ -22,13 +22,14 @@ const feedbackRatelimit = redisUrl && redisToken ? new Ratelimit({
   timeout: 1500,
 }) : null;
 
+/**
+ * Client IP for rate-limit keys. The left-most x-forwarded-for hop is client-supplied, so
+ * rotating it would bypass the per-IP limit. Use the platform-set headers only.
+ */
 export function getClientIp(request: Request): string {
-  const forwardedFor = request.headers.get('x-forwarded-for');
-  if (forwardedFor) {
-    const [first] = forwardedFor.split(',');
-    if (first) return first.trim();
-  }
-  const realIp = request.headers.get('x-real-ip');
+  const vercel = request.headers.get('x-vercel-forwarded-for')?.trim();
+  if (vercel) return vercel;
+  const realIp = request.headers.get('x-real-ip')?.trim();
   if (realIp) return realIp;
   return 'unknown';
 }

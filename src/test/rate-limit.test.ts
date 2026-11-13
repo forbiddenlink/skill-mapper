@@ -32,7 +32,7 @@ vi.mock('@upstash/ratelimit', () => {
 process.env.UPSTASH_REDIS_REST_URL = 'https://example.upstash.io';
 process.env.UPSTASH_REDIS_REST_TOKEN = 'test-token';
 
-const { checkRateLimit, checkGlobalDailyCap } = await import('@/lib/rate-limit');
+const { checkRateLimit, checkGlobalDailyCap, getClientIp } = await import('@/lib/rate-limit');
 
 const req = () =>
   new Request('https://example.com/api/ai/feedback', { headers: { 'x-forwarded-for': '1.2.3.4' } });
@@ -111,5 +111,21 @@ describe('checkGlobalDailyCap', () => {
   it('fails closed on a malformed result', async () => {
     pipe.exec.mockResolvedValue([undefined, 1]);
     expect(await checkGlobalDailyCap(day)).toEqual({ success: false, unavailable: true });
+  });
+});
+
+describe('getClientIp', () => {
+  const h = (headers: Record<string, string>) => new Request('https://example.com', { headers });
+
+  it('prefers x-vercel-forwarded-for, then x-real-ip', () => {
+    expect(getClientIp(h({ 'x-vercel-forwarded-for': '203.0.113.7', 'x-real-ip': '198.51.100.1' }))).toBe('203.0.113.7');
+    expect(getClientIp(h({ 'x-real-ip': '198.51.100.1' }))).toBe('198.51.100.1');
+  });
+
+  it('a spoofed x-forwarded-for does not change the key', () => {
+    const base = { 'x-vercel-forwarded-for': '203.0.113.7' };
+    expect(getClientIp(h({ ...base, 'x-forwarded-for': '6.6.6.6' }))).toBe('203.0.113.7');
+    expect(getClientIp(h({ ...base, 'x-forwarded-for': '7.7.7.7' }))).toBe('203.0.113.7');
+    expect(getClientIp(h({ 'x-forwarded-for': '6.6.6.6' }))).toBe('unknown');
   });
 });

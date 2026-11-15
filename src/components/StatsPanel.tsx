@@ -8,6 +8,7 @@ import { calculatePercentage } from '@/lib/utils';
 import { useKeyboardShortcut } from '@/hooks/use-keyboard-shortcuts';
 import { useShallow } from 'zustand/react/shallow';
 import { useDialogA11y } from '@/hooks/use-dialog-a11y';
+import ProgressBackup from './ProgressBackup';
 
 type StatsPanelProps = {
     isOpen?: boolean;
@@ -226,6 +227,8 @@ export default function StatsPanel({
                                     ))}
                                 </div>
                             </div>
+
+                            <ProgressBackup />
                         </motion.div>
                     </div>
                 )}

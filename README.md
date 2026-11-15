@@ -33,7 +33,7 @@ Open [http://localhost:3000](http://localhost:3000).
 To build for production:
 
 ```bash
-pnpm build   # runs next-sitemap as a postbuild step
+pnpm build   # next build (sitemap and robots come from src/app/sitemap.ts and robots.ts)
 pnpm start
 ```
 
@@ -59,7 +59,7 @@ Full stack, layout, and gotchas: see `CLAUDE.md`.
 
 ```bash
 pnpm dev                # next dev
-pnpm build              # next build (postbuild runs next-sitemap)
+pnpm build              # next build (sitemap.ts and robots.ts generate the sitemap)
 pnpm start              # next start
 pnpm lint               # eslint
 pnpm type-check         # tsc --noEmit

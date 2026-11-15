@@ -21,8 +21,7 @@
     "biome:fix": "biome check . --write",
     "biome:format": "biome format . --write",
     "test:watch": "vitest",
-    "analyze": "ANALYZE=true next build",
-    "postbuild": "next-sitemap"
+    "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "@arcjet/next": "^1.12.0",

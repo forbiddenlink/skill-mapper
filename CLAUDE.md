@@ -33,7 +33,7 @@ achievements, and progress tracking.
 
 ```bash
 pnpm dev                # next dev
-pnpm build              # next build (postbuild runs next-sitemap)
+pnpm build              # next build (sitemap.ts and robots.ts generate the sitemap)
 pnpm start              # next start
 pnpm lint               # eslint
 pnpm biome:check        # biome check .

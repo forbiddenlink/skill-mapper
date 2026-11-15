@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Familjen_Grotesk, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
 import { PostHogProvider } from "@/lib/posthog";
-import { env } from "@/env";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -26,7 +26,6 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const siteUrl = env.NEXT_PUBLIC_APP_URL ?? "https://skill-mapper-six.vercel.app";
 
 export const metadata: Metadata = {
   title: "Skill Mapper - Gamified Learning Platform for Interactive Skill Development",

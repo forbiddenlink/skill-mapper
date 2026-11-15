@@ -5,6 +5,13 @@ All notable changes to the Skill Mapper project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0](https://github.com/forbiddenlink/skill-mapper/compare/v1.2.3...v1.3.0) (2026-11-15)
+
+
+### Features
+
+* **progress:** download and restore progress as a JSON file ([#157](https://github.com/forbiddenlink/skill-mapper/issues/157)) ([136f909](https://github.com/forbiddenlink/skill-mapper/commit/136f909f1662ea04ad8f13ff393d828c48a21c0a))
+
 ## [1.2.3](https://github.com/forbiddenlink/skill-mapper/compare/v1.2.2...v1.2.3) (2026-11-15)
 
 

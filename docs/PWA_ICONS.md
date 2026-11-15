@@ -1,5 +1,7 @@
 # PWA Icons Setup
 
+> Status as of 2026-11-15: the icon set already exists in `public/icons/` and is referenced by `public/manifest.json`. Use this guide only to regenerate it.
+
 ## Quick Start
 
 The PWA manifest requires icons in various sizes. You have two options:

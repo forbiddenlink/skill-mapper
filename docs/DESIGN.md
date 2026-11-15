@@ -1,10 +1,10 @@
-# Signal Atlas — Skill Mapper Design System
+# Signal Atlas: Skill Mapper Design System
 
 Agent instruction: read this file before any UI work. Prefer tokens and classes from `src/app/globals.css`. Do not invent neon cyan/pink, Inter, Orbitron, or glass cards.
 
 ## Intent
 
-Skill Mapper is a **skill cartography console**. Learners navigate a tree of craft nodes. The UI should feel like a precise atlas and ops panel — professional, unique to this product, never generic AI cyberpunk.
+Skill Mapper is a **skill cartography console**. Learners navigate a tree of craft nodes. The UI should feel like a precise atlas and ops panel, professional, unique to this product, never generic AI cyberpunk.
 
 ## Personality
 
@@ -28,7 +28,7 @@ Precise · Progressive · Crafted
 | Decay | `--decay` | Decayed / needs repair |
 | Danger | `--danger` | Errors, destructive |
 
-Legacy class aliases (`neon-cyan`, `plasma-pink`, `electric-green`) map to signal / mastery / progress for compatibility — prefer semantic names in new code.
+Legacy class aliases (`neon-cyan`, `plasma-pink`, `electric-green`) map to signal / mastery / progress for compatibility, prefer semantic names in new code.
 
 ### Typography
 
@@ -84,8 +84,8 @@ Respect `prefers-reduced-motion`. Prefer opacity + transform only.
 - One primary CTA at footer; secondary states are status banners
 
 ### Buttons
-- `.btn-primary` — signal fill, dark ink text
-- `.btn-ghost` — surface + muted border
+- `.btn-primary`: signal fill, dark ink text
+- `.btn-ghost`: surface + muted border
 - `.btn-mastery` / `.btn-reward` / `.btn-danger` for role actions
 - Never make every control primary
 
@@ -103,4 +103,4 @@ Respect `prefers-reduced-motion`. Prefer opacity + transform only.
 
 1. Tokens live in `src/app/globals.css` (`:root` + `@theme inline`)
 2. Utility surfaces: `.panel-base`, `.panel-strong`, `.modal-shell`, `.metric-card`
-3. When restyling a feature modal, match HUD/node language first — then local status color
+3. When restyling a feature modal, match HUD/node language first, then local status color

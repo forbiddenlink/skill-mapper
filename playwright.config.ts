@@ -12,7 +12,7 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: isCI,
   /* Retry on CI only */
-  retries: isCI ? 1 : 0,
+  retries: 0, // a test that passes only on retry is a bug to fix, not a pass
   /* Use 2 workers in CI for faster execution */
   workers: isCI ? 2 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */

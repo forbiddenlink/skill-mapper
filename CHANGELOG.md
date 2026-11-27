@@ -5,6 +5,13 @@ All notable changes to the Skill Mapper project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1](https://github.com/forbiddenlink/skill-mapper/compare/v1.3.0...v1.3.1) (2026-11-27)
+
+
+### Bug Fixes
+
+* **csp:** allow PostHog asset host and blob workers ([#162](https://github.com/forbiddenlink/skill-mapper/issues/162)) ([98fc7bb](https://github.com/forbiddenlink/skill-mapper/commit/98fc7bb0310b84e5e8c318eb41975b57b2e618f8))
+
 ## [1.3.0](https://github.com/forbiddenlink/skill-mapper/compare/v1.2.3...v1.3.0) (2026-11-15)
 
 
